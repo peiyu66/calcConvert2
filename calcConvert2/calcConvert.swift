@@ -17,6 +17,8 @@ class calcConvert {
     var opBuffer:String=""    //保存前運算子
     var txtBuffer:String=""   //組字當中的數字，empty表示重新開始組字
     var digBuffer:Double=0    //組字結果的值
+    var historyBuffer:String=""
+    var historyList:([String])=[""] //輸入按鍵的歷史紀錄
     let precision:String="15" //最高精度是15
 
 
@@ -33,6 +35,16 @@ class calcConvert {
             valBuffer=0
             opBuffer=""
             txtBuffer=""
+            historyList=[""]
+            historyBuffer=""
+//        case "back":
+//            if historyList.count > 1 {
+//                historyList.removeLast()
+//                historyBuffer=""
+//                for key in historyList {
+//                    historyBuffer += key
+//                }
+//            }
         case "mc":
             valMemory = 0
         case "+","-","*","/","=","m+","m-","CR","SR":
@@ -75,6 +87,12 @@ class calcConvert {
                 default:
                     break
             }
+
+//            historyList.append(txtBuffer)
+//            historyList.append(inputedKey)
+//            historyBuffer+=txtBuffer
+//            historyBuffer+=inputedKey
+
             txtBuffer=""
             digBuffer=0
             opBuffer=inputedKey
@@ -160,12 +178,18 @@ class calcConvert {
     ]
 
     var exchangeRate:([[[(Double,Double)]]]) = [[
-        //台幣        日圓      美金      歐元
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //台幣
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //日圓
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //美金
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]   //歐元
+        //台幣        日圓      美金      歐元       人民幣    港幣
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //台幣
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //日圓
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //美金
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //歐元
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //人民幣
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]   //港幣
     ]]
+
+    let currencyCategory:([String])=["匯兌"]
+    let currencyList:([[String]]) = [["台幣","日圓","美金","歐元","人民幣","港幣"]]
+    let currencyCode:([String]) = ["TWD","JPY","USD","EUR","CNY","HKD"]
 
 
     var categoryIndex:Int = 0   //目前度量種類
@@ -186,22 +210,41 @@ class calcConvert {
         return valBuffer
     }
 
-    func getExchangeRate () {
-        dispatch_async(dispatch_get_main_queue()) {
-            let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s=TWDUSD=X&f=nl1d1t1");
 
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-                //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-                if let downloadedData = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-                    self.exchangeRate[0][0][2].0 = Double(downloadedData.componentsSeparatedByString(",")[1])!
-                    self.exchangeRate[0][2][0].1 = self.exchangeRate[0][0][2].0
+
+    func getExchangeRate () {
+        let dispatchGroup:dispatch_group_t = dispatch_group_create()
+        var allRateUpdated:Bool = true
+        for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
+            for (indexTo,codeTo) in self.currencyCode.enumerate() {
+                if indexFrom != indexTo {
+                    dispatch_group_enter(dispatchGroup)
+                        let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
+                        let request = NSURLRequest(URL: url!)
+                        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: {(data, response, error) in
+                            if error == nil {
+                                if let downloadedData = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+                                    self.exchangeRate[0][indexFrom][indexTo].0 = Double(downloadedData.componentsSeparatedByString(",")[1])!
+//                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
+                                }
+                            } else {
+                                allRateUpdated = false
+                            }
+                            dispatch_group_leave(dispatchGroup)
+                        })
+                    task.resume()
                 }
+
             }
-            task.resume()
-            self.category += ["匯兌"]
-            self.unit += [["台幣","日圓","美金","歐元"]]
-            self.convertX += self.exchangeRate
         }
+        dispatch_group_notify(dispatchGroup,dispatch_get_main_queue(), {
+            if allRateUpdated {
+                self.category += self.currencyCategory;
+                self.unit += self.currencyList;
+                self.convertX += self.exchangeRate;
+            }
+        })
+
     }
 
 }

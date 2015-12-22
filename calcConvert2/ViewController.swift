@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, tableViewDelegate {
 
     let precisionLong:String   = "15"
     let precisionShort:String  = "8"
@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var uiOutput: UILabel!
     @IBOutlet weak var uiMemory: UILabel!
     @IBOutlet weak var uiUnits: UISegmentedControl!
+    @IBOutlet weak var uiHistory: UITextView!
 
 
     override func viewDidLoad() {
@@ -27,6 +28,7 @@ class ViewController: UIViewController {
         uiMemory.adjustsFontSizeToFitWidth=true
         uiOutput.text="0"
         uiMemory.text=""
+        uiHistory.text=""
 
         if (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation)) {
             precision=precisionLong
@@ -34,7 +36,9 @@ class ViewController: UIViewController {
             precision=precisionShort
         }
 
-        changedSetting(withIndex: calc.categoryIndex,convertingPrice:calc.priceConverting) //起始度量種類是0重量，單價換算是關閉
+        changedSetting(withIndex: calc.categoryIndex,priceConverting:calc.priceConverting) //起始度量種類是0重量，單價換算是關閉
+
+        calc.getExchangeRate()  //查詢匯率
 
     }
 
@@ -44,14 +48,15 @@ class ViewController: UIViewController {
     }
 
     //設定category度量種類
-    func changedSetting(withIndex index: Int?, convertingPrice: Bool?) {
+    func changedSetting(withIndex index: Int?, priceConverting: Bool?) {
         calc.categoryIndex=index!
-        calc.priceConverting=convertingPrice!
-//        navigationItem.title="度量："+calc.category[conv.cataIndex]
-//        if calc.priceConverting {
-//            navigationItem.title=navigationItem.title!+"，單價換算＄"
-//        }
+        calc.priceConverting=priceConverting!
+        navigationItem.title="度量："+calc.category[calc.categoryIndex]
+        if calc.priceConverting {
+            navigationItem.title=navigationItem.title!+"，單價換算＄"
+        }
         populateSegmentUnits(calc.categoryIndex)  //度量種類改變時，重新建立度量單位的選項
+
     }
 
     //產生units選項
@@ -83,16 +88,16 @@ class ViewController: UIViewController {
         calcKeyIn("") //重新輸出數值
     }
 
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        // Get the new view controller using segue.destinationViewController.
-//        // Pass the selected object to the new view controller.
-//        let destViewController = segue.destinationViewController as! TableViewController
-//        destViewController.Delegate=self
-//        destViewController.conv = conv
-//        let backItem = UIBarButtonItem()
-//        backItem.title = ""
-//        navigationItem.backBarButtonItem = backItem
-//    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        let destViewController = segue.destinationViewController as! TableViewController
+        destViewController.viewDelegate=self
+        destViewController.calc = calc
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
+    }
 
 
     //計算機介面
@@ -100,6 +105,7 @@ class ViewController: UIViewController {
     func calcKeyIn(key: String) {
         if calc.keyIn(key) == "" {
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
+            uiHistory.text = calc.historyBuffer
         } else {
             uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer)
         }
@@ -180,6 +186,9 @@ class ViewController: UIViewController {
         calcKeyIn("mc")
     }
 
+    @IBAction func uiKeyBack(sender: UIButton) {
+        calcKeyIn("back")
+    }
 
 
 }

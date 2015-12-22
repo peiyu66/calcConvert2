@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E27703301C283FFD0089F965 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E277032F1C283FFD0089F965 /* Assets.xcassets */; };
+		E2B7D09D1C28EAD500003B07 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B7D09C1C28EAD500003B07 /* TableViewController.swift */; };
+		E2B7D09F1C28EB3600003B07 /* cellPriceConverting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B7D09E1C28EB3600003B07 /* cellPriceConverting.swift */; };
 		E2B895E51C277EB7000F1445 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895E41C277EB7000F1445 /* AppDelegate.swift */; };
 		E2B895E71C277EB7000F1445 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895E61C277EB7000F1445 /* ViewController.swift */; };
 		E2B895EA1C277EB7000F1445 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2B895E81C277EB7000F1445 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		E277032F1C283FFD0089F965 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E2B7D09C1C28EAD500003B07 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		E2B7D09E1C28EB3600003B07 /* cellPriceConverting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cellPriceConverting.swift; sourceTree = "<group>"; };
 		E2B895E11C277EB7000F1445 /* calcConvert2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = calcConvert2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B895E41C277EB7000F1445 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2B895E61C277EB7000F1445 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 				E2B895ED1C277EB8000F1445 /* LaunchScreen.storyboard */,
 				E2B895F01C277EB8000F1445 /* Info.plist */,
 				E277032F1C283FFD0089F965 /* Assets.xcassets */,
+				E2B7D09C1C28EAD500003B07 /* TableViewController.swift */,
+				E2B7D09E1C28EB3600003B07 /* cellPriceConverting.swift */,
 			);
 			path = calcConvert2;
 			sourceTree = "<group>";
@@ -99,6 +105,7 @@
 				TargetAttributes = {
 					E2B895E01C277EB7000F1445 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = QQP5F43Z2T;
 					};
 				};
 			};
@@ -138,9 +145,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2B7D09F1C28EB3600003B07 /* cellPriceConverting.swift in Sources */,
 				E2B895E71C277EB7000F1445 /* ViewController.swift in Sources */,
 				E2B895F71C277EF0000F1445 /* calcConvert.swift in Sources */,
 				E2B895E51C277EB7000F1445 /* AppDelegate.swift in Sources */,
+				E2B7D09D1C28EAD500003B07 /* TableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,10 +262,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = calcConvert2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tw.com.unlock.calcConvert2;
+				PRODUCT_BUNDLE_IDENTIFIER = tw.com.unlock.calcConvert;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -264,10 +276,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = calcConvert2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tw.com.unlock.calcConvert2;
+				PRODUCT_BUNDLE_IDENTIFIER = tw.com.unlock.calcConvert;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
