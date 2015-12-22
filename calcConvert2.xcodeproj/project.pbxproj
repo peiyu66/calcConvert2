@@ -7,21 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E27703301C283FFD0089F965 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E277032F1C283FFD0089F965 /* Assets.xcassets */; };
 		E2B895E51C277EB7000F1445 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895E41C277EB7000F1445 /* AppDelegate.swift */; };
 		E2B895E71C277EB7000F1445 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895E61C277EB7000F1445 /* ViewController.swift */; };
 		E2B895EA1C277EB7000F1445 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2B895E81C277EB7000F1445 /* Main.storyboard */; };
-		E2B895EC1C277EB7000F1445 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2B895EB1C277EB7000F1445 /* Assets.xcassets */; };
 		E2B895EF1C277EB8000F1445 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2B895ED1C277EB8000F1445 /* LaunchScreen.storyboard */; };
+		E2B895F71C277EF0000F1445 /* calcConvert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895F61C277EF0000F1445 /* calcConvert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E277032F1C283FFD0089F965 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2B895E11C277EB7000F1445 /* calcConvert2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = calcConvert2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B895E41C277EB7000F1445 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2B895E61C277EB7000F1445 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E2B895E91C277EB7000F1445 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		E2B895EB1C277EB7000F1445 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2B895EE1C277EB8000F1445 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2B895F01C277EB8000F1445 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2B895F61C277EF0000F1445 /* calcConvert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calcConvert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +59,10 @@
 				E2B895E41C277EB7000F1445 /* AppDelegate.swift */,
 				E2B895E61C277EB7000F1445 /* ViewController.swift */,
 				E2B895E81C277EB7000F1445 /* Main.storyboard */,
-				E2B895EB1C277EB7000F1445 /* Assets.xcassets */,
+				E2B895F61C277EF0000F1445 /* calcConvert.swift */,
 				E2B895ED1C277EB8000F1445 /* LaunchScreen.storyboard */,
 				E2B895F01C277EB8000F1445 /* Info.plist */,
+				E277032F1C283FFD0089F965 /* Assets.xcassets */,
 			);
 			path = calcConvert2;
 			sourceTree = "<group>";
@@ -123,7 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B895EF1C277EB8000F1445 /* LaunchScreen.storyboard in Resources */,
-				E2B895EC1C277EB7000F1445 /* Assets.xcassets in Resources */,
+				E27703301C283FFD0089F965 /* Assets.xcassets in Resources */,
 				E2B895EA1C277EB7000F1445 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B895E71C277EB7000F1445 /* ViewController.swift in Sources */,
+				E2B895F71C277EF0000F1445 /* calcConvert.swift in Sources */,
 				E2B895E51C277EB7000F1445 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +290,7 @@
 				E2B895F51C277EB8000F1445 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
