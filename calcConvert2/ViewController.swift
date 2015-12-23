@@ -35,8 +35,8 @@ class ViewController: UIViewController, tableViewDelegate {
         } else {
             precision=precisionShort
         }
-        changedSetting(withIndex: calc.categoryIndex,priceConverting:calc.priceConverting) //起始度量種類是0重量，單價換算是關閉
-        
+        populateSegmentUnits(calc.categoryIndex)  //建立度量單位的選項
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -58,14 +58,23 @@ class ViewController: UIViewController, tableViewDelegate {
     }
 
     //設定category度量種類
-    func changedSetting(withIndex index: Int?, priceConverting: Bool?) {
-        calc.categoryIndex=index!
+    func changedSetting(withIndex index: Int?, priceConverting: Bool?, historySwitch:Bool?) {
+        if calc.categoryIndex != index! {
+            calc.categoryIndex=index!
+            populateSegmentUnits(calc.categoryIndex)  //度量種類改變時，重新建立度量單位的選項
+            calc.historyText += " " + calc.unit[calc.categoryIndex][calc.unitIndex] + " "
+        }
         calc.priceConverting=priceConverting!
+        calc.historySwitch=historySwitch!
+        if calc.historySwitch == true {
+            uiHistory.text = calc.historyText
+        } else {
+            uiHistory.text = ""
+        }
         navigationItem.title="度量："+calc.category[calc.categoryIndex]
         if calc.priceConverting {
             navigationItem.title=navigationItem.title!+"，單價換算＄"
         }
-        populateSegmentUnits(calc.categoryIndex)  //度量種類改變時，重新建立度量單位的選項
 
     }
 
@@ -78,7 +87,6 @@ class ViewController: UIViewController, tableViewDelegate {
         }
         uiUnits.selectedSegmentIndex=0
         calc.unitIndex=uiUnits.selectedSegmentIndex
-        calc.historyText += " " + calc.unit[calc.categoryIndex][calc.unitIndex] + " "
      }
 
     @IBAction func SegUnitValueChanged(sender: UISegmentedControl) {
@@ -121,16 +129,18 @@ class ViewController: UIViewController, tableViewDelegate {
         if calc.keyIn(key) == "" {
 //            uiOutput.text = String(format:"%."+precision+"g",(calc.categoryIndex == 3 ? round(10000.0*calc.valBuffer)/10000.0 : calc.valBuffer))
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
-            uiHistory.text = calc.historyText
-        } else {
+         } else {
             uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer)
         }
         if calc.valMemory == 0 {
             uiMemory.text = ""
-            uiHistory.text = calc.historyText
         } else {
             uiMemory.text = "m = "+String(format:"%."+precision+"g",calc.valMemory)
+        }
+        if calc.historySwitch == true {
             uiHistory.text = calc.historyText
+        } else {
+            uiHistory.text = ""
         }
     }
 

@@ -9,10 +9,11 @@
 import UIKit
 
 protocol cellDelegate: class {
-    func priceConvertingChanged(withStatus status:Bool?)
+    func cellSwitchChanged(withStatus status:Bool?,cellSwitch:UITableViewCell?)
+
 }
 
-class cellPriceConverting: UITableViewCell {
+class cellSwitch: UITableViewCell {
 
     var tableCellDelegate:cellDelegate?
 
@@ -28,11 +29,15 @@ class cellPriceConverting: UITableViewCell {
     }
 
 
-    @IBOutlet weak var uiPriceConverting: UISwitch!
+    @IBOutlet weak var uiSwitchLabel: UILabel!
+    @IBOutlet weak var uiSwitch: UISwitch!
 
-    @IBAction func uiChangedPriceConverting(sender: UISwitch) {
+    @IBAction func uiChangedSwitchStatus(sender: UISwitch) {
         
-        tableCellDelegate?.priceConvertingChanged(withStatus: sender.on)
+        tableCellDelegate?.cellSwitchChanged(withStatus: sender.on,cellSwitch:self)
     }
 
 }
+
+
+

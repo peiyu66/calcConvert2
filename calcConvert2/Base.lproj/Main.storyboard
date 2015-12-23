@@ -33,7 +33,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellPriceConverting" id="ewS-TB-a92" customClass="cellPriceConverting" customModule="calcConvert2" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellSwitch" id="ewS-TB-a92" customClass="cellSwitch" customModule="calcConvert2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="158" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ewS-TB-a92" id="8ip-uJ-oOq">
@@ -46,10 +46,10 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmR-1o-dn3">
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmR-1o-dn3" userLabel="uiSwitch">
                                             <rect key="frame" x="527" y="6" width="51" height="31"/>
                                             <connections>
-                                                <action selector="uiChangedPriceConverting:" destination="ewS-TB-a92" eventType="valueChanged" id="6oa-5z-gSa"/>
+                                                <action selector="uiChangedSwitchStatus:" destination="ewS-TB-a92" eventType="valueChanged" id="LhW-Y9-jqU"/>
                                             </connections>
                                         </switch>
                                     </subviews>
@@ -61,7 +61,8 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="uiPriceConverting" destination="dmR-1o-dn3" id="rV1-tQ-OWc"/>
+                                    <outlet property="uiSwitch" destination="dmR-1o-dn3" id="Uki-KC-YZL"/>
+                                    <outlet property="uiSwitchLabel" destination="jRQ-FY-xUL" id="jWj-B6-g1W"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

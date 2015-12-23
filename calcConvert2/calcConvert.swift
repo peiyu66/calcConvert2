@@ -21,7 +21,7 @@ class calcConvert {
     var historyList:([String])=[""] //輸入按鍵的歷史紀錄
     let precisionForHistory="8"
     let precision:String="15" //最高精度是15
-
+    var historySwitch:Bool=false
 
 
     init () {
@@ -29,7 +29,7 @@ class calcConvert {
         category = categoryList
         unit = unitList
         historyList=[(unit[categoryIndex][unitIndex])]
-//        historyText=unit[categoryIndex][unitIndex]+" "
+        historyText=unit[categoryIndex][unitIndex]+" "
     }
 
     func keyIn (inputedKey: String) -> String {
@@ -49,6 +49,8 @@ class calcConvert {
             historyText=unit[categoryIndex][unitIndex]+" "
         case "mc":
             valMemory = 0
+            historyList.append(inputedKey)
+            historyText+=inputedKey
         case "+","-","x","/","=","m+","m-","CR","SR":
             //這幾個運算子將結束組字並做運算；CR立方根、SR平方根
             //之前有op則先拿來和現在剛輸入的數值做運算
@@ -103,7 +105,7 @@ class calcConvert {
                 //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號。
                 if inputedKey != "=" || (opBuffer != "=" && opBuffer != "CR" && opBuffer != "SR" && opBuffer != "m+" && opBuffer != "m-" && opBuffer != "") {
                     if inputedKey == "CR" || inputedKey == "SR" {
-                        historyText += "+"
+                        historyText += "="
                     }
                     historyText += " " + String(format:"%."+precisionForHistory+"g",valBuffer)
                 }

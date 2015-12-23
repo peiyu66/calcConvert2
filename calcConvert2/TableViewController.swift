@@ -9,14 +9,15 @@
 import UIKit
 
 protocol tableViewDelegate: class {
-    func changedSetting(withIndex index: Int?, priceConverting: Bool?)
+    func changedSetting(withIndex index: Int?, priceConverting: Bool?, historySwitch:Bool?)
 }
 
 class TableViewController: UITableViewController ,cellDelegate {
 
     var calc:calcConvert?
     var lastSelectedIndexPath:NSIndexPath?
-    var lastSwitchStatus:Bool=false
+    var lastPriceSwitchStatus:Bool=false
+    var lastHistorySwitchStatus:Bool=false
     var viewDelegate:tableViewDelegate?
     var uiPriceConverting:UISwitch?
     var currencyTime:String=""
@@ -50,9 +51,9 @@ class TableViewController: UITableViewController ,cellDelegate {
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        if (lastSelectedIndexPath?.row != calc!.categoryIndex || lastSwitchStatus != calc!.priceConverting) {
+        if (lastSelectedIndexPath?.row != calc!.categoryIndex || lastPriceSwitchStatus != calc!.priceConverting  || lastHistorySwitchStatus != calc!.historySwitch) {
 
-            viewDelegate?.changedSetting(withIndex: lastSelectedIndexPath?.row, priceConverting: lastSwitchStatus)
+            viewDelegate?.changedSetting(withIndex: lastSelectedIndexPath?.row, priceConverting: lastPriceSwitchStatus, historySwitch: lastHistorySwitchStatus)
         }
 
     }
@@ -83,8 +84,9 @@ class TableViewController: UITableViewController ,cellDelegate {
                 checkCurrencyTime ()
             }
             return calc!.category.count
+        } else {
+            return 2
         }
-        return 1
     }
 
 
@@ -100,25 +102,31 @@ class TableViewController: UITableViewController ,cellDelegate {
             }
             return cell
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("cellPriceConverting", forIndexPath: indexPath) as! cellPriceConverting
+//        if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
-            lastSwitchStatus=calc!.priceConverting
-            cell.uiPriceConverting.on=lastSwitchStatus
-            if calc!.categoryIndex == 3 {
-                cell.uiPriceConverting.enabled = false
+            if indexPath.row == 1 {
+                lastPriceSwitchStatus=calc!.priceConverting
+                cell.uiSwitch.on=lastPriceSwitchStatus
+                cell.uiSwitchLabel.text="單價換算"
+                if calc!.categoryIndex == 3 {
+                    cell.uiSwitch.enabled = false
+                } else {
+                    cell.uiSwitch.enabled = true
+                }
+                uiPriceConverting=cell.uiSwitch
             } else {
-                cell.uiPriceConverting.enabled = true
+                lastHistorySwitchStatus=calc!.historySwitch
+                cell.uiSwitch.on=lastHistorySwitchStatus
+                cell.uiSwitchLabel.text="計算歷程"
             }
-            uiPriceConverting=cell.uiPriceConverting
             return cell
-
         }
-    }
+   }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if indexPath.section == 0 {
-
             if indexPath.row != lastSelectedIndexPath?.row {
                 if let lastSelectedIndexPath = lastSelectedIndexPath {
                     let oldCell = tableView.cellForRowAtIndexPath(lastSelectedIndexPath)
@@ -127,7 +135,7 @@ class TableViewController: UITableViewController ,cellDelegate {
                 if indexPath.row == 3 {
                     uiPriceConverting?.on = false
                     uiPriceConverting?.enabled = false
-                    lastSwitchStatus = false
+                    lastPriceSwitchStatus = false
                 } else {
                     uiPriceConverting?.enabled = true
                 }
@@ -139,53 +147,14 @@ class TableViewController: UITableViewController ,cellDelegate {
     }
 
 
-    func priceConvertingChanged(withStatus status:Bool?) {
-        lastSwitchStatus=status!
+    func cellSwitchChanged(withStatus status:Bool?,cellSwitch:UITableViewCell?) {
+        let indexPath = self.tableView.indexPathForCell(cellSwitch!)
+        if indexPath!.row == 1 {
+            lastPriceSwitchStatus=status!
+        } else {
+            lastHistorySwitchStatus=status!
+        }
 
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-    // Return false if you do not want the specified item to be editable.
-    return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-    if editingStyle == .Delete {
-    // Delete the row from the data source
-    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-    } else if editingStyle == .Insert {
-    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-    // Return false if you do not want the item to be re-orderable.
-    return true
-    }
-    */
-
-
-    // MARK: - Navigation
-    /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
 }
