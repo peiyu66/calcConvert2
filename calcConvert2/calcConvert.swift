@@ -17,8 +17,9 @@ class calcConvert {
     var opBuffer:String=""    //保存前運算子
     var txtBuffer:String=""   //組字當中的數字，empty表示重新開始組字
     var digBuffer:Double=0    //組字結果的值
-    var historyBuffer:String=""
+    var historyText:String=""
     var historyList:([String])=[""] //輸入按鍵的歷史紀錄
+    let precisionForHistory="8"
     let precision:String="15" //最高精度是15
 
 
@@ -27,6 +28,8 @@ class calcConvert {
         convertX = convertXList
         category = categoryList
         unit = unitList
+        historyList=[(unit[categoryIndex][unitIndex])]
+//        historyText=unit[categoryIndex][unitIndex]+" "
     }
 
     func keyIn (inputedKey: String) -> String {
@@ -42,19 +45,11 @@ class calcConvert {
             valBuffer=0
             opBuffer=""
             txtBuffer=""
-            historyList=[""]
-            historyBuffer=""
-//        case "back":
-//            if historyList.count > 1 {
-//                historyList.removeLast()
-//                historyBuffer=""
-//                for key in historyList {
-//                    historyBuffer += key
-//                }
-//            }
+            historyList=[(unit[categoryIndex][unitIndex])]
+            historyText=unit[categoryIndex][unitIndex]+" "
         case "mc":
             valMemory = 0
-        case "+","-","*","/","=","m+","m-","CR","SR":
+        case "+","-","x","/","=","m+","m-","CR","SR":
             //這幾個運算子將結束組字並做運算；CR立方根、SR平方根
             //之前有op則先拿來和現在剛輸入的數值做運算
             switch opBuffer {
@@ -62,7 +57,7 @@ class calcConvert {
                     valBuffer=valBuffer+digBuffer
                 case "-":
                     valBuffer=valBuffer-digBuffer
-                case "*":
+                case "x":
                     valBuffer=valBuffer*digBuffer
                 case "/":
                     valBuffer=valBuffer/digBuffer
@@ -73,7 +68,7 @@ class calcConvert {
                         valBuffer=digBuffer
                     }
                 case "CR","SR":
-                    if digBuffer != 0 {     //前組字中開根，然後呢？
+                    if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
                         valBuffer=digBuffer
                     }
                 default:
@@ -82,23 +77,39 @@ class calcConvert {
                         valBuffer=digBuffer
                     }
             }
-            switch inputedKey {
-                case "m+":
-                    valMemory=valMemory+valBuffer
-                case "m-":
-                    valMemory=valMemory-valBuffer
-                case "CR":
-                    valBuffer=cbrt(valBuffer)
-                case "SR":
-                    valBuffer=sqrt(valBuffer)
-                default:
-                    break
+            if txtBuffer != "" {
+                historyList.append(txtBuffer)
+                historyText+=String(format:"%."+precisionForHistory+"g",digBuffer)
             }
-
-//            historyList.append(txtBuffer)
-//            historyList.append(inputedKey)
-//            historyBuffer+=txtBuffer
-//            historyBuffer+=inputedKey
+            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "CR" && opBuffer != "SR" && opBuffer != "m+" && opBuffer != "m-" && opBuffer != "") {
+                //抑制無效的=出現。哪些是無效的=，即之前opBuffer不是=,CR,SR,m+,m-等會導致輸出結果的運算子
+                historyList.append(inputedKey)
+                historyText+=inputedKey
+            }
+            switch inputedKey {
+            case "m+","m-","CR","SR","=":
+                 switch inputedKey {
+                    case "m+":
+                        valMemory=valMemory+valBuffer
+                    case "m-":
+                        valMemory=valMemory-valBuffer
+                    case "CR":
+                        valBuffer=cbrt(valBuffer)
+                    case "SR":
+                        valBuffer=sqrt(valBuffer)
+                    default:
+                        break
+                }
+                //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號。
+                if inputedKey != "=" || (opBuffer != "=" && opBuffer != "CR" && opBuffer != "SR" && opBuffer != "m+" && opBuffer != "m-" && opBuffer != "") {
+                    if inputedKey == "CR" || inputedKey == "SR" {
+                        historyText += "+"
+                    }
+                    historyText += " " + String(format:"%."+precisionForHistory+"g",valBuffer)
+                }
+           default:
+                break
+            }
 
             txtBuffer=""
             digBuffer=0
@@ -107,10 +118,14 @@ class calcConvert {
             if opBuffer == "=" {    //如果之前已按=結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
                 valBuffer=0
                 opBuffer=""
+                historyText+=" "    //此時用空格表示段落，以增加可讀性
             }
             if inputedKey=="mr" {
                 txtBuffer=String(format:"%."+precision+"g",valMemory)
                 digBuffer=valMemory
+                //mr等於重新組字，所以空格表示段落，但要等組字完成才提示數值
+                historyList.append(inputedKey)
+                historyText+=" "+inputedKey
             } else {
                 if txtBuffer == "0" && inputedKey != "." { txtBuffer="" } //如果組數字時已有前導零，又不是組小數，則清除前導零
                 if txtBuffer == ""  && inputedKey == "." { txtBuffer="0"} //如果組字是初始empty又接小數點，則補前導零
@@ -165,7 +180,10 @@ class calcConvert {
         ]
     let currencyList:([[String]]) = [["台幣","日圓","美元","歐元","人民幣","港幣"]]
     let currencyCode:([String]) = ["TWD","JPY","USD","EUR","CNY","HKD"] //這是Yahoo的查詢代碼
-    var currencyTime:NSDate?  //取得匯率的時間
+//        let currencyList:([[String]]) = [["美元","歐元","港幣","人民幣","台幣","日圓"]]
+//        let currencyCode:([String]) = ["USD","EUR","HKD","CNY","TWD","JPY"] //這是Yahoo的查詢代碼
+    var currencyTime:NSDate?  //最後成功取得全部匯率的時間
+    var queryTime:NSDate?     //查詢當中的時間
 
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
     //這是3維陣列：[度量種類][原單位][新單位]
@@ -221,8 +239,17 @@ class calcConvert {
         } else {
             output = valBuffer * factor0 / factor1
         }
+
+        //轉換的提示以=開始，然後提示轉換後的數值和單位
+        if output != 0 {
+            historyText += "=" + String(format:"%."+precisionForHistory+"g",output) + (priceConverting ? "@" : "") + unit[categoryIndex][unitIndexTo]
+        }
+        historyList.append(unit[categoryIndex][unitIndexTo])
+
         unitIndex=unitIndexTo
+
         valBuffer=output
+
         return valBuffer
     }
 
@@ -233,7 +260,7 @@ class calcConvert {
         var allRateUpdated:Bool = true
         for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
             for (indexTo,codeTo) in self.currencyCode.enumerate() {
-                if indexFrom < indexTo {
+                if indexFrom != indexTo {
                     dispatch_group_enter(dispatchGroup)
                         let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
                         let request = NSURLRequest(URL: url!)
@@ -241,14 +268,14 @@ class calcConvert {
                             if error == nil {
                                 if let downloadedData = NSString(data: data!, encoding: NSUTF8StringEncoding) {
                                     self.exchangeRate[0][indexFrom][indexTo].0 = Double(downloadedData.componentsSeparatedByString(",")[1])!
-                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
+//                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
                                     let d = downloadedData.componentsSeparatedByString(",")[2].stringByReplacingOccurrencesOfString("\"", withString: "")
                                     let t = downloadedData.componentsSeparatedByString(",")[3].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "").uppercaseString
                                     let dateFormatter = NSDateFormatter()
                                     dateFormatter.locale=NSLocale(localeIdentifier: "us")
-                                    dateFormatter.dateFormat = "M/d/yyyyh:mmazzz"
-                                    if let dt = dateFormatter.dateFromString(d+t+"GMT") {
-                                        self.currencyTime = dt
+                                    dateFormatter.dateFormat = "M/d/yyyy h:mma zzz"
+                                    if let dt = dateFormatter.dateFromString(d+" "+t+" GMT") {
+                                        self.queryTime = dt
                                     }
                                 }
                             } else {
@@ -266,6 +293,9 @@ class calcConvert {
                 self.convertX = self.convertXList + self.exchangeRate
                 self.unit = self.unitList + self.currencyList
                 self.category = self.categoryList + self.currencyCategory
+                if let _ = self.queryTime {
+                    self.currencyTime = self.queryTime! //這裡沒有!會當掉
+                }
             } else {
                 self.currencyTime = nil
             }

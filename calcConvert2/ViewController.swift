@@ -18,7 +18,7 @@ class ViewController: UIViewController, tableViewDelegate {
     @IBOutlet weak var uiOutput: UILabel!
     @IBOutlet weak var uiMemory: UILabel!
     @IBOutlet weak var uiUnits: UISegmentedControl!
-    @IBOutlet weak var uiHistory: UITextView!
+    @IBOutlet weak var uiHistory: UILabel!
 
 
     override func viewDidLoad() {
@@ -35,7 +35,6 @@ class ViewController: UIViewController, tableViewDelegate {
         } else {
             precision=precisionShort
         }
-
         changedSetting(withIndex: calc.categoryIndex,priceConverting:calc.priceConverting) //起始度量種類是0重量，單價換算是關閉
         
     }
@@ -44,7 +43,7 @@ class ViewController: UIViewController, tableViewDelegate {
         super.viewWillAppear(animated)
         //進入畫面時，試一次查詢匯率
         if let _ = calc.currencyTime {
-            if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 1 {
+            if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 30 {
                 calc.getExchangeRate()  //30分鐘後重新查詢匯率
             }
         } else  {
@@ -79,10 +78,11 @@ class ViewController: UIViewController, tableViewDelegate {
         }
         uiUnits.selectedSegmentIndex=0
         calc.unitIndex=uiUnits.selectedSegmentIndex
-    }
+        calc.historyText += " " + calc.unit[calc.categoryIndex][calc.unitIndex] + " "
+     }
 
     @IBAction func SegUnitValueChanged(sender: UISegmentedControl) {
-        //度量單位改變時，相當於先按=取得計算機結果、轉換、傳送empty輸出轉換結果
+        //度量單位改變時，傳送=取得計算機結果、轉換、傳送empty輸出轉換結果
         calcKeyIn("=")
         calc.unitConvert(sender.selectedSegmentIndex)
         calcKeyIn("")
@@ -119,15 +119,18 @@ class ViewController: UIViewController, tableViewDelegate {
 
     func calcKeyIn(key: String) {
         if calc.keyIn(key) == "" {
+//            uiOutput.text = String(format:"%."+precision+"g",(calc.categoryIndex == 3 ? round(10000.0*calc.valBuffer)/10000.0 : calc.valBuffer))
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
-            uiHistory.text = calc.historyBuffer
+            uiHistory.text = calc.historyText
         } else {
             uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer)
         }
         if calc.valMemory == 0 {
             uiMemory.text = ""
+            uiHistory.text = calc.historyText
         } else {
             uiMemory.text = "m = "+String(format:"%."+precision+"g",calc.valMemory)
+            uiHistory.text = calc.historyText
         }
     }
 
@@ -174,7 +177,7 @@ class ViewController: UIViewController, tableViewDelegate {
         calcKeyIn("-")
     }
     @IBAction func uiKeyMutiply(sender: UIButton) {
-        calcKeyIn("*")
+        calcKeyIn("x")
     }
     @IBAction func uiKeyDivide(sender: UIButton) {
         calcKeyIn("/")

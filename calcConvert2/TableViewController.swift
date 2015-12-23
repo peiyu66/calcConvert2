@@ -34,13 +34,13 @@ class TableViewController: UITableViewController ,cellDelegate {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
+        checkCurrencyTime()
 
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        checkCurrencyTime()
-     }
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//     }
 
 
     override func didReceiveMemoryWarning() {
@@ -64,7 +64,7 @@ class TableViewController: UITableViewController ,cellDelegate {
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
             dateFormatter.locale = NSLocale(localeIdentifier: "us")
-            uiMessage.text=helpMessage+"匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)
+            uiMessage.text=helpMessage+"Yahoo!匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)
         } else {
             uiMessage.text=helpMessage+"還在等候連網取得匯率查詢，成功時度量種類才會出現匯兌選項。"
         }
