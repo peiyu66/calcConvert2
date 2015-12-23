@@ -19,6 +19,12 @@ class TableViewController: UITableViewController ,cellDelegate {
     var lastSwitchStatus:Bool=false
     var viewDelegate:tableViewDelegate?
     var uiPriceConverting:UISwitch?
+    var currencyTime:String=""
+
+    @IBOutlet weak var uiMessage: UITextView!
+
+    let helpMessage:String = "使用單價換算：先選公克再輸入1，代表每公克單價1元，然後切換至公斤得每公斤1000元。這就是單價換算的操作方式。\n\n"
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +34,14 @@ class TableViewController: UITableViewController ,cellDelegate {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
+
     }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        checkCurrencyTime()
+     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,7 +58,18 @@ class TableViewController: UITableViewController ,cellDelegate {
     }
 
 
+    func checkCurrencyTime () {
+        //檢查匯率查詢時間，在說明欄顯示
+        if let _=calc!.currencyTime {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
+            dateFormatter.locale = NSLocale(localeIdentifier: "us")
+            uiMessage.text=helpMessage+"匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)
+        } else {
+            uiMessage.text=helpMessage+"還在等候連網取得匯率查詢，成功時度量種類才會出現匯兌選項。"
+        }
 
+    }
 
     // MARK: - Table view data source
 
@@ -55,6 +79,9 @@ class TableViewController: UITableViewController ,cellDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
+            if calc!.category.count == (calc!.categoryList.count + 1) {
+                checkCurrencyTime ()
+            }
             return calc!.category.count
         }
         return 1

@@ -37,10 +37,21 @@ class ViewController: UIViewController, tableViewDelegate {
         }
 
         changedSetting(withIndex: calc.categoryIndex,priceConverting:calc.priceConverting) //起始度量種類是0重量，單價換算是關閉
-
-        calc.getExchangeRate()  //查詢匯率
-
+        
     }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        //進入畫面時，試一次查詢匯率
+        if let _ = calc.currencyTime {
+            if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 1 {
+                calc.getExchangeRate()  //30分鐘後重新查詢匯率
+            }
+        } else  {
+            calc.getExchangeRate()  //還沒成功查過就重試查詢匯率
+        }
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -91,12 +102,16 @@ class ViewController: UIViewController, tableViewDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        let destViewController = segue.destinationViewController as! TableViewController
-        destViewController.viewDelegate=self
-        destViewController.calc = calc
-        let backItem = UIBarButtonItem()
-        backItem.title = ""
-        navigationItem.backBarButtonItem = backItem
+        if segue.identifier == "segueTableView" {
+            if let destViewController = segue.destinationViewController as? TableViewController {
+                destViewController.viewDelegate=self
+                destViewController.calc = calc
+                let backItem = UIBarButtonItem()
+                backItem.title = ""
+                navigationItem.backBarButtonItem = backItem
+            }
+        }
+
     }
 
 

@@ -22,6 +22,13 @@ class calcConvert {
     let precision:String="15" //最高精度是15
 
 
+
+    init () {
+        convertX = convertXList
+        category = categoryList
+        unit = unitList
+    }
+
     func keyIn (inputedKey: String) -> String {
         //組字及運算：valBuffer得到值之後，就把組字中txtBuffer清為empty，並輸出valBuffer
         //如果收到的字是=開頭的數值，則直接帶入數值當作結果
@@ -138,18 +145,31 @@ class calcConvert {
 
 
     //*****度量衡轉換的部份*****
+    var categoryIndex:Int = 0         //目前度量種類
+    var unitIndex:Int = 0             //保留前單位
     var priceConverting:Bool=false    //單價換算是否啟動
+
+
     //度量種類
-    var category:([String]) =  ["重量","長度","面積"]
+    var category:([String])           //在init()會塞入categoryList這個大陣列，之後取得匯率時再加入currencyCategory
+    let categoryList:([String]) =  ["重量","長度","面積"]
+    let currencyCategory:([String])=["匯兌"]
+
+
     //單位
-    var unit:([[String]]) =  [
+    var unit:([[String]])            //在init()會塞入unitList這個陣列，之後取得匯率時再加入currencyList
+    var unitList:([[String]]) =  [
             ["公斤","公克","台斤","台兩","磅","盎司"],   // 重量
             ["公尺","公分","台尺","英尺","英寸"],       // 長度
             ["平方公尺","平方英尺","坪"]               // 面積
         ]
+    let currencyList:([[String]]) = [["台幣","日圓","美元","歐元","人民幣","港幣"]]
+    let currencyCode:([String]) = ["TWD","JPY","USD","EUR","CNY","HKD"] //這是Yahoo的查詢代碼
+    var currencyTime:NSDate?  //取得匯率的時間
+
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
     //這是3維陣列：[度量種類][原單位][新單位]
-    var convertX:([[[(Double,Double)]]]) = [
+    let convertXList:([[[(Double,Double)]]]) = [
         //重量
         [   //  公斤              公克              台斤             台兩            磅             盎司
             [(1.0,1.0),         (1000.0,1.0),   (5.0,3.0),   (80.0,3.0), (1.0,0.45359237),(16.0,0.45359237)],  // 公斤 3公斤=5台斤
@@ -176,24 +196,20 @@ class calcConvert {
             [(400.0,121.0),(400.0,11.241268),  (1.0,1.0)]           //坪 11.241268坪=400平方英尺
         ]
     ]
-
+    var convertX:([[[(Double,Double)]]])    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
     var exchangeRate:([[[(Double,Double)]]]) = [[
-        //台幣        日圓      美金      歐元       人民幣    港幣
+        //台幣        日圓      美元      歐元       人民幣    港幣
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //台幣
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //日圓
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //美金
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //美元
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //歐元
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //人民幣
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]   //港幣
     ]]
 
-    let currencyCategory:([String])=["匯兌"]
-    let currencyList:([[String]]) = [["台幣","日圓","美金","歐元","人民幣","港幣"]]
-    let currencyCode:([String]) = ["TWD","JPY","USD","EUR","CNY","HKD"]
 
 
-    var categoryIndex:Int = 0   //目前度量種類
-    var unitIndex:Int = 0       //保留前單位
+
 
 
     func unitConvert (unitIndexTo:Int) -> Double {
@@ -217,7 +233,7 @@ class calcConvert {
         var allRateUpdated:Bool = true
         for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
             for (indexTo,codeTo) in self.currencyCode.enumerate() {
-                if indexFrom != indexTo {
+                if indexFrom < indexTo {
                     dispatch_group_enter(dispatchGroup)
                         let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
                         let request = NSURLRequest(URL: url!)
@@ -225,7 +241,15 @@ class calcConvert {
                             if error == nil {
                                 if let downloadedData = NSString(data: data!, encoding: NSUTF8StringEncoding) {
                                     self.exchangeRate[0][indexFrom][indexTo].0 = Double(downloadedData.componentsSeparatedByString(",")[1])!
-//                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
+                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
+                                    let d = downloadedData.componentsSeparatedByString(",")[2].stringByReplacingOccurrencesOfString("\"", withString: "")
+                                    let t = downloadedData.componentsSeparatedByString(",")[3].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "").uppercaseString
+                                    let dateFormatter = NSDateFormatter()
+                                    dateFormatter.locale=NSLocale(localeIdentifier: "us")
+                                    dateFormatter.dateFormat = "M/d/yyyyh:mmazzz"
+                                    if let dt = dateFormatter.dateFromString(d+t+"GMT") {
+                                        self.currencyTime = dt
+                                    }
                                 }
                             } else {
                                 allRateUpdated = false
@@ -239,9 +263,11 @@ class calcConvert {
         }
         dispatch_group_notify(dispatchGroup,dispatch_get_main_queue(), {
             if allRateUpdated {
-                self.category += self.currencyCategory;
-                self.unit += self.currencyList;
-                self.convertX += self.exchangeRate;
+                self.convertX = self.convertXList + self.exchangeRate
+                self.unit = self.unitList + self.currencyList
+                self.category = self.categoryList + self.currencyCategory
+            } else {
+                self.currencyTime = nil
             }
         })
 
