@@ -24,6 +24,7 @@ class calcConvert {
 
 
     init () {
+        //建立轉換係數等陣列，後續查詢匯率成功時，還會加入匯率係數，不成功就維持初始狀態
         convertX = convertXList
         category = categoryList
         unit = unitList
@@ -50,34 +51,35 @@ class calcConvert {
             valMemory = 0
             historyText+=inputedKey
         case "+","-","x","/","=","[m+]","[m-]","[CR]","[SR]":
-            //這幾個運算子將結束組字並做運算；CR立方根、SR平方根
+            //這幾個運算子將結束組字並做運算；CR立方根、SR平方根、"→"是度量轉換但在unitConvert()已經處理了
             //之前有op則先拿來和現在剛輸入的數值做運算
             if txtBuffer != "" {
                 //                historyList.append(txtBuffer)
                 historyText+=String(format:"%."+precisionForHistory+"g",digBuffer)
             }
             switch opBuffer {
-                case "+":
-                    valBuffer=valBuffer+digBuffer
-                case "-":
-                    valBuffer=valBuffer-digBuffer
-                case "x":
-                    valBuffer=valBuffer*digBuffer
-                case "/":
-                    valBuffer=valBuffer/digBuffer
-                case "=":
-                    break
-                case "[m+]","[m-]","[CR]","[SR]":
-                    if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
-                        valBuffer=digBuffer
-                    }
-                default:
-                    //第一次沒有前運算子時，把組字結果做值輸出
-                    if txtBuffer != "" {
-                        valBuffer=digBuffer
-                    }
+            case "+":
+                valBuffer=valBuffer+digBuffer
+            case "-":
+                valBuffer=valBuffer-digBuffer
+            case "x":
+                valBuffer=valBuffer*digBuffer
+            case "/":
+                valBuffer=valBuffer/digBuffer
+            case "=":
+                break
+            case "[m+]","[m-]","[CR]","[SR]":
+                if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
+                    valBuffer=digBuffer
+                }
+            default:
+                //包括第一次沒有前運算子時，把組字結果做值輸出
+                if txtBuffer != "" {
+                    valBuffer=digBuffer
+                }
+
             }
-            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "") {
+            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
                 //抑制無效的=出現。哪些是無效的=，即之前opBuffer不是=,CR,SR,[m+],[m-]等會導致輸出結果的運算子
                 historyText+=inputedKey
             }
@@ -95,8 +97,8 @@ class calcConvert {
                     default:
                         break
                 }
-                //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號。
-                if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "") {
+                //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號所產生的結果。
+                if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
                     if inputedKey == "[CR]" || inputedKey == "[SR]" {
                         historyText += "="
                     }
@@ -112,12 +114,10 @@ class calcConvert {
         case "0","1","2","3","4","5","6","7","8","9",".","[mr]":
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
-            case "[m+]","[m-]","[CR]","[SR]","=":
+            case "[m+]","[m-]","[CR]","[SR]","=","→":    //度量轉換時，opBuffer是"→"
                 valBuffer=0
                 opBuffer=""
-                if inputedKey != "" {   //度量轉換時符合先=後empty的情形，則抑制,輸出
-                    historyText+=","    //此時分段落，以增加可讀性
-                }
+                historyText+=","    //此時分段落，以增加可讀性
             default:
                 break
             }
@@ -251,10 +251,8 @@ class calcConvert {
 
 
     func changeUnitInHistoryText () ->String {
-        historyText += (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": "
-        if valBuffer != 0 {
-            historyText += String(format:"%."+precisionForHistory+"g",valBuffer) + (txtBuffer == "" ? "" : opBuffer)
-        }
+        //變換度量單位時輸出：[@]<單位名稱>：[目前數值][前運算子] opBuffer代表剛開始沒有前運算子則不輸出0
+        historyText += (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",valBuffer)) + (txtBuffer == "" ? "" : opBuffer)
         return self.historyText
     }
 
@@ -264,6 +262,7 @@ class calcConvert {
         var output:Double=0
         let factor0=convertX[categoryIndex][unitIndex][unitIndexTo].0
         let factor1=convertX[categoryIndex][unitIndex][unitIndexTo].1
+        self.keyIn("=") //先取得計算機的結果
         if priceConverting {
             output = valBuffer * factor1 / factor0    //單價換算時，轉換係數的分子分母顛倒
         } else {
@@ -272,6 +271,7 @@ class calcConvert {
 
         //轉換的提示以箭頭符號開始，然後提示轉換後的數值和單位
         if output != 0 {
+            opBuffer = "→"  //代表這次不是加減乘除，是度量轉換
             historyText += "→"
         }
 
@@ -332,6 +332,7 @@ class calcConvert {
                         
                     }
                 }
+                //把匯率加入到度量轉換係數的大陣列
                 self.convertX = self.convertXList + self.exchangeRate
                 self.unit = self.unitList + self.currencyList
                 self.category = self.categoryList + self.currencyCategory

@@ -45,7 +45,7 @@ class ViewController: UIViewController, tableViewDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //進入畫面時，檢查匯率查詢
+        //進入畫面時，檢查匯率查詢，例如從設定畫面切回到主畫面就會檢查一次
         if let _ = calc.currencyTime {
             if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 30 {
                 calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
@@ -143,20 +143,23 @@ class ViewController: UIViewController, tableViewDelegate {
 
     //轉換unit作換算
     @IBAction func uiUnitValueChanged(sender: UISegmentedControl) {
-        //度量單位改變時，傳送=取得計算機結果、轉換、傳送empty輸出轉換結果
-        calcKeyIn("=")
+        //度量單位改變時，傳送=取得計算機結果、轉換並以"→"作運算子、輸出轉換結果
         uiHistory.text = calc.unitConvert(sender.selectedSegmentIndex)
-        calcKeyIn("")
-
+        outputText ()
     }
 
     //按鍵和輸出的統一處理
     func calcKeyIn(key: String) {
         uiHistory.text = calc.keyIn(key) //計算和輸出歷程
+        outputText ()
+
+    }
+
+    func outputText () {
         //顯示計算結果
         if calc.txtBuffer == "" {
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
-         } else {
+        } else {
             uiOutput.text = calc.txtBuffer //String(format:"%."+precision+"g",calc.digBuffer)
         }
         //顯示暫存值
