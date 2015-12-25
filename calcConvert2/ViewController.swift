@@ -19,12 +19,14 @@ class ViewController: UIViewController, tableViewDelegate {
     @IBOutlet weak var uiMemory: UILabel!
     @IBOutlet weak var uiUnits: UISegmentedControl!
     @IBOutlet weak var uiHistory: UILabel!
+    @IBOutlet weak var uiHistoryScrollView: UIScrollView!
+    @IBOutlet weak var uiHistoryContentView: UIView!
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Initialize the output labels.
-        uiOutput.adjustsFontSizeToFitWidth=true
+        uiOutput.adjustsFontSizeToFitWidth=true //數字太常時會自動縮小字級
         uiMemory.adjustsFontSizeToFitWidth=true
         uiOutput.text="0"
         uiMemory.text=""
@@ -35,21 +37,23 @@ class ViewController: UIViewController, tableViewDelegate {
         } else {
             precision=precisionShort
         }
-        populateSegmentUnits(calc.categoryIndex)  //建立度量單位的選項
 
+        //啟始category度量種類
+        changeCategory(withCategory: 0, priceConverting: false) //這會帶動unit刷新後在historyText顯示第一個度量單位名稱
+        changeHistorySwitch(withSwitch: false)  //這會在初始時隱藏historyText
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //進入畫面時，試一次查詢匯率
+        //進入畫面時，檢查匯率查詢
         if let _ = calc.currencyTime {
             if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 30 {
-                calc.getExchangeRate()  //30分鐘後重新查詢匯率
+                calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
             }
         } else  {
             calc.getExchangeRate()  //還沒成功查過就重試查詢匯率
         }
-    }
+     }
 
 
     override func didReceiveMemoryWarning() {
@@ -57,26 +61,24 @@ class ViewController: UIViewController, tableViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    //設定category度量種類
-    func changedSetting(withIndex index: Int?, priceConverting: Bool?, historySwitch:Bool?) {
-        if calc.categoryIndex != index! {
-            calc.categoryIndex=index!
-            populateSegmentUnits(calc.categoryIndex)  //度量種類改變時，重新建立度量單位的選項
-            calc.historyText += " " + calc.unit[calc.categoryIndex][calc.unitIndex] + " "
-        }
-        calc.priceConverting=priceConverting!
-        calc.historySwitch=historySwitch!
-        if calc.historySwitch == true {
-            uiHistory.text = calc.historyText
-        } else {
-            uiHistory.text = ""
-        }
-        navigationItem.title="度量："+calc.category[calc.categoryIndex]
-        if calc.priceConverting {
-            navigationItem.title=navigationItem.title!+"，單價換算＄"
-        }
-
+    //啟始或變換category度量種類
+    func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool) {
+        uiHistory.text = calc.setCategoryAndPriceConverting(withCategory: categoryIndex, priceConverting: priceConverting)   //這會帶動將unit初始為第1個度量單位
+        populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
+        navigationItem.title = "度量：" + calc.category[categoryIndex] + (calc.priceConverting ? "，單價換算＄" : "")
     }
+
+    //啟始或變換單價換算開關
+    func changePriceConverting(withSwitch priceConverting:Bool) {
+        uiHistory.text = calc.setPriceConvertingOnly(withSwitch:priceConverting)
+    }
+
+    //啟始或變換計算歷程顯示開關
+    func changeHistorySwitch(withSwitch historySwitch:Bool) {
+        calc.setHistorySwitch(withSwitch:historySwitch)
+        uiHistoryScrollView.hidden = (calc.historySwitch ? false : true)
+    }
+
 
     //產生units選項
     func populateSegmentUnits (catalogIndex:IntegerLiteralType) {
@@ -85,16 +87,9 @@ class ViewController: UIViewController, tableViewDelegate {
         for tx in calc.unit[catalogIndex] {
             uiUnits.insertSegmentWithTitle(tx, atIndex: uiUnits.numberOfSegments, animated: false)
         }
-        uiUnits.selectedSegmentIndex=0
-        calc.unitIndex=uiUnits.selectedSegmentIndex
+        uiUnits.selectedSegmentIndex=calc.unitIndex  //起始應為第1個度量單位
      }
 
-    @IBAction func SegUnitValueChanged(sender: UISegmentedControl) {
-        //度量單位改變時，傳送=取得計算機結果、轉換、傳送empty輸出轉換結果
-        calcKeyIn("=")
-        calc.unitConvert(sender.selectedSegmentIndex)
-        calcKeyIn("")
-    }
 
 
     //機體旋轉時
@@ -107,6 +102,7 @@ class ViewController: UIViewController, tableViewDelegate {
         calcKeyIn("") //重新輸出數值
     }
 
+    //將要進入設定畫面時，帶入calc物件、清除back按鈕的名稱（太長了難看）
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
@@ -122,26 +118,55 @@ class ViewController: UIViewController, tableViewDelegate {
 
     }
 
+    //uiHistory更新時會改變scrollView的layout，這時做自動捲動
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        //捲動位置是historyText的長度減去scrollView的寬度，也就是靠右顯示
+        var cg = CGPointMake((uiHistoryScrollView.contentSize.width - uiHistoryScrollView.bounds.size.width), self.uiHistoryScrollView.contentOffset.y)
+        //雖然說layout更新了，不知為什麼有時不會馬上刷新historyText的寬度，所以捲動的程式指派給非同步的系統排程去執行
+        dispatch_async(dispatch_get_main_queue(), {
+            //這一行就是捲動
+            self.uiHistoryScrollView.setContentOffset(cg, animated: true)
 
-    //計算機介面
+            //不知為什麼即使非同步，有時還是沒來得及刷新historyText的寬度，所以再檢查一次
+            cg = CGPointMake((self.uiHistoryScrollView.contentSize.width - self.uiHistoryScrollView.bounds.size.width), self.uiHistoryScrollView.contentOffset.y)
+            //如果沒來得及刷新也沒關係，再捲一次就會到位了
+            if cg.x != self.uiHistoryScrollView.contentOffset.x {
+                self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+            }
+        })
 
+    }
+
+
+    //計算機按鍵的介面
+
+    //轉換unit作換算
+    @IBAction func uiUnitValueChanged(sender: UISegmentedControl) {
+        //度量單位改變時，傳送=取得計算機結果、轉換、傳送empty輸出轉換結果
+        calcKeyIn("=")
+        uiHistory.text = calc.unitConvert(sender.selectedSegmentIndex)
+        calcKeyIn("")
+
+    }
+
+    //按鍵和輸出的統一處理
     func calcKeyIn(key: String) {
-        if calc.keyIn(key) == "" {
-//            uiOutput.text = String(format:"%."+precision+"g",(calc.categoryIndex == 3 ? round(10000.0*calc.valBuffer)/10000.0 : calc.valBuffer))
+        uiHistory.text = calc.keyIn(key) //計算和輸出歷程
+        //顯示計算結果
+        if calc.txtBuffer == "" {
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
          } else {
-            uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer)
+            uiOutput.text = calc.txtBuffer //String(format:"%."+precision+"g",calc.digBuffer)
         }
+        //顯示暫存值
         if calc.valMemory == 0 {
             uiMemory.text = ""
         } else {
             uiMemory.text = "m = "+String(format:"%."+precision+"g",calc.valMemory)
         }
-        if calc.historySwitch == true {
-            uiHistory.text = calc.historyText
-        } else {
-            uiHistory.text = ""
-        }
+
+
     }
 
     @IBAction func uiKey1(sender: UIButton) {
@@ -178,7 +203,7 @@ class ViewController: UIViewController, tableViewDelegate {
         calcKeyIn(".")
     }
     @IBAction func uiKeyClear(sender: UIButton) {
-        calcKeyIn("C")
+        calcKeyIn("[C]")
     }
     @IBAction func uiKeyPlus(sender: UIButton) {
         calcKeyIn("+")
@@ -196,26 +221,26 @@ class ViewController: UIViewController, tableViewDelegate {
         calcKeyIn("=")
     }
     @IBAction func uiKeySquareRoot(sender: UIButton) {
-        calcKeyIn("SR")
+        calcKeyIn("[SR]")
     }
     @IBAction func uiKeyCubeRoot(sender: UIButton) {
-        calcKeyIn("CR")
+        calcKeyIn("[CR]")
     }
     @IBAction func uiKeyMPlus(sender: UIButton) {
-        calcKeyIn("m+")
+        calcKeyIn("[m+]")
     }
     @IBAction func uiKeyMMinus(sender: UIButton) {
-        calcKeyIn("m-")
+        calcKeyIn("[m-]")
     }
     @IBAction func uiKeyMRecall(sender: UIButton) {
-        calcKeyIn("mr")
+        calcKeyIn("[mr]")
     }
     @IBAction func uiKeyMClear(sender: UIButton) {
-        calcKeyIn("mc")
+        calcKeyIn("[mc]")
     }
 
     @IBAction func uiKeyBack(sender: UIButton) {
-        calcKeyIn("back")
+        calcKeyIn("[back]")
     }
 
 

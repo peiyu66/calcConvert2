@@ -9,7 +9,9 @@
 import UIKit
 
 protocol tableViewDelegate: class {
-    func changedSetting(withIndex index: Int?, priceConverting: Bool?, historySwitch:Bool?)
+    func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool)
+    func changePriceConverting(withSwitch priceConverting:Bool)
+    func changeHistorySwitch(withSwitch historySwitch:Bool)
 }
 
 class TableViewController: UITableViewController ,cellDelegate {
@@ -51,9 +53,16 @@ class TableViewController: UITableViewController ,cellDelegate {
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        if (lastSelectedIndexPath?.row != calc!.categoryIndex || lastPriceSwitchStatus != calc!.priceConverting  || lastHistorySwitchStatus != calc!.historySwitch) {
-
-            viewDelegate?.changedSetting(withIndex: lastSelectedIndexPath?.row, priceConverting: lastPriceSwitchStatus, historySwitch: lastHistorySwitchStatus)
+        if (lastSelectedIndexPath?.row != calc!.categoryIndex) ||  lastPriceSwitchStatus != calc!.priceConverting {
+            //只要category變了必須帶動刷新PriceConverting（顯示是否帶單價符號的單位名稱），所以不必重複叫
+            if (lastSelectedIndexPath?.row != calc!.categoryIndex) {
+                viewDelegate?.changeCategory(withCategory:(lastSelectedIndexPath?.row)!, priceConverting:lastPriceSwitchStatus)
+            } else {
+                viewDelegate?.changePriceConverting(withSwitch: lastPriceSwitchStatus)
+            }
+         }
+        if lastHistorySwitchStatus != calc!.historySwitch {
+            viewDelegate?.changeHistorySwitch(withSwitch: lastHistorySwitchStatus)
         }
 
     }
@@ -65,7 +74,7 @@ class TableViewController: UITableViewController ,cellDelegate {
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
             dateFormatter.locale = NSLocale(localeIdentifier: "us")
-            uiMessage.text=helpMessage+"Yahoo!匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)
+            uiMessage.text=helpMessage+"Yahoo!匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n為了消除換算誤差，匯率將以美金為基準。例如台幣換日圓是台幣對美金價格再換成日幣，而不是採市場的台幣對日幣價格。"
         } else {
             uiMessage.text=helpMessage+"還在等候連網取得匯率查詢，成功時度量種類才會出現匯兌選項。"
         }
@@ -106,6 +115,7 @@ class TableViewController: UITableViewController ,cellDelegate {
             let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
             if indexPath.row == 1 {
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
                 lastPriceSwitchStatus=calc!.priceConverting
                 cell.uiSwitch.on=lastPriceSwitchStatus
                 cell.uiSwitchLabel.text="單價換算"
@@ -117,6 +127,7 @@ class TableViewController: UITableViewController ,cellDelegate {
                 uiPriceConverting=cell.uiSwitch
             } else {
                 lastHistorySwitchStatus=calc!.historySwitch
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.uiSwitch.on=lastHistorySwitchStatus
                 cell.uiSwitchLabel.text="計算歷程"
             }
