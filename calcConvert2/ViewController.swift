@@ -13,7 +13,6 @@ class ViewController: UIViewController, tableViewDelegate {
     let precisionLong:String   = "15"
     let precisionShort:String  = "8"
     var calc:calcConvert = calcConvert()
-    var precision:String = ""
 
     @IBOutlet weak var uiOutput: UILabel!
     @IBOutlet weak var uiMemory: UILabel!
@@ -33,9 +32,9 @@ class ViewController: UIViewController, tableViewDelegate {
         uiHistory.text=""
 
         if (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation)) {
-            precision=precisionLong
+            calc.setPrecisionForOutput (withPrecision: precisionLong)
         } else {
-            precision=precisionShort
+            calc.setPrecisionForOutput (withPrecision: precisionShort)
         }
 
         //啟始category度量種類
@@ -80,6 +79,12 @@ class ViewController: UIViewController, tableViewDelegate {
         uiHistoryScrollView.hidden = (calc.historySwitch ? false : true)
     }
 
+    //啟始或變換限制小數位數開關
+    func changeRoundingSwitch(withScale scale:Double, roundingDisplay:Bool, roundingCalculation:Bool) {
+        calc.setRounding(withScale:scale, roundingDisplay:roundingDisplay,roundingCalculation:roundingCalculation)
+        outputText ()
+     }
+
 
     //產生units選項
     func populateSegmentUnits (catalogIndex:IntegerLiteralType) {
@@ -96,11 +101,11 @@ class ViewController: UIViewController, tableViewDelegate {
     //機體旋轉時
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-            precision=precisionLong
+            calc.setPrecisionForOutput (withPrecision: precisionLong)
         } else {
-            precision=precisionShort
+            calc.setPrecisionForOutput (withPrecision: precisionShort)
         }
-        calcKeyIn("") //重新輸出數值
+        outputText () //重新輸出數值
     }
 
     //將要進入設定畫面時，帶入calc物件、清除back按鈕的名稱（太長了難看）
@@ -158,19 +163,9 @@ class ViewController: UIViewController, tableViewDelegate {
 
     func outputText () {
         //顯示計算結果
-        if calc.txtBuffer == "" {
-            uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
-        } else {
-            uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer) //不使用txtBuffer因為mr後txtBuffer精度不準
-        }
+        uiOutput.text = calc.valueOutput
         //顯示暫存值
-        if calc.valMemory == 0 {
-            uiMemory.text = ""
-        } else {
-            uiMemory.text = "m = "+String(format:"%."+precision+"g",calc.valMemory)
-        }
-
-
+        uiMemory.text = calc.memoryOutput
     }
 
     @IBAction func uiKey1(sender: UIButton) {
