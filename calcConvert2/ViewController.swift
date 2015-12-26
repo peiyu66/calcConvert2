@@ -10,8 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, tableViewDelegate {
 
-    let precisionLong:String   = "15"
-    let precisionShort:String  = "8"
+    let precisionLong:String   = "16"
+    let precisionShort:String  = "9"
     var calc:calcConvert = calcConvert()
 
     @IBOutlet weak var uiOutput: UILabel!

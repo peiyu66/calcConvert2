@@ -30,8 +30,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="限制小數位數" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sHd-CJ-9aT" userLabel="uiLabel">
-                                            <rect key="frame" x="16" y="11" width="68" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="限制小數位數" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sHd-CJ-9aT" userLabel="uiLabel">
+                                            <rect key="frame" x="16" y="11" width="102" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -69,54 +69,37 @@
                                     <outlet property="uiSwitchLabel" destination="sHd-CJ-9aT" id="zBd-Ph-vZr"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellRoundingScale" id="ewS-TB-a92" customClass="cellSwitch" customModule="calcConvert2" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellStepper" id="ewS-TB-a92" customClass="cellStepper" customModule="calcConvert2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="202" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ewS-TB-a92" id="8ip-uJ-oOq">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="小數位數" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRQ-FY-xUL" userLabel="uiLabel">
-                                            <rect key="frame" x="16" y="11" width="68" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="小數位數 = 4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRQ-FY-xUL" userLabel="uiLabel">
+                                            <rect key="frame" x="16" y="11" width="98" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DiM-Rf-tlE" userLabel="uiScale">
-                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" maximumValue="15" translatesAutoresizingMaskIntoConstraints="NO" id="CIN-aY-Q1W">
+                                            <rect key="frame" x="482" y="7" width="94" height="29"/>
+                                            <connections>
+                                                <action selector="uiValueChanged:" destination="ewS-TB-a92" eventType="valueChanged" id="xwI-BE-1Oi"/>
+                                            </connections>
+                                        </stepper>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="DiM-Rf-tlE" firstAttribute="centerX" secondItem="8ip-uJ-oOq" secondAttribute="centerX" id="36K-TH-N7q"/>
-                                        <constraint firstItem="DiM-Rf-tlE" firstAttribute="centerY" secondItem="8ip-uJ-oOq" secondAttribute="centerY" id="ba3-ud-IAy"/>
-                                        <constraint firstItem="jRQ-FY-xUL" firstAttribute="leading" secondItem="8ip-uJ-oOq" secondAttribute="leadingMargin" constant="8" id="eOZ-n0-099"/>
                                         <constraint firstItem="jRQ-FY-xUL" firstAttribute="centerY" secondItem="8ip-uJ-oOq" secondAttribute="centerY" id="k5g-1a-gFU"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="CIN-aY-Q1W" secondAttribute="trailing" constant="16" id="m1J-ie-8c3"/>
+                                        <constraint firstItem="CIN-aY-Q1W" firstAttribute="centerY" secondItem="8ip-uJ-oOq" secondAttribute="centerY" id="meD-JT-OJ2"/>
                                         <constraint firstItem="jRQ-FY-xUL" firstAttribute="leading" secondItem="8ip-uJ-oOq" secondAttribute="leadingMargin" constant="8" id="r2o-wA-S50"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="subviews">
-                                            <exclude reference="DiM-Rf-tlE"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <exclude reference="36K-TH-N7q"/>
-                                            <exclude reference="ba3-ud-IAy"/>
-                                            <exclude reference="eOZ-n0-099"/>
-                                        </mask>
-                                    </variation>
-                                    <variation key="widthClass=compact">
-                                        <mask key="subviews">
-                                            <include reference="DiM-Rf-tlE"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <include reference="36K-TH-N7q"/>
-                                            <include reference="ba3-ud-IAy"/>
-                                            <include reference="eOZ-n0-099"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="uiStepper" destination="CIN-aY-Q1W" id="9y6-ee-acf"/>
+                                    <outlet property="uiStepperLabel" destination="jRQ-FY-xUL" id="b6V-JU-tyF"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol cellDelegate: class {
+protocol cellSwitchDelegate: class {
     func cellSwitchChanged(withStatus status:Bool?,cellSwitch:UITableViewCell?)
 
 }
 
 class cellSwitch: UITableViewCell {
 
-    var tableCellDelegate:cellDelegate?
+    var tableCellDelegate:cellSwitchDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,5 +39,33 @@ class cellSwitch: UITableViewCell {
 
 }
 
+protocol cellStepperDelegate: class {
+    func cellStepperValueChanged(withCell cell: cellStepper?)
+
+}
+
+class cellStepper: UITableViewCell {
+
+    var tableCellDelegate:cellStepperDelegate?
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+    @IBOutlet weak var uiStepperLabel: UILabel!
+    @IBOutlet weak var uiStepper: UIStepper!
 
 
+    @IBAction func uiValueChanged(sender: UIStepper) {
+        tableCellDelegate?.cellStepperValueChanged(withCell: self)
+    }
+
+
+}

@@ -15,7 +15,7 @@ protocol tableViewDelegate: class {
     func changeRoundingSwitch(withScale scale:Double, roundingDisplay:Bool, roundingCalculation:Bool)
 }
 
-class TableViewController: UITableViewController ,cellDelegate {
+class TableViewController: UITableViewController ,cellSwitchDelegate, cellStepperDelegate {
 
     var calc:calcConvert?
     var lastSelectedIndexPath:NSIndexPath?
@@ -43,8 +43,9 @@ class TableViewController: UITableViewController ,cellDelegate {
         lastRoundingCalculation=calc!.rounding
         lastPriceSwitchStatus=calc!.priceConverting
         lastHistorySwitchStatus=calc!.historySwitch
+        lastRoundingScale=calc!.roundingScale
 
-        checkCurrencyTime()
+        //checkCurrencyTime()
 
     }
 
@@ -142,6 +143,7 @@ class TableViewController: UITableViewController ,cellDelegate {
                 } else {
                     footer="等候連網查詢匯率....成功時才會出現「匯兌」選項。"
                 }
+
                 return footer
             }
 
@@ -165,7 +167,7 @@ class TableViewController: UITableViewController ,cellDelegate {
                 let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
                 cell.tableCellDelegate=self
                 cell.uiSwitch.on=lastRoundingDisplay
-                cell.uiSwitchLabel.text="顯示時固定小數位數"
+                cell.uiSwitchLabel.text="顯示數值時固定小數位數"
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 return cell
             case 1:
@@ -176,8 +178,11 @@ class TableViewController: UITableViewController ,cellDelegate {
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 return cell
             case 2:
-                let cell = tableView.dequeueReusableCellWithIdentifier("cellRoundingScale", forIndexPath: indexPath) as UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("cellStepper", forIndexPath: indexPath) as! cellStepper
+                cell.tableCellDelegate=self
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.uiStepper.value = log10(lastRoundingScale)
+                cell.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",cell.uiStepper.value)
                 return cell
             default:
                 break
@@ -234,6 +239,7 @@ class TableViewController: UITableViewController ,cellDelegate {
     }
 
 
+    // cellSwitchDelegate
     func cellSwitchChanged(withStatus status:Bool?,cellSwitch:UITableViewCell?) {
         let indexPath = self.tableView.indexPathForCell(cellSwitch!)
         switch indexPath!.section {
@@ -241,7 +247,7 @@ class TableViewController: UITableViewController ,cellDelegate {
             switch indexPath!.row {
             case 0: //限制顯示的小數位數
                 lastRoundingDisplay=status!
-                self.tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: UITableViewRowAnimation.Automatic)
+                self.tableView.reloadData()
                 if lastRoundingDisplay == false {
                     lastRoundingCalculation = false //不限制顯示位數的時候，也要關閉計算時的捨入開關
                 }
@@ -257,6 +263,14 @@ class TableViewController: UITableViewController ,cellDelegate {
         default:
             break
         }
+
+    }
+
+    // cellStepperDelegate
+    func cellStepperValueChanged(withCell cell: cellStepper?) {
+        let stepper = cell!.uiStepper
+        lastRoundingScale = pow (10.0, stepper.value)
+        cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",stepper.value)
 
     }
 
