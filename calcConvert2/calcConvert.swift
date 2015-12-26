@@ -20,7 +20,10 @@ class calcConvert {
     var historySwitch:Bool=false    //是否顯示計算歷程
     var historyText:String=""       //計算歷程的內容
     let precisionForHistory="7"     //計算歷程使用的精度
-    let precision:String="15" //計算機使用的精度，根據機體直擺橫擺會變動
+//    let precision:String="15" //計算機使用的精度，根據機體直擺橫擺會變動
+    var rounding:Bool=true      //是否四捨五入
+    var roundingDigit:Double=10000.0    //四捨五入的小數位,10000是4位數
+
 
 
     init () {
@@ -59,23 +62,23 @@ class calcConvert {
             }
             switch opBuffer {
             case "+":
-                valBuffer=valBuffer+digBuffer
+                valBuffer=(rounding ? round((valBuffer+digBuffer)*roundingDigit)/roundingDigit : valBuffer+digBuffer)
             case "-":
-                valBuffer=valBuffer-digBuffer
+                valBuffer=(rounding ? round((valBuffer-digBuffer)*roundingDigit)/roundingDigit : valBuffer-digBuffer)
             case "x":
-                valBuffer=valBuffer*digBuffer
+                valBuffer=(rounding ? round((valBuffer*digBuffer)*roundingDigit)/roundingDigit : valBuffer*digBuffer)
             case "/":
-                valBuffer=valBuffer/digBuffer
+                valBuffer=(rounding ? round((valBuffer/digBuffer)*roundingDigit)/roundingDigit : valBuffer/digBuffer)
             case "=":
                 break
             case "[m+]","[m-]","[CR]","[SR]":
                 if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
-                    valBuffer=digBuffer
+                    valBuffer=(rounding ? round(digBuffer*roundingDigit)/roundingDigit : digBuffer)
                 }
             default:
                 //包括第一次沒有前運算子時，把組字結果做值輸出
                 if txtBuffer != "" {
-                    valBuffer=digBuffer
+                    valBuffer=(rounding ? round(digBuffer*roundingDigit)/roundingDigit : digBuffer)
                 }
 
             }
@@ -87,13 +90,13 @@ class calcConvert {
             case "[m+]","[m-]","[CR]","[SR]","=":
                  switch inputedKey {
                     case "[m+]":
-                        valMemory=valMemory+valBuffer
+                        valMemory=(rounding ? round((valMemory+valBuffer)*roundingDigit)/roundingDigit : valMemory+valBuffer)
                     case "[m-]":
-                        valMemory=valMemory-valBuffer
+                        valMemory=(rounding ? round((valMemory-valBuffer)*roundingDigit)/roundingDigit : valMemory-valBuffer)
                     case "[CR]":
-                        valBuffer=cbrt(valBuffer)
+                        valBuffer=(rounding ? round(cbrt(valBuffer)*roundingDigit)/roundingDigit : cbrt(valBuffer))
                     case "[SR]":
-                        valBuffer=sqrt(valBuffer)
+                        valBuffer=(rounding ? round(sqrt(valBuffer)*roundingDigit)/roundingDigit : sqrt(valBuffer))
                     default:
                         break
                 }
@@ -115,17 +118,20 @@ class calcConvert {
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
             case "[m+]","[m-]","[CR]","[SR]","=","→":    //度量轉換時，opBuffer是"→"
+                historyText += ((valBuffer != 0 && digBuffer == 0) && (opBuffer != "→" || valBuffer != 0) ? "," : "") //此時分段落，以增加可讀性
+                //條件 valBuffer != 0 剛好valBuffer計算後是0 卻不能顯示逗號
+                //條件 valBuffer != 0 && digBuffer == 0 剛好valBuffer計算後是0 換單位時是空白接逗號，所以加opBuffer != "→"條件
+                //條件 (valBuffer != 0 && digBuffer == 0) && (opBuffer != "→" ) 組字中換category已用＝得值，再接著組字卻沒有逗號
                 valBuffer=0
                 opBuffer=""
-                historyText+=","    //此時分段落，以增加可讀性
             default:
                 break
             }
             if inputedKey=="[mr]" {
                 //mr等於重新組字，但要等組字完成才提示mr的數值
-                historyText += txtBuffer + " " + inputedKey
-                txtBuffer=String(format:"%."+precision+"g",valMemory)
-                digBuffer=valMemory
+                historyText += txtBuffer + " " + inputedKey + " "
+                txtBuffer=String(format:"%."+precisionForHistory+"g",valMemory) //借用historyText使用的精度
+                digBuffer=(rounding ? round(valMemory*roundingDigit)/roundingDigit : valMemory)
 
             } else {
                 if txtBuffer == "0" && inputedKey != "." { txtBuffer="" } //如果組數字時已有前導零，又不是組小數，則清除前導零
@@ -135,7 +141,7 @@ class calcConvert {
                 } else {
                     txtBuffer=txtBuffer+inputedKey  //最後把組字接上去
                     if let _=Double(txtBuffer) {
-                        digBuffer=Double(txtBuffer)!    //取得組字結果值
+                        digBuffer=Double(txtBuffer)!    //取得組字結果值，user輸入的數值不作四捨五入
                     } else {
                         digBuffer=0
                     }               }
@@ -229,6 +235,7 @@ class calcConvert {
 
 
     func setCategoryAndPriceConverting (withCategory categoryIndex: Int, priceConverting: Bool) ->String {
+        self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
         self.priceConverting = priceConverting
         return setUnit (withUnit: 0)
@@ -240,6 +247,7 @@ class calcConvert {
     }
 
     func setUnit (withUnit unitIndex: Int) ->String {
+        opBuffer = "→"  //代表這次不是加減乘除，是度量轉換
         self.unitIndex = unitIndex
         return changeUnitInHistoryText ()
     }
@@ -251,8 +259,8 @@ class calcConvert {
 
 
     func changeUnitInHistoryText () ->String {
-        //變換度量單位時輸出：[@]<單位名稱>：[目前數值][前運算子] opBuffer代表剛開始沒有前運算子則不輸出0
-        historyText += (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",valBuffer)) + (txtBuffer == "" ? "" : opBuffer)
+        //變換度量單位時輸出：[@]<單位名稱>：[目前數值][前運算子] opBuffer代表剛開始沒有前運算子則不輸出0；前運算子是"→"也要抑制
+        historyText += (opBuffer == "" ? "" : " ") + (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",valBuffer)) + (txtBuffer == "" || opBuffer == "→" ? "" : opBuffer)
         return self.historyText
     }
 
@@ -264,14 +272,13 @@ class calcConvert {
         let factor1=convertX[categoryIndex][unitIndex][unitIndexTo].1
         self.keyIn("=") //先取得計算機的結果
         if priceConverting {
-            output = valBuffer * factor1 / factor0    //單價換算時，轉換係數的分子分母顛倒
+            output = (rounding ? round((valBuffer * factor1 / factor0)*roundingDigit)/roundingDigit : valBuffer * factor1 / factor0)    //單價換算時，轉換係數的分子分母顛倒
         } else {
-            output = valBuffer * factor0 / factor1
+            output = (rounding ? round((valBuffer * factor0 / factor1)*roundingDigit)/roundingDigit : valBuffer * factor0 / factor1)
         }
 
         //轉換的提示以箭頭符號開始，然後提示轉換後的數值和單位
         if output != 0 {
-            opBuffer = "→"  //代表這次不是加減乘除，是度量轉換
             historyText += "→"
         }
 

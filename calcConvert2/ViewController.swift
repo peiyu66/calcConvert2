@@ -65,12 +65,13 @@ class ViewController: UIViewController, tableViewDelegate {
     func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool) {
         uiHistory.text = calc.setCategoryAndPriceConverting(withCategory: categoryIndex, priceConverting: priceConverting)   //這會帶動將unit初始為第1個度量單位
         populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
-        navigationItem.title = "度量：" + calc.category[categoryIndex] + (calc.priceConverting ? "，單價換算＄" : "")
+        navigationItem.title = "度量：" + calc.category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
     }
 
     //啟始或變換單價換算開關
     func changePriceConverting(withSwitch priceConverting:Bool) {
         uiHistory.text = calc.setPriceConvertingOnly(withSwitch:priceConverting)
+        navigationItem.title = "度量：" + calc.category[calc.categoryIndex] + (priceConverting ? "，單價換算＄" : "")
     }
 
     //啟始或變換計算歷程顯示開關
@@ -160,7 +161,7 @@ class ViewController: UIViewController, tableViewDelegate {
         if calc.txtBuffer == "" {
             uiOutput.text = String(format:"%."+precision+"g",calc.valBuffer)
         } else {
-            uiOutput.text = calc.txtBuffer //String(format:"%."+precision+"g",calc.digBuffer)
+            uiOutput.text = String(format:"%."+precision+"g",calc.digBuffer) //不使用txtBuffer因為mr後txtBuffer精度不準
         }
         //顯示暫存值
         if calc.valMemory == 0 {
