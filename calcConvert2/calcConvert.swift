@@ -24,8 +24,8 @@ class calcConvert {
 
     var historySwitch:Bool=false                //是否顯示計算歷程
     var historyText:String=""                   //計算歷程的內容
-    let precisionForHistory:String="7"          //計算歷程使用的精度
-    let precisionForHistoryLong:String="9"      //調整小數位後於historyText用較長精度顯示
+    let precisionForHistory:String="16"          //計算歷程使用的精度
+    let precisionForHistoryLong:String="16"      //調整小數位後於historyText用較長精度顯示
 
     var rounding:Bool=false             //計算時是否四捨五入
     var roundingDisplay:Bool=false    //限制顯示時的小數位數
@@ -141,7 +141,7 @@ class calcConvert {
             if inputedKey=="[mr]" {
                 //mr等於重新組字，但要等組字完成才提示mr的數值
                 historyText += txtBuffer + " " + inputedKey + " "
-                txtBuffer=String(format:"%."+precisionForHistory+"g",valMemory) //借用historyText使用的精度
+                txtBuffer=String(format:"%."+precisionForOutput+"g",valMemory)
                 digBuffer=(rounding ? round(valMemory*roundingScale)/roundingScale : valMemory)
 
             } else {
@@ -230,8 +230,12 @@ class calcConvert {
         if scalingValue == nil {
             scalingValue = originValue
         }
-
-        return (decimalScale(originValue!),decimalScale(scalingValue!))
+        let factor:(originScale:Int,movingScale:Int) = (decimalScale(originValue!),decimalScale(scalingValue!))
+        if factor.originScale == 0 {
+            scalingValue = nil  //小數位數本來就是零，不做了
+            originValue = nil
+        }
+        return factor   //不做時，手指頭移動還是觸動位移計算，但不會叫onScaling()，也不會就不會在historyText寫[≒]
     }
 
     func onScaling (factor: Int) {
@@ -269,15 +273,16 @@ class calcConvert {
         var scale:Int = 0
         let s:String = String(format:"%."+precisionForOutput+"g",d)
         let pIndex = s.rangeOfString(".")?.startIndex.advancedBy(1)
-        let eIndex = s.rangeOfString("e")?.startIndex.advancedBy(1)
-        if  let _ = eIndex {
+        let ePlus = s.rangeOfString("e+")?.startIndex.advancedBy(2)
+        let eMinus = s.rangeOfString("e-")?.startIndex.advancedBy(2)
+        if  let _ = ePlus {
             scale = 0
-        } else {
-            if let _ = pIndex {
+        } else if let _ = eMinus {
+            scale = Int(s.substringFromIndex(eMinus!))!
+        } else if let _ = pIndex {
                 scale = s.substringFromIndex(pIndex!).characters.count
-            } else {
-                scale = 0
-            }
+        } else {
+            scale = 0
         }
         return scale
     }

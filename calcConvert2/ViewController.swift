@@ -165,8 +165,9 @@ class ViewController: UIViewController, tableViewDelegate {
             if factor.originScale > 0 {                 //原始數值有小數位才處理
                 factor.movingScale = beginX - movedX    //這次移動的位數，必須介於0和原始位數之間（轉正負所以用減）
                 factor.movingScale = (factor.movingScale < 0 ? 0 : (factor.movingScale > factor.originScale ? factor.originScale : factor.movingScale))
-                calc.onScaling(factor.movingScale)      //把移動位數更新暫存值
+                calc.onScaling(factor.movingScale)      //用移動位數更新暫存值
                 outputToDisplay ()                      //，並回饋到畫面上
+
             }
         }
     }
