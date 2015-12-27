@@ -20,11 +20,12 @@ class calcConvert {
 
     var valueOutput:String="0"          //輸出計算結果valBuffer or digBuffer
     var memoryOutput:String=""          //輸出valMemory
-    var precisionForOutput:String="8"   //輸出欄使用的精度
+    var precisionForOutput:String="9"   //輸出欄使用的精度
 
-    var historySwitch:Bool=false            //是否顯示計算歷程
-    var historyText:String=""               //計算歷程的內容
-    let precisionForHistory:String="7"      //計算歷程使用的精度
+    var historySwitch:Bool=false                //是否顯示計算歷程
+    var historyText:String=""                   //計算歷程的內容
+    let precisionForHistory:String="7"          //計算歷程使用的精度
+    let precisionForHistoryLong:String="9"      //調整小數位後於historyText用較長精度顯示
 
     var rounding:Bool=false             //計算時是否四捨五入
     var roundingDisplay:Bool=false    //限制顯示時的小數位數
@@ -44,6 +45,8 @@ class calcConvert {
         //如果收到的字是=開頭的數值，則直接帶入數值當作結果
         //如果收到的是其他如empty，則有txtBuffer就輸出txtBuffer，沒有就重新輸出valBuffer
 
+        updateIfScaling ()  //檢查是否有用手指移動入捨小數位，有的話要先更新入捨後的結果值，再繼續運算
+
         switch inputedKey {
         case "[C]":
             if valBuffer==0 && txtBuffer==""{
@@ -59,7 +62,7 @@ class calcConvert {
         case "[mc]":
             valMemory = 0
             historyText+=inputedKey
-        case "+","-","x","/","=","[m+]","[m-]","[CR]","[SR]":
+        case "+","-","x","/","=","[m+]","[m-]","[cr]","[sr]":
             //這幾個運算子將結束組字並做運算；CR立方根、SR平方根、"→"是度量轉換但在unitConvert()已經處理了
             //之前有op則先拿來和現在剛輸入的數值做運算
             if txtBuffer != "" {
@@ -77,7 +80,7 @@ class calcConvert {
                 valBuffer=(rounding ? round((valBuffer/digBuffer)*roundingScale)/roundingScale : valBuffer/digBuffer)
             case "=":
                 break
-            case "[m+]","[m-]","[CR]","[SR]":
+            case "[m+]","[m-]","[cr]","[sr]":
                 if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
                     valBuffer=(rounding ? round(digBuffer*roundingScale)/roundingScale : digBuffer)
                 }
@@ -88,27 +91,27 @@ class calcConvert {
                 }
 
             }
-            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
+            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
                 //抑制無效的=出現。哪些是無效的=，即之前opBuffer不是=,CR,SR,[m+],[m-]等會導致輸出結果的運算子
                 historyText+=inputedKey
             }
             switch inputedKey {
-            case "[m+]","[m-]","[CR]","[SR]","=":
+            case "[m+]","[m-]","[cr]","[sr]","=":
                  switch inputedKey {
                     case "[m+]":
                         valMemory=(rounding ? round((valMemory+valBuffer)*roundingScale)/roundingScale : valMemory+valBuffer)
                     case "[m-]":
                         valMemory=(rounding ? round((valMemory-valBuffer)*roundingScale)/roundingScale : valMemory-valBuffer)
-                    case "[CR]":
+                    case "[cr]":
                         valBuffer=(rounding ? round(cbrt(valBuffer)*roundingScale)/roundingScale : cbrt(valBuffer))
-                    case "[SR]":
+                    case "[sr]":
                         valBuffer=(rounding ? round(sqrt(valBuffer)*roundingScale)/roundingScale : sqrt(valBuffer))
                     default:
                         break
                 }
                 //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號所產生的結果。
-                if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[CR]" && opBuffer != "[SR]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
-                    if inputedKey == "[CR]" || inputedKey == "[SR]" {
+                if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
+                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
                         historyText += "="
                     }
                     historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
@@ -123,7 +126,7 @@ class calcConvert {
         case "0","1","2","3","4","5","6","7","8","9",".","[mr]":
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
-            case "[m+]","[m-]","[CR]","[SR]","=","→":    //度量轉換時，opBuffer是"→"
+            case "[m+]","[m-]","[cr]","[sr]","=","→":    //度量轉換時，opBuffer是"→"
                 historyText += ((valBuffer != 0 || opBuffer == "=" || opBuffer == "[m+]" || opBuffer == "[m-]") && (opBuffer != "→" || valBuffer != 0) ? "," : "") //此時分段落，以增加可讀性
                 //條件 valBuffer != 0 剛好valBuffer計算後是0 卻不能顯示逗號
                 //條件 valBuffer != 0 && digBuffer == 0 剛好valBuffer計算後是0 換單位時是空白接逗號，所以加opBuffer != "→"條件
@@ -178,13 +181,17 @@ class calcConvert {
 
     func prepareDisplayOutput () {
         //顯示計算結果
-        if self.txtBuffer == "" {
-            valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
+        if let _ = scalingValue {
+            valueOutput = scalingOutput!
         } else {
-            if opBuffer == "[mr]" {
-                valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(digBuffer*roundingScale)/roundingScale : digBuffer)) //不使用txtBuffer因為mr後txtBuffer精度不準
+            if self.txtBuffer == "" {
+                valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
             } else {
-                valueOutput = txtBuffer
+                if opBuffer == "[mr]" {
+                    valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(digBuffer*roundingScale)/roundingScale : digBuffer)) //不使用txtBuffer因為mr後txtBuffer精度不準
+                } else {
+                    valueOutput = txtBuffer
+                }
             }
         }
         //顯示暫存值
@@ -209,6 +216,76 @@ class calcConvert {
         self.roundingDisplay = roundingDisplay
         prepareDisplayOutput ()
     }
+
+
+
+
+    //***** 用手指變動小數位數 *****
+    var scalingValue:Double?    //用手指變動小數位數的暫存值
+    var originValue:Double?     //原始數值
+    var scalingOutput:String?   //scalingValue的輸出，要負責在不足位數補零以容易辨識目前調到幾位
+
+    func startScaling () -> (Int, Int) {
+        originValue = ( txtBuffer == "" ? valBuffer : digBuffer)
+        if scalingValue == nil {
+            scalingValue = originValue
+        }
+
+        return (decimalScale(originValue!),decimalScale(scalingValue!))
+    }
+
+    func onScaling (factor: Int) {
+         if factor == 0 {
+            scalingValue = round(originValue!)  //小數位＝0時....其實10的0次方得1也行，不過多算1次多1次誤差
+            scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
+        } else {
+            let scale = pow(10,Double(factor))
+            scalingValue = round(originValue! * scale) / scale
+            scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
+            let scalingFactor = decimalScale(scalingValue!)
+            if scalingFactor < factor {
+                scalingOutput = scalingOutput! + "." + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+            }
+        }
+        prepareDisplayOutput ()
+
+    }
+
+    func updateIfScaling () {
+        if let _ = scalingValue {
+            if txtBuffer == "" {    //如果位數沒變，給原始值，避免暫存值因為旋轉機體導致精度變動而失真，historyText並用長精度顯示
+                valBuffer = (decimalScale(scalingValue!) == decimalScale(originValue!) ? originValue! : scalingValue!)
+                historyText += "[≒] " + String(format:"%."+precisionForHistoryLong+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
+            } else {
+                digBuffer = (decimalScale(scalingValue!) == decimalScale(originValue!) ? originValue! : scalingValue!)
+            }
+            scalingValue = nil
+            originValue = nil
+        }
+    }
+
+
+    func decimalScale (d:Double) -> Int {   //回傳double的小數位數，用於手指操作進位時
+        var scale:Int = 0
+        let s:String = String(format:"%."+precisionForOutput+"g",d)
+        let pIndex = s.rangeOfString(".")?.startIndex.advancedBy(1)
+        let eIndex = s.rangeOfString("e")?.startIndex.advancedBy(1)
+        if  let _ = eIndex {
+            scale = 0
+        } else {
+            if let _ = pIndex {
+                scale = s.substringFromIndex(pIndex!).characters.count
+            } else {
+                scale = 0
+            }
+        }
+        return scale
+    }
+
+
+
+
+
 
 
     //*****度量衡轉換的部份*****

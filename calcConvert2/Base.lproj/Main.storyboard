@@ -183,13 +183,13 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKU-LI-m15">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKU-LI-m15">
                                 <rect key="frame" x="28" y="109" width="544" height="32"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGn-D2-Ki2">
                                         <rect key="frame" x="0.0" y="7" width="544" height="18"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="公斤" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7U-1o-jpf" userLabel="history">
+                                            <label opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="公斤" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7U-1o-jpf" userLabel="history">
                                                 <rect key="frame" x="0.0" y="0.0" width="544" height="18"/>
                                                 <gestureRecognizers/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -213,8 +213,9 @@
                                     <constraint firstAttribute="trailing" secondItem="PGn-D2-Ki2" secondAttribute="trailing" id="qbB-yd-KGY"/>
                                 </constraints>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output">
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output">
                                 <rect key="frame" x="28" y="184" width="544" height="79"/>
+                                <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -224,6 +225,9 @@
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="95"/>
                                 </variation>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Rbu-Xm-w25" appends="YES" id="doV-iY-GUa"/>
+                                </connections>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eV4-DJ-CH5">
                                 <rect key="frame" x="21" y="264" width="139" height="62"/>
@@ -516,17 +520,6 @@
                                     <action selector="uiKeyCubeRoot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0ed-fC-1SB"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pWG-WV-G5w" userLabel="back">
-                                <rect key="frame" x="302" y="260" width="135" height="60"/>
-                                <color key="backgroundColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <state key="normal" title="⬅︎">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="uiKeyBack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Mie-87-EUY"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEN-ib-N7O" userLabel="squareroot">
                                 <rect key="frame" x="469" y="388" width="107" height="60"/>
                                 <color key="backgroundColor" red="0.19607843137254902" green="0.39215686274509803" blue="0.58823529411764708" alpha="1" colorSpace="calibratedRGB"/>
@@ -789,7 +782,6 @@
                             <mask key="subviews">
                                 <exclude reference="qam-cc-sxG"/>
                                 <exclude reference="R30-10-3RL"/>
-                                <exclude reference="pWG-WV-G5w"/>
                                 <exclude reference="cEN-ib-N7O"/>
                             </mask>
                             <mask key="constraints">
@@ -1331,10 +1323,16 @@
                         <outlet property="uiHistoryScrollView" destination="mKU-LI-m15" id="rvi-uj-Kl5"/>
                         <outlet property="uiMemory" destination="fvO-lX-MTt" id="9sA-MS-AFH"/>
                         <outlet property="uiOutput" destination="2zZ-du-mTe" id="dqY-sX-2Rz"/>
+                        <outlet property="uiPanGesture" destination="Rbu-Xm-w25" id="blS-GA-3sf"/>
                         <outlet property="uiUnits" destination="a7I-b1-EsN" id="X9R-fJ-67S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Rbu-Xm-w25">
+                    <connections>
+                        <action selector="uiPanGestureRecognized:" destination="BYZ-38-t0r" id="AdZ-ob-wBB"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1173" y="698"/>
         </scene>

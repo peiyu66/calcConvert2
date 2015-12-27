@@ -18,12 +18,14 @@ protocol tableViewDelegate: class {
 class TableViewController: UITableViewController ,cellSwitchDelegate, cellStepperDelegate {
 
     var calc:calcConvert?
+    
     var lastSelectedIndexPath:NSIndexPath?
     var lastPriceSwitchStatus:Bool=false
     var lastHistorySwitchStatus:Bool=false
     var lastRoundingDisplay:Bool=false
     var lastRoundingCalculation:Bool=false
     var lastRoundingScale:Double=10000.0    //四捨五入的小數位,10000是4位數
+
     var viewDelegate:tableViewDelegate?
     var uiPriceConverting:UISwitch?
     var uiRoundingCalculation:UISwitch?
