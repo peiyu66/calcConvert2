@@ -19,16 +19,16 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
     var calc:calcConvert?
     
-    var lastSelectedIndexPath:NSIndexPath?
+    var lastSelectedCategoryIndex:Int=0
     var lastPriceSwitchStatus:Bool=false
+    var lastPriceSwitchEnabled:Bool=true
     var lastHistorySwitchStatus:Bool=false
+
     var lastRoundingDisplay:Bool=false
     var lastRoundingCalculation:Bool=false
     var lastRoundingScale:Double=10000.0    //四捨五入的小數位,10000是4位數
 
     var viewDelegate:tableViewDelegate?
-    var uiPriceConverting:UISwitch?
-    var uiRoundingCalculation:UISwitch?
     var currencyTime:String=""
 
 
@@ -40,7 +40,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         self.clearsSelectionOnViewWillAppear = false
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-
+        lastSelectedCategoryIndex=calc!.categoryIndex
         lastRoundingDisplay=calc!.roundingDisplay
         lastRoundingCalculation=calc!.rounding
         lastPriceSwitchStatus=calc!.priceConverting
@@ -63,10 +63,10 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        if (lastSelectedIndexPath!.row != calc!.categoryIndex) ||  lastPriceSwitchStatus != calc!.priceConverting {
+        if (lastSelectedCategoryIndex != calc!.categoryIndex) ||  lastPriceSwitchStatus != calc!.priceConverting {
             //只要category變了必須帶動刷新PriceConverting（顯示是否帶單價符號的單位名稱），所以不必重複叫
-            if (lastSelectedIndexPath!.row != calc!.categoryIndex) {
-                viewDelegate!.changeCategory(withCategory:(lastSelectedIndexPath!.row), priceConverting:lastPriceSwitchStatus)
+            if (lastSelectedCategoryIndex != calc!.categoryIndex) {
+                viewDelegate!.changeCategory(withCategory:lastSelectedCategoryIndex, priceConverting:lastPriceSwitchStatus)
             } else {
                 viewDelegate!.changePriceConverting(withSwitch: lastPriceSwitchStatus)
             }
@@ -156,9 +156,8 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         case 0: //度量種類的cell
             let cell = tableView.dequeueReusableCellWithIdentifier("cellCategory", forIndexPath: indexPath)
             cell.textLabel!.text = calc!.category[indexPath.row]
-            if indexPath.row == calc!.categoryIndex {
+            if indexPath.row == lastSelectedCategoryIndex {
                 cell.accessoryType = .Checkmark
-                lastSelectedIndexPath=indexPath
             } else {
                 cell.accessoryType = .None
             }
@@ -193,14 +192,15 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
             let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
             cell.uiSwitch.on=lastPriceSwitchStatus
+            if lastSelectedCategoryIndex == 3 {   //匯兌時不能使用單價換算
+                lastPriceSwitchEnabled = false
+            } else {
+                lastPriceSwitchEnabled = true
+            }
+            cell.uiSwitch.enabled=lastPriceSwitchEnabled
             cell.uiSwitchLabel.text="單價換算"
             cell.selectionStyle = UITableViewCellSelectionStyle.None
-            uiPriceConverting=cell.uiSwitch
-            if calc!.categoryIndex == 3 {   //匯兌時不能使用單價換算
-                uiPriceConverting!.enabled = false
-            } else {
-                uiPriceConverting!.enabled = true
-            }
+
             return cell
         case 3: //section 3 計算歷程
             let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
@@ -223,19 +223,19 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if indexPath.section == 0 {
             //這裡只處理度量種類的選擇，其他設定項目不允許選到row（UITableViewCellSelectionStyle.None）
-            if indexPath.row != lastSelectedIndexPath!.row {
-                let oldCell = tableView.cellForRowAtIndexPath(lastSelectedIndexPath!)
+            if indexPath.row != lastSelectedCategoryIndex {
+                let oldCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastSelectedCategoryIndex, inSection: 0))
                 oldCell!.accessoryType = .None
-                if indexPath.row == 3 { //匯兌時不能使用單價換算
-                    uiPriceConverting!.on = false
-                    uiPriceConverting!.enabled = false
-                    lastPriceSwitchStatus = false
-                } else {
-                    uiPriceConverting!.enabled = true
-                }
                 let newCell = tableView.cellForRowAtIndexPath(indexPath)
                 newCell!.accessoryType = .Checkmark
-                lastSelectedIndexPath = indexPath
+                lastSelectedCategoryIndex = indexPath.row
+                if lastSelectedCategoryIndex == 3 { //匯兌時不能使用單價換算
+                    lastPriceSwitchEnabled = false
+                    lastPriceSwitchStatus = false
+                } else {
+                    lastPriceSwitchEnabled = true
+                }
+                self.tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: UITableViewRowAnimation.Automatic)
             }
         }
     }

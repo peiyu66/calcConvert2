@@ -111,9 +111,9 @@ class calcConvert {
                 }
                 //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號所產生的結果。
                 if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
-                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
-                        historyText += "="
-                    }
+//                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
+//                        historyText += "="
+//                    }
                     historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
                 }
            default:
