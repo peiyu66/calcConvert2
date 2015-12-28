@@ -24,8 +24,8 @@ class calcConvert {
 
     var historySwitch:Bool=false                //是否顯示計算歷程
     var historyText:String=""                   //計算歷程的內容
-    let precisionForHistory:String="16"          //計算歷程使用的精度
-    let precisionForHistoryLong:String="16"      //調整小數位後於historyText用較長精度顯示
+    let precisionForHistory:String="7"          //計算歷程使用的精度
+    let precisionForHistoryLong:String="10"      //調整小數位後於historyText用較長精度顯示
 
     var rounding:Bool=false             //計算時是否四捨五入
     var roundingDisplay:Bool=false    //限制顯示時的小數位數
@@ -248,7 +248,11 @@ class calcConvert {
             scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
             let scalingFactor = decimalScale(scalingValue!)
             if scalingFactor < factor {
-                scalingOutput = scalingOutput! + "." + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+                if let _ = scalingOutput!.rangeOfString(".") {
+                    scalingOutput = scalingOutput! + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+                } else {
+                    scalingOutput = scalingOutput! + "." + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+                }
             }
         }
         prepareDisplayOutput ()

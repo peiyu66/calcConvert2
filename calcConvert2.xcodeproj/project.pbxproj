@@ -18,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E2696C201C3164AF0058A3F0 /* calcConvert2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = calcConvert2.entitlements; sourceTree = "<group>"; };
 		E277032F1C283FFD0089F965 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2B7D09C1C28EAD500003B07 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		E2B7D09E1C28EB3600003B07 /* cellClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cellClass.swift; sourceTree = "<group>"; };
@@ -60,6 +61,7 @@
 		E2B895E31C277EB7000F1445 /* calcConvert2 */ = {
 			isa = PBXGroup;
 			children = (
+				E2696C201C3164AF0058A3F0 /* calcConvert2.entitlements */,
 				E2B895E41C277EB7000F1445 /* AppDelegate.swift */,
 				E2B895E61C277EB7000F1445 /* ViewController.swift */,
 				E2B895E81C277EB7000F1445 /* Main.storyboard */,
@@ -106,6 +108,11 @@
 					E2B895E01C277EB7000F1445 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = QQP5F43Z2T;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
