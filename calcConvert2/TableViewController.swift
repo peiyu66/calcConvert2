@@ -26,7 +26,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
     var lastRoundingDisplay:Bool=false
     var lastRoundingCalculation:Bool=false
-    var lastRoundingScale:Double=10000.0    //四捨五入的小數位,10000是4位數
+    var lastDecimalScale:Double=4    //四捨五入的小數位,10000是4位數
 
     var viewDelegate:tableViewDelegate?
     var currencyTime:String=""
@@ -45,7 +45,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         lastRoundingCalculation=calc!.rounding
         lastPriceSwitchStatus=calc!.priceConverting
         lastHistorySwitchStatus=calc!.historySwitch
-        lastRoundingScale=calc!.roundingScale
+        lastDecimalScale=calc!.decimalScale
 
         //checkCurrencyTime()
 
@@ -74,8 +74,8 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         if lastHistorySwitchStatus != calc!.historySwitch {
             viewDelegate!.changeHistorySwitch(withSwitch: lastHistorySwitchStatus)
         }
-        if lastRoundingDisplay != calc!.roundingDisplay || lastRoundingCalculation != calc!.rounding || lastRoundingScale != calc!.roundingScale {
-            viewDelegate!.changeRoundingSwitch(withScale:lastRoundingScale, roundingDisplay:lastRoundingDisplay, roundingCalculation:lastRoundingCalculation)
+        if lastRoundingDisplay != calc!.roundingDisplay || lastRoundingCalculation != calc!.rounding || lastDecimalScale != calc!.decimalScale {
+            viewDelegate!.changeRoundingSwitch(withScale:lastDecimalScale, roundingDisplay:lastRoundingDisplay, roundingCalculation:lastRoundingCalculation)
         }
 
     }
@@ -182,7 +182,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 let cell = tableView.dequeueReusableCellWithIdentifier("cellStepper", forIndexPath: indexPath) as! cellStepper
                 cell.tableCellDelegate=self
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
-                cell.uiStepper.value = log10(lastRoundingScale)
+                cell.uiStepper.value = lastDecimalScale
                 cell.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",cell.uiStepper.value)
                 return cell
             default:
@@ -271,7 +271,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     // cellStepperDelegate
     func cellStepperValueChanged(withCell cell: cellStepper?) {
         let stepper = cell!.uiStepper
-        lastRoundingScale = pow (10.0, stepper.value)
+        lastDecimalScale = stepper.value
         cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",stepper.value)
 
     }

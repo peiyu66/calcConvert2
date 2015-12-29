@@ -39,7 +39,7 @@ class ViewController: UIViewController, tableViewDelegate {
 
         //啟始category度量種類
         changeCategory(withCategory: 0, priceConverting: false) //這會帶動unit刷新後在historyText顯示第一個度量單位名稱
-        changeHistorySwitch(withSwitch: false)  //這會在初始時隱藏historyText
+        changeHistorySwitch(withSwitch: calc.historySwitch)  //這會在初始時隱藏historyText
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -80,8 +80,8 @@ class ViewController: UIViewController, tableViewDelegate {
     }
 
     //啟始或變換限制小數位數開關
-    func changeRoundingSwitch(withScale scale:Double, roundingDisplay:Bool, roundingCalculation:Bool) {
-        calc.setRounding(withScale:scale, roundingDisplay:roundingDisplay,roundingCalculation:roundingCalculation)
+    func changeRoundingSwitch(withScale decimalScale:Double, roundingDisplay:Bool, roundingCalculation:Bool) {
+        calc.setRounding(withScale:decimalScale, roundingDisplay:roundingDisplay,roundingCalculation:roundingCalculation)
         outputToDisplay ()
      }
 

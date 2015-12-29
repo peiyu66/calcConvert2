@@ -8,6 +8,10 @@
 
 import Foundation
 
+class userPreference {
+
+}
+
 
 class calcConvert {
 
@@ -21,20 +25,48 @@ class calcConvert {
 
     var valueOutput:String="0"          //輸出計算結果valBuffer or digBuffer
     var memoryOutput:String=""          //輸出valMemory
-    var precisionForOutput:String="9"   //輸出欄使用的精度
 
-    var historySwitch:Bool=false                //是否顯示計算歷程
-    var historyText:String=""                   //計算歷程的內容
-    let precisionForHistory:String="7"          //計算歷程使用的精度
-    let precisionForHistoryLong:String="10"      //調整小數位後於historyText用較長精度顯示
+    var historySwitch:Bool=false        //是否顯示計算歷程
+    var historyText:String=""           //計算歷程的內容
+
+    var precisionForOutput:String="9"               //輸出欄使用的精度
+    let precisionForHistory:String="7"              //計算歷程使用的精度
+    let precisionForHistoryLong:String="10"         //調整小數位後於historyText用較長精度顯示
 
     var rounding:Bool=false             //計算時是否四捨五入
-    var roundingDisplay:Bool=false    //限制顯示時的小數位數
+    var roundingDisplay:Bool=false      //限制顯示時的小數位數
+    var decimalScale:Double = 4         //四捨五入的小數位
     var roundingScale:Double=10000.0    //四捨五入的小數位,10000是4位數
+
+    var defaults:NSUserDefaults
+    let keyRounding:String          = "keyRounding"
+    let keyRoundingDisplay:String   = "keyRoundingDisplay"
+    let keyDecimalScale:String      = "keyDecimalScale"
+    let keyPriceConverting:String   = "keyPriceConverting"
+    let keyHistorySwitch:String     = "keyHistorySwitch"
+    let keyPreferenceUpdated:String = "keyPreferenceUpdated"
 
 
 
     init () {
+
+        defaults = NSUserDefaults.standardUserDefaults()
+        if let _ = defaults.objectForKey(keyPreferenceUpdated) {
+             rounding = defaults.boolForKey(keyRounding)
+            roundingDisplay = defaults.boolForKey(keyRoundingDisplay)
+            decimalScale = defaults.doubleForKey (keyDecimalScale)
+            priceConverting = defaults.boolForKey(keyPriceConverting)
+            historySwitch = defaults.boolForKey(keyHistorySwitch)
+        } else {
+            rounding = false
+            roundingDisplay = false
+            decimalScale = 4
+            roundingScale = pow (10.0, decimalScale)
+            priceConverting = false
+            historySwitch = false
+        }
+
+
         //建立轉換係數等陣列，後續查詢匯率成功時，還會加入匯率係數，不成功就維持初始狀態
         convertX = convertXList
         category = categoryList
@@ -222,10 +254,16 @@ class calcConvert {
     }
 
     func setRounding (withScale scale:Double, roundingDisplay:Bool, roundingCalculation:Bool) {
-        self.roundingScale = scale
+        self.decimalScale = scale
+        self.roundingScale = pow (10.0, scale)
         self.rounding = roundingCalculation
         self.roundingDisplay = roundingDisplay
         prepareDisplayOutput ()
+
+        defaults.setBool(rounding, forKey: keyRounding)
+        defaults.setBool(roundingDisplay, forKey: keyRoundingDisplay)
+        defaults.setDouble(decimalScale, forKey: keyDecimalScale)
+        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
     }
 
 
@@ -379,15 +417,19 @@ class calcConvert {
         self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
         self.priceConverting = priceConverting
-        return setUnit (withUnit: 0)
+        defaults.setBool(priceConverting, forKey: keyPriceConverting)
+        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
+        return changeUnit (withUnit: 0)
     }
 
     func setPriceConvertingOnly (withSwitch priceConverting: Bool) ->String {
         self.priceConverting = priceConverting
+        defaults.setBool(priceConverting, forKey: keyPriceConverting)
+        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
         return changeUnitInHistoryText ()
     }
 
-    func setUnit (withUnit unitIndex: Int) ->String {
+    func changeUnit (withUnit unitIndex: Int) ->String {
         opBuffer = "→"  //代表這次不是加減乘除，是度量轉換
         self.unitIndex = unitIndex
         return changeUnitInHistoryText ()
@@ -395,6 +437,8 @@ class calcConvert {
 
     func setHistorySwitch (withSwitch historySwitch: Bool) {
         self.historySwitch = historySwitch
+        defaults.setBool(historySwitch, forKey: keyHistorySwitch)
+        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
     }
 
 
@@ -428,7 +472,7 @@ class calcConvert {
 
         prepareDisplayOutput()
 
-        return self.setUnit(withUnit: unitIndexTo)
+        return self.changeUnit(withUnit: unitIndexTo)
 
      }
 
