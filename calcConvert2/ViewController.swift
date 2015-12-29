@@ -38,8 +38,10 @@ class ViewController: UIViewController, tableViewDelegate {
         }
 
         //啟始category度量種類
-        changeCategory(withCategory: 0, priceConverting: false) //這會帶動unit刷新後在historyText顯示第一個度量單位名稱
+        populateSegmentUnits(calc.categoryIndex)    //重新建立度量單位的選項
+        calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
         changeHistorySwitch(withSwitch: calc.historySwitch)  //這會在初始時隱藏historyText
+        navigationItem.title = calc.categoryTitle   //設定標題
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -64,13 +66,13 @@ class ViewController: UIViewController, tableViewDelegate {
     func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool) {
         uiHistory.text = calc.setCategoryAndPriceConverting(withCategory: categoryIndex, priceConverting: priceConverting)   //這會帶動將unit初始為第1個度量單位
         populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
-        navigationItem.title = "度量：" + calc.category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
+        navigationItem.title = calc.categoryTitle
     }
 
     //啟始或變換單價換算開關
     func changePriceConverting(withSwitch priceConverting:Bool) {
         uiHistory.text = calc.setPriceConvertingOnly(withSwitch:priceConverting)
-        navigationItem.title = "度量：" + calc.category[calc.categoryIndex] + (priceConverting ? "，單價換算＄" : "")
+        navigationItem.title = calc.categoryTitle
     }
 
     //啟始或變換計算歷程的顯示開關
