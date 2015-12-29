@@ -43,6 +43,7 @@ class calcConvert {
     let keyRounding:String          = "keyRounding"
     let keyRoundingDisplay:String   = "keyRoundingDisplay"
     let keyDecimalScale:String      = "keyDecimalScale"
+    let keyshowPriceConvert:String  = "keyshowPriceConvert"
     let keyPriceConverting:String   = "keyPriceConverting"
     let keyHistorySwitch:String     = "keyHistorySwitch"
     let keyPreferenceUpdated:String = "keyPreferenceUpdated"
@@ -63,11 +64,11 @@ class calcConvert {
     func getUserPreference () {
         if let _ = defaults.objectForKey(keyPreferenceUpdated) {
             self.setRounding(withScale: defaults.doubleForKey (keyDecimalScale), roundingDisplay: defaults.boolForKey(keyRoundingDisplay), roundingCalculation: defaults.boolForKey(keyRounding))
-            self.setPriceConvertingOnly(withSwitch: defaults.boolForKey(keyPriceConverting))
+            self.showPriceConvertButton(withSwitch: defaults.boolForKey(keyshowPriceConvert))
             self.setHistorySwitch(withSwitch: defaults.boolForKey(keyHistorySwitch))
         } else {
             self.setRounding(withScale: 4, roundingDisplay: false, roundingCalculation: false)
-            self.setPriceConvertingOnly(withSwitch: false)
+            self.showPriceConvertButton(withSwitch: false)
             self.setHistorySwitch(withSwitch: false)
         }
     }
@@ -347,9 +348,10 @@ class calcConvert {
 
 
     //*****度量衡轉換的部份*****
-    var categoryIndex:Int = 0         //目前度量種類
-    var unitIndex:Int = 0             //保留前單位
-    var priceConverting:Bool=false    //單價換算是否啟動
+    var categoryIndex:Int = 0           //目前度量種類
+    var unitIndex:Int = 0               //保留前單位
+    var priceConverting:Bool=false      //單價換算是否啟動
+    var showPriceConvertButton:Bool=true     //是否隱藏單價換算開關
 
 
     //度量種類
@@ -413,14 +415,21 @@ class calcConvert {
 
 
 
-    func setCategoryAndPriceConverting (withCategory categoryIndex: Int, priceConverting: Bool) ->String {
+    func setCategory (withCategory categoryIndex: Int) ->String {
         self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
-        setPriceConvertingOnly (withSwitch: priceConverting)
         return changeUnit (withUnit: 0)
     }
 
-    func setPriceConvertingOnly (withSwitch priceConverting: Bool) ->String {
+    func showPriceConvertButton (withSwitch show:Bool) ->String {
+        showPriceConvertButton = show
+        defaults.setBool(showPriceConvertButton, forKey: keyshowPriceConvert)
+        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
+        return setPriceConverting(withSwitch: (show ? defaults.boolForKey(keyPriceConverting) : false)) //如果不顯示開關，也要關閉單價換算為OFF
+
+    }
+
+    func setPriceConverting (withSwitch priceConverting: Bool) ->String {
         self.priceConverting = priceConverting
         defaults.setBool(priceConverting, forKey: keyPriceConverting)
         defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)

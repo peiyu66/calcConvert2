@@ -9,8 +9,8 @@
 import UIKit
 
 protocol tableViewDelegate: class {
-    func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool)
-    func changePriceConverting(withSwitch priceConverting:Bool)
+    func changeCategory(withCategory categoryIndex: Int)
+    func showPriceConvert(withSwitch show:Bool)
     func changeHistorySwitch(withSwitch historySwitch:Bool)
     func changeRoundingSwitch(withScale scale:Double, roundingDisplay:Bool, roundingCalculation:Bool)
 }
@@ -43,7 +43,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         lastSelectedCategoryIndex=calc!.categoryIndex
         lastRoundingDisplay=calc!.roundingDisplay
         lastRoundingCalculation=calc!.rounding
-        lastPriceSwitchStatus=calc!.priceConverting
+        lastPriceSwitchStatus=calc!.showPriceConvertButton
         lastHistorySwitchStatus=calc!.historySwitch
         lastDecimalScale=calc!.decimalScale
 
@@ -61,16 +61,17 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        if (lastSelectedCategoryIndex != calc!.categoryIndex) ||  lastPriceSwitchStatus != calc!.priceConverting {
-            //只要category變了必須帶動刷新PriceConverting（顯示是否帶單價符號的單位名稱），所以不必重複叫
-            if (lastSelectedCategoryIndex != calc!.categoryIndex) {
-                viewDelegate!.changeCategory(withCategory:lastSelectedCategoryIndex, priceConverting:lastPriceSwitchStatus)
-            } else {
-                viewDelegate!.changePriceConverting(withSwitch: lastPriceSwitchStatus)
-            }
-         }
+//    override func viewWillDisappear(animated: Bool) {
+//        super.viewWillDisappear(animated)
+//    }
+
+    func setPreference () {
+        if (lastSelectedCategoryIndex != calc!.categoryIndex) {
+            viewDelegate!.changeCategory(withCategory:lastSelectedCategoryIndex)
+        }
+        if (lastPriceSwitchStatus != calc!.showPriceConvertButton) {
+            viewDelegate!.showPriceConvert(withSwitch: lastPriceSwitchStatus)
+        }
         if lastHistorySwitchStatus != calc!.historySwitch {
             viewDelegate!.changeHistorySwitch(withSwitch: lastHistorySwitchStatus)
         }
@@ -79,8 +80,6 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         }
 
     }
-
-
 
 
     // MARK: - Table view data source
@@ -128,7 +127,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         case 0: //度量種類footer 顯示匯率查詢時間及計算說明
             return checkCurrencyTime ()
         case 2: //單價換算
-            return "先選公克再輸入1，代表每公克單價1元，然後切換至公斤得每公斤1000元。這就是單價換算的方式。"
+            return "單價換算切到ON，先選公克再輸入1，代表每公克單價1元，然後切換至公斤得每公斤1000元。這就是單價換算。"
         default:
             return ""
         }
@@ -198,7 +197,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 lastPriceSwitchEnabled = true
             }
             cell.uiSwitch.enabled=lastPriceSwitchEnabled
-            cell.uiSwitchLabel.text="單價換算"
+            cell.uiSwitchLabel.text="單價換算開關"
             cell.selectionStyle = UITableViewCellSelectionStyle.None
 
             return cell
@@ -236,6 +235,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                     lastPriceSwitchEnabled = true
                 }
                 self.tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: UITableViewRowAnimation.Automatic)
+                setPreference ()
             }
         }
     }
@@ -265,7 +265,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         default:
             break
         }
-
+        setPreference ()
     }
 
     // cellStepperDelegate
@@ -273,7 +273,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         let stepper = cell!.uiStepper
         lastDecimalScale = stepper.value
         cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",stepper.value)
-
+        setPreference ()
     }
 
 }

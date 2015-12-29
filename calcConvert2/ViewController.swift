@@ -40,8 +40,9 @@ class ViewController: UIViewController, tableViewDelegate {
         //啟始category度量種類
         populateSegmentUnits(calc.categoryIndex)    //重新建立度量單位的選項
         calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
-        changeHistorySwitch(withSwitch: calc.historySwitch)  //這會在初始時隱藏historyText
-        navigationItem.title = calc.categoryTitle   //設定標題
+        changeHistorySwitch(withSwitch: calc.historySwitch)     //這會顯示或隱藏historyText
+        showPriceConvert(withSwitch: calc.showPriceConvertButton)     //這會顯示或隱藏單價換算開關
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -62,16 +63,32 @@ class ViewController: UIViewController, tableViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
+
+    @IBOutlet weak var uiPriceConverting: UIButton!
+
+    @IBAction func uiPriceConvertingSwitch(sender: UIButton) {
+        if sender == uiPriceConverting {
+            uiHistory.text = calc.setPriceConverting(withSwitch: !calc.priceConverting) //開就關、關就開
+            sender.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), forState: UIControlState.Normal)
+            sender.setTitleColor((calc.priceConverting ? UIColor.orangeColor() : UIColor.lightGrayColor()) , forState: UIControlState.Normal)
+            navigationItem.title = calc.categoryTitle
+        }
+    }
+
+
     //啟始或變換category度量種類
-    func changeCategory(withCategory categoryIndex: Int, priceConverting:Bool) {
-        uiHistory.text = calc.setCategoryAndPriceConverting(withCategory: categoryIndex, priceConverting: priceConverting)   //這會帶動將unit初始為第1個度量單位
+    func changeCategory(withCategory categoryIndex: Int) {
+        uiHistory.text = calc.setCategory(withCategory: categoryIndex)   //這會帶動將unit初始為第1個度量單位
         populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
         navigationItem.title = calc.categoryTitle
     }
 
     //啟始或變換單價換算開關
-    func changePriceConverting(withSwitch priceConverting:Bool) {
-        uiHistory.text = calc.setPriceConvertingOnly(withSwitch:priceConverting)
+    func showPriceConvert(withSwitch show:Bool) {
+        uiHistory.text = calc.showPriceConvertButton(withSwitch: show)
+        uiPriceConverting.hidden = !show
+        uiPriceConverting.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), forState: UIControlState.Normal)
+        uiPriceConverting.setTitleColor((calc.priceConverting ? UIColor.orangeColor() : UIColor.lightGrayColor()) , forState: UIControlState.Normal)
         navigationItem.title = calc.categoryTitle
     }
 
