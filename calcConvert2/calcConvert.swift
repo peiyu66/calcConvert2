@@ -17,6 +17,7 @@ class calcConvert {
     var opBuffer:String=""    //保存前運算子
     var txtBuffer:String=""   //組字當中的數字，empty表示重新開始組字
     var digBuffer:Double=0    //組字結果的值
+    var prevInputed:String=""   //保存前次輸入運算子或運算元
 
     var valueOutput:String="0"          //輸出計算結果valBuffer or digBuffer
     var memoryOutput:String=""          //輸出valMemory
@@ -58,71 +59,80 @@ class calcConvert {
             valBuffer=0
             opBuffer=""
             txtBuffer=""
-
+            prevInputed = inputedKey
         case "[mc]":
             valMemory = 0
             historyText+=inputedKey
+            prevInputed = inputedKey
         case "+","-","x","/","=","[m+]","[m-]","[cr]","[sr]":
-            //這幾個運算子將結束組字並做運算；CR立方根、SR平方根、"→"是度量轉換但在unitConvert()已經處理了
-            //之前有op則先拿來和現在剛輸入的數值做運算
-            if txtBuffer != "" {
-                //                historyList.append(txtBuffer)
-                historyText+=String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(digBuffer*roundingScale)/roundingScale : digBuffer))
-            }
-            switch opBuffer {
-            case "+":
-                valBuffer=(rounding ? round((valBuffer+digBuffer)*roundingScale)/roundingScale : valBuffer+digBuffer)
-            case "-":
-                valBuffer=(rounding ? round((valBuffer-digBuffer)*roundingScale)/roundingScale : valBuffer-digBuffer)
-            case "x":
-                valBuffer=(rounding ? round((valBuffer*digBuffer)*roundingScale)/roundingScale : valBuffer*digBuffer)
-            case "/":
-                valBuffer=(rounding ? round((valBuffer/digBuffer)*roundingScale)/roundingScale : valBuffer/digBuffer)
-            case "=":
-                break
-            case "[m+]","[m-]","[cr]","[sr]":
-                if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
-                    valBuffer=(rounding ? round(digBuffer*roundingScale)/roundingScale : digBuffer)
-                }
+            switch prevInputed {    //如果沒有輸入運算元，連續接四則運算子，就以目前inputedKey取代之前的運算子，以消除無意義的重複連續運算子
+            case "+","-","x","/":
+                opBuffer = inputedKey
+                let index = historyText.endIndex.advancedBy(-1)
+                historyText = historyText.substringToIndex(index) + inputedKey
             default:
-                //包括第一次沒有前運算子時，把組字結果做值輸出
+
+                //這幾個運算子將結束組字並做運算；CR立方根、SR平方根、"→"是度量轉換但在unitConvert()已經處理了
+                //之前有op則先拿來和現在剛輸入的數值做運算
                 if txtBuffer != "" {
-                    valBuffer=(rounding ? round(digBuffer*roundingScale)/roundingScale : digBuffer)
+                    historyText+=String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(digBuffer*roundingScale)/roundingScale : digBuffer))
                 }
+                switch opBuffer {
+                case "+":
+                    valBuffer=(rounding ? round((valBuffer+digBuffer)*roundingScale)/roundingScale : valBuffer+digBuffer)
+                case "-":
+                    valBuffer=(rounding ? round((valBuffer-digBuffer)*roundingScale)/roundingScale : valBuffer-digBuffer)
+                case "x":
+                    valBuffer=(rounding ? round((valBuffer*digBuffer)*roundingScale)/roundingScale : valBuffer*digBuffer)
+                case "/":
+                    valBuffer=(rounding ? round((valBuffer/digBuffer)*roundingScale)/roundingScale : valBuffer/digBuffer)
+                case "=":
+                    break
+                case "[m+]","[m-]","[cr]","[sr]":
+                    if digBuffer != 0 {     //開根後組字中又開根，應拿組字中的值來開而不是上次開根結果來開
+                        valBuffer=(rounding ? round(digBuffer*roundingScale)/roundingScale : digBuffer)
+                    }
+                default:
+                    //包括第一次沒有前運算子時，把組字結果做值輸出
+                    if txtBuffer != "" {
+                        valBuffer=(rounding ? round(digBuffer*roundingScale)/roundingScale : digBuffer)
+                    }
 
-            }
-            if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
-                //抑制無效的=出現。哪些是無效的=，即之前opBuffer不是=,CR,SR,[m+],[m-]等會導致輸出結果的運算子
-                historyText+=inputedKey
-            }
-            switch inputedKey {
-            case "[m+]","[m-]","[cr]","[sr]","=":
-                 switch inputedKey {
-                    case "[m+]":
-                        valMemory=(rounding ? round((valMemory+valBuffer)*roundingScale)/roundingScale : valMemory+valBuffer)
-                    case "[m-]":
-                        valMemory=(rounding ? round((valMemory-valBuffer)*roundingScale)/roundingScale : valMemory-valBuffer)
-                    case "[cr]":
-                        valBuffer=(rounding ? round(cbrt(valBuffer)*roundingScale)/roundingScale : cbrt(valBuffer))
-                    case "[sr]":
-                        valBuffer=(rounding ? round(sqrt(valBuffer)*roundingScale)/roundingScale : sqrt(valBuffer))
-                    default:
-                        break
                 }
-                //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號所產生的結果。
                 if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
-//                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
-//                        historyText += "="
-//                    }
-                    historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
+                    //抑制無效的=出現。哪些是無效的=，即之前opBuffer不是=,CR,SR,[m+],[m-]等會導致輸出結果的運算子
+                    historyText += (inputedKey == "=" && roundingDisplay && round(valBuffer*roundingScale)/roundingScale != valBuffer ? "≒" : inputedKey)
                 }
-           default:
-                break
-            }
+                switch inputedKey {
+                case "[m+]","[m-]","[cr]","[sr]","=":
+                     switch inputedKey {
+                        case "[m+]":
+                            valMemory=(rounding ? round((valMemory+valBuffer)*roundingScale)/roundingScale : valMemory+valBuffer)
+                        case "[m-]":
+                            valMemory=(rounding ? round((valMemory-valBuffer)*roundingScale)/roundingScale : valMemory-valBuffer)
+                        case "[cr]":
+                            valBuffer=(rounding ? round(cbrt(valBuffer)*roundingScale)/roundingScale : cbrt(valBuffer))
+                        case "[sr]":
+                            valBuffer=(rounding ? round(sqrt(valBuffer)*roundingScale)/roundingScale : sqrt(valBuffer))
+                        default:
+                            break
+                    }
+                    //這些運算子會導致輸出結果，所以要提示運算結果，並冠空白表示段落。同前要抑制無效等號所產生的結果。
+                    if inputedKey != "=" || (opBuffer != "=" && opBuffer != "[cr]" && opBuffer != "[sr]" && opBuffer != "[m+]" && opBuffer != "[m-]" && opBuffer != "" && opBuffer != "→") {
+    //                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
+    //                        historyText += "="
+    //                    }
+                        historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
+                    }
+               default:
+                    break
+                }
 
-            txtBuffer=""
-            digBuffer=0
-            opBuffer=inputedKey
+                txtBuffer=""
+                digBuffer=0
+                opBuffer=inputedKey
+            }
+            prevInputed = inputedKey
         case "0","1","2","3","4","5","6","7","8","9",".","[mr]":
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
@@ -157,6 +167,7 @@ class calcConvert {
                         digBuffer=0
                     }               }
             }
+            prevInputed = txtBuffer
         default:
             //只有一種特殊情形是傳入按鍵外的資料，即傳入=後接數值，則將數值帶入保存 (度量單位改變時帶入換算結果）
             if inputedKey.rangeOfString("=") != nil {
