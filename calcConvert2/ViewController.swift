@@ -81,6 +81,7 @@ class ViewController: UIViewController, tableViewDelegate {
         uiHistory.text = calc.setCategory(withCategory: categoryIndex)   //這會帶動將unit初始為第1個度量單位
         populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
         navigationItem.title = calc.categoryTitle
+        outputToDisplay ()  //還沒等號時換度量會先算=的結果，所以不能輸出結果
     }
 
     //啟始或變換單價換算開關

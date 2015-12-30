@@ -29,6 +29,7 @@ class calcConvert {
 
     var historySwitch:Bool=false        //是否顯示計算歷程
     var historyText:String=""           //計算歷程的內容
+    var prevHistoryText:String=""       //前次要放入historyText的紀錄內容
 
     var precisionForOutput:String="9"               //輸出欄使用的精度
     let precisionForHistory:String="7"              //計算歷程使用的精度
@@ -357,7 +358,7 @@ class calcConvert {
     //度量種類
     var category:([String])           //在init()會塞入categoryList這個大陣列，之後取得匯率時再加入currencyCategory
     let categoryList:([String]) =  ["重量","長度","面積"]
-    let currencyCategory:([String])=["匯兌"]
+    let currencyCategory:([String])=["貨幣"]
 
 
     //單位
@@ -455,10 +456,10 @@ class calcConvert {
     func changeUnitInHistoryText () ->String {
         //變換度量單位時輸出：[@]<單位名稱>：[目前數值][前運算子] opBuffer代表剛開始沒有前運算子則不輸出0；前運算子是"→"也要抑制
         let text = (opBuffer == "" ? "" : " ") + (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))) + (txtBuffer == "" || opBuffer == "→" ? "" : opBuffer)
-        if text != historyText {    //初始時，setPriceConverting()和changeUnit()會重複叫，則不要重複給相同單位名稱
+        if text != prevHistoryText {    //初始時，setPriceConverting()和changeUnit()會重複叫，則不要重複給相同單位名稱
             historyText += text
         }
-
+        prevHistoryText = text
         return self.historyText
     }
 

@@ -140,9 +140,9 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                     let dateFormatter = NSDateFormatter()
                     dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
                     dateFormatter.locale = NSLocale(localeIdentifier: "us")
-                    footer="Yahoo!匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n匯兌換算以美金為基準。例如台幣換日圓是台幣對美金價格再換成日幣，而不是採市場的台幣對日幣價格。"
+                    footer="Yahoo!匯率查詢時間："+dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n貨幣換算以美元為基準。例如台幣換日圓是台幣對美元價格再換成日圓，而不是採市場的台幣對日圓價格。"
                 } else {
-                    footer="等候連網查詢匯率....成功時才會出現「匯兌」選項。"
+                    footer="等候連網查詢匯率....成功時才會出現「貨幣」選項。"
                 }
 
                 return footer
@@ -191,7 +191,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
             let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
             cell.uiSwitch.on=lastPriceSwitchStatus
-            if lastSelectedCategoryIndex == 3 {   //匯兌時不能使用單價換算
+            if lastSelectedCategoryIndex == 3 {   //貨幣時不能使用單價換算
                 lastPriceSwitchEnabled = false
             } else {
                 lastPriceSwitchEnabled = true
@@ -228,7 +228,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 let newCell = tableView.cellForRowAtIndexPath(indexPath)
                 newCell!.accessoryType = .Checkmark
                 lastSelectedCategoryIndex = indexPath.row
-                if lastSelectedCategoryIndex == 3 { //匯兌時不能使用單價換算
+                if lastSelectedCategoryIndex == 3 { //貨幣時不能使用單價換算
                     lastPriceSwitchEnabled = false
                     lastPriceSwitchStatus = false
                 } else {
