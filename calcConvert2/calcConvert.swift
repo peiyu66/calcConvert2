@@ -368,10 +368,9 @@ class calcConvert {
             ["公尺","公分","台尺","英尺","英寸"],       // 長度
             ["平方公尺","平方英尺","坪"]               // 面積
         ]
-    let currencyList:([[String]]) = [["美元","歐元","日圓","台幣","港幣","人民幣"]]
-    let currencyCode:([String]) = ["USD","EUR","JPY","TWD","HKD","CNY"] //這是Yahoo的查詢代碼
+    let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","港幣","人民幣"]]
+    let currencyCode:([String]) = ["TWD","USD","EUR","JPY","HKD","CNY"] //這是Yahoo的查詢代碼
     var currencyTime:NSDate?  //最後成功取得全部匯率的時間
-    var queryTime:NSDate?     //查詢當中的時間
 
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
     //這是3維陣列：[度量種類][原單位][新單位]
@@ -404,13 +403,12 @@ class calcConvert {
     ]
     var convertX:([[[(Double,Double)]]])    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
     var exchangeRate:([[[(Double,Double)]]]) = [[
-        //美元      歐元        日圓       台幣       港幣       人民幣
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //美元
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //歐元
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //日圓
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //台幣
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],  //港幣
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]   //人民幣
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]
     ]]
 
 
@@ -490,8 +488,91 @@ class calcConvert {
      }
 
 
-    //查詢Yahoo!匯率
     func getExchangeRate () {
+        botQuery()
+//        if currencyTime == nil {
+//            yahooQuery()
+//        }
+    }
+
+
+    //查詢台灣銀行匯率
+
+    func botQuery () {
+        self.currencyTime = nil
+        let url = NSURL(string: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm");
+        let request = NSURLRequest(URL: url!)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: {(data, response, error) in
+            if error == nil {
+                if let downloadedData = String(data: data!, encoding: NSUTF8StringEncoding) {
+//                    print (self.botRate(downloadedData,currency: "USD").spotSelling)
+                    if let range = downloadedData.rangeOfString("最新掛牌時間：(.+)", options: .RegularExpressionSearch) {
+                        let dTime = downloadedData.substringWithRange(range).componentsSeparatedByString(";")[1]
+                        let dateFormatter = NSDateFormatter()
+                        dateFormatter.locale=NSLocale(localeIdentifier: "zh_TW")
+                        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm zzz"
+                        if let dt = dateFormatter.dateFromString(dTime+" GMT+8") {
+                            self.currencyTime = dt
+
+                            for (indexFrom,_) in self.currencyCode.enumerate() {
+                                for (indexTo,currencyTo) in self.currencyCode.enumerate() {
+                                    if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
+                                        if indexFrom == 0 {
+                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.botRate(downloadedData,currency: currencyTo).spotSelling
+                                            self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][indexFrom][indexTo].1
+                                        } else {
+                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexTo].1   //以下皆以對美金的價格帶入，以維持換算係數的一致
+                                            self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexFrom].1
+                                            self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexFrom].1
+                                            self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexTo].1
+                                        }
+                                    }
+                                    
+                                }
+                            }
+
+                            self.convertX = self.convertXList + self.exchangeRate
+                            self.unit = self.unitList + self.currencyList
+                            self.category = self.categoryList + self.currencyCategory
+                       }
+                    }
+                }
+            }
+            
+            
+        })
+        task.resume()
+
+    }
+
+    func botRate (data:String,currency:String) -> (cashBuying:Double,cashSelling:Double,spotBuying:Double,spotSelling:Double) {
+        var cashBuying:Double   = 0
+        var cashSelling:Double  = 0
+        var spotBuying:Double   = 0
+        var spotSelling:Double  = 0
+
+        if let range=data.rangeOfString("\\("+currency+"\\)(.+)</td><td class=\"link\" colspan=\"1\"><a href=", options: .RegularExpressionSearch) {
+            let usd=data.substringWithRange(range).stringByReplacingOccurrencesOfString("</td><td class=\"decimal\">", withString: ",").stringByReplacingOccurrencesOfString("</td><td class=\"link\" colspan=\"1\"><a href=", withString: "")
+            if let d1=Double(usd.componentsSeparatedByString(",")[1]) {
+                cashBuying  = d1
+            }
+            if let d2=Double(usd.componentsSeparatedByString(",")[2]) {
+                cashSelling = d2
+            }
+            if let d3=Double(usd.componentsSeparatedByString(",")[3]) {
+                spotBuying  = d3
+            }
+            if let d4=Double(usd.componentsSeparatedByString(",")[4]) {
+                spotSelling = d4
+            }
+        }
+        return (cashBuying,cashSelling,spotBuying,spotSelling)
+    }
+
+    //查詢Yahoo!匯率
+    var queryTime:NSDate?     //查詢當中的時間
+    func yahooQuery () {
+        self.currencyTime = nil
         let dispatchGroup:dispatch_group_t = dispatch_group_create()
         var yahooSucceed:Bool = true
         for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
@@ -510,11 +591,11 @@ class calcConvert {
                                         let d = downloadedData.componentsSeparatedByString(",")[2].stringByReplacingOccurrencesOfString("\"", withString: "")
                                         let t = downloadedData.componentsSeparatedByString(",")[3].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "").uppercaseString
                                         let dateFormatter = NSDateFormatter()
-                                        dateFormatter.locale=NSLocale(localeIdentifier: "us")
+                                        dateFormatter.locale=NSLocale(localeIdentifier: "en_US")
                                         dateFormatter.dateFormat = "M/d/yyyy h:mma zzz"
                                         if let dt = dateFormatter.dateFromString(d+" "+t+" GMT") {
                                             self.queryTime = dt
-                                        }
+                                         }
                                     }
                                 } else {
                                     yahooSucceed = false
@@ -541,11 +622,11 @@ class calcConvert {
                     }
                 }
                 //把匯率加入到度量轉換係數的大陣列
-                self.convertX = self.convertXList + self.exchangeRate
-                self.unit = self.unitList + self.currencyList
-                self.category = self.categoryList + self.currencyCategory
                 if let _ = self.queryTime {
                     self.currencyTime = self.queryTime! //這裡沒有!會當掉
+                    self.convertX = self.convertXList + self.exchangeRate
+                    self.unit = self.unitList + self.currencyList
+                    self.category = self.categoryList + self.currencyCategory
                 }
             } else {
                 self.currencyTime = nil
