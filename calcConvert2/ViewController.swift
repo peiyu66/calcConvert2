@@ -24,8 +24,18 @@ class ViewController: UIViewController, tableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: "applicationDidBecomeActive:",
+            name: UIApplicationDidBecomeActiveNotification,
+            object: nil)
+
+
+
         // Initialize the output labels.
-        uiOutput.adjustsFontSizeToFitWidth=true //數字太常時會自動縮小字級
+        uiOutput.adjustsFontSizeToFitWidth=true //數字太長時會自動縮小字級
         uiMemory.adjustsFontSizeToFitWidth=true
         uiOutput.text="0"
         uiMemory.text=""
@@ -48,13 +58,7 @@ class ViewController: UIViewController, tableViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         //進入畫面時，檢查匯率查詢，例如從設定畫面切回到主畫面就會檢查一次
-        if let _ = calc.currencyTime {
-            if (0 - (calc.currencyTime!.timeIntervalSinceNow / 60)) > 30 {
-                calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
-            }
-        } else  {
-            calc.getExchangeRate()  //還沒成功查過就重試查詢匯率
-        }
+        calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
      }
 
 
@@ -63,6 +67,14 @@ class ViewController: UIViewController, tableViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
+
+    func applicationDidBecomeActive(notification: NSNotification) {
+        calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
+    }
+
+    deinit {
+         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
 
     @IBOutlet weak var uiPriceConverting: UIButton!
 

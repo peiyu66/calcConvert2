@@ -489,10 +489,16 @@ class calcConvert {
 
 
     func getExchangeRate () {
-        botQuery()
-//        if currencyTime == nil {
-//            yahooQuery()
-//        }
+        if let _ = currencyTime {
+            if (0 - (currencyTime!.timeIntervalSinceNow / 60)) > 30 {
+                botQuery()  //上次查詢超過30分鐘再重新查詢匯率
+            }
+        } else  {
+            botQuery()  //還沒成功查過就重試查詢匯率
+            //        if currencyTime == nil {
+            //            yahooQuery()
+            //        }
+        }
     }
 
 
