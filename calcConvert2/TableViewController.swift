@@ -127,7 +127,11 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         case 0: //度量種類footer 顯示匯率查詢時間及計算說明
             return checkCurrencyTime ()
         case 2: //單價換算
-            return "單價換算切到ON，先選公克再輸入1，代表每公克單價1元，然後切換至公斤得每公斤1000元。"
+            if lastSelectedCategoryIndex == 3 { //貨幣不能使用單價換算
+                return "貨幣不能使用單價換算。"
+            } else {
+                return "單價換算切到ON，先選公克再輸入1，代表每公克單價1元，然後切換至公斤得每公斤1000元。"
+            }
         default:
             return ""
         }
