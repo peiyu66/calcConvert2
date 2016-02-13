@@ -8,13 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController, tableViewDelegate {
+class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     let precisionLong:String   = "16"
     let precisionShort:String  = "9"
     var calc:calcConvert = calcConvert()
 
-    @IBOutlet weak var uiOutput: UILabel!
+
+    @IBOutlet weak var uiOutput: pasteboardLabel!
     @IBOutlet weak var uiMemory: UILabel!
     @IBOutlet weak var uiUnits: UISegmentedControl!
     @IBOutlet weak var uiHistory: UILabel!
@@ -52,6 +53,8 @@ class ViewController: UIViewController, tableViewDelegate {
         calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
         changeHistorySwitch(withSwitch: calc.historySwitch)     //這會顯示或隱藏historyText
         showPriceConvert(withSwitch: calc.showPriceConvertButton)     //這會顯示或隱藏單價換算開關
+
+        uiOutput.Delegate = self
 
     }
 
@@ -176,6 +179,7 @@ class ViewController: UIViewController, tableViewDelegate {
 
     }
 
+
     //***** 用手指變動小數位數 *****
     var factor:(originScale:Int,movingScale:Int) = (0,0) //原始的位數，和移動中的位數
     var beginX:Int = 0                                   //這次開始移動時的位數
@@ -204,6 +208,35 @@ class ViewController: UIViewController, tableViewDelegate {
         }
     }
 
+
+//***** 手指點出複製貼上的選單 *****//
+    @IBAction func uiTapGestureRecognized(sender: UITapGestureRecognizer) {
+        if sender.state == .Ended {
+            showMenu(uiOutput)
+        }
+    }
+
+    func showMenu(sender: UILabel) {
+        sender.becomeFirstResponder()
+        let menu = UIMenuController.sharedMenuController()
+        if !menu.menuVisible {
+            menu.setTargetRect(sender.frame, inView: sender.superview!)
+            menu.setMenuVisible(true, animated: true)
+        }
+    }
+
+    //uiOutput.Deletage的實作
+    func pasteLabel(withString pasteString: String) {
+        calc.pastBoard = pasteString
+        calcKeyIn("[貼上]")
+    }
+    
+    func copyLabel(){
+        let board = UIPasteboard.generalPasteboard()
+        board.string = String(format:"%."+precisionLong+"g",calc.valBuffer)
+        let menu = UIMenuController.sharedMenuController()
+        menu.setMenuVisible(false, animated: true)
+    }
 
 
     //***** 計算機按鍵的介面 *****

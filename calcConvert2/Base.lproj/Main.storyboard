@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Rd1-Qz-psh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Rd1-Qz-psh">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -216,8 +216,8 @@
                                     <constraint firstAttribute="trailing" secondItem="PGn-D2-Ki2" secondAttribute="trailing" id="qbB-yd-KGY"/>
                                 </constraints>
                             </scrollView>
-                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output">
-                                <rect key="frame" x="28" y="184" width="544" height="79"/>
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output" customClass="pasteboardLabel" customModule="calcConvert2" customModuleProvider="target">
+                                <rect key="frame" x="535" y="184" width="37" height="79"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -233,6 +233,7 @@
                                 </variation>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Rbu-Xm-w25" appends="YES" id="doV-iY-GUa"/>
+                                    <outletCollection property="gestureRecognizers" destination="xbg-eO-1X5" appends="YES" id="9gp-Vn-GBS"/>
                                 </connections>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m = 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fvO-lX-MTt" userLabel="memory">
@@ -746,7 +747,7 @@
                             <constraint firstItem="jez-Wx-S4S" firstAttribute="top" secondItem="frn-sg-9ea" secondAttribute="top" constant="1" id="U5r-lu-Ww0"/>
                             <constraint firstItem="NnX-Kh-qgX" firstAttribute="leading" secondItem="NYV-IT-rKl" secondAttribute="leading" id="UJK-sN-TQf"/>
                             <constraint firstItem="kAw-X8-hyd" firstAttribute="height" secondItem="OLZ-5p-9HB" secondAttribute="height" id="Uee-QJ-9UP"/>
-                            <constraint firstItem="2zZ-du-mTe" firstAttribute="leading" secondItem="066-ro-xrt" secondAttribute="leading" constant="8" id="Uyt-Tl-ZId"/>
+                            <constraint firstItem="2zZ-du-mTe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="066-ro-xrt" secondAttribute="leading" constant="8" id="Uyt-Tl-ZId"/>
                             <constraint firstItem="NYV-IT-rKl" firstAttribute="leading" secondItem="eV4-DJ-CH5" secondAttribute="leading" id="V9d-Ke-zHN"/>
                             <constraint firstItem="ltB-gC-F6N" firstAttribute="leading" secondItem="NYV-IT-rKl" secondAttribute="leading" id="VL3-Vx-WdJ"/>
                             <constraint firstItem="NYV-IT-rKl" firstAttribute="bottom" secondItem="eV4-DJ-CH5" secondAttribute="bottom" id="Vbn-Al-aD2"/>
@@ -1191,9 +1192,6 @@
                                 <include reference="JJr-YQ-QHF"/>
                                 <include reference="fH3-VC-PmE"/>
                                 <include reference="jvT-J2-HD1"/>
-                                <include reference="CMB-fC-niI"/>
-                                <include reference="Uyt-Tl-ZId"/>
-                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="49z-OM-cLl"/>
                                 <include reference="Dvd-o7-jrO"/>
                                 <include reference="F6C-1v-OsX"/>
@@ -1345,6 +1343,9 @@
                                 <exclude reference="cEr-uy-ORT"/>
                                 <include reference="klg-WB-hrz"/>
                                 <include reference="w8f-hA-UPe"/>
+                                <include reference="CMB-fC-niI"/>
+                                <include reference="Uyt-Tl-ZId"/>
+                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="9IT-hT-BdB"/>
                                 <include reference="Ae0-iD-d9d"/>
                                 <exclude reference="S95-aM-dMh"/>
@@ -1412,8 +1413,8 @@
                         <outlet property="uiHistoryContentView" destination="PGn-D2-Ki2" id="7S6-1A-Jaf"/>
                         <outlet property="uiHistoryScrollView" destination="mKU-LI-m15" id="rvi-uj-Kl5"/>
                         <outlet property="uiMemory" destination="fvO-lX-MTt" id="9sA-MS-AFH"/>
-                        <outlet property="uiOutput" destination="2zZ-du-mTe" id="dqY-sX-2Rz"/>
-                        <outlet property="uiPanGesture" destination="Rbu-Xm-w25" id="blS-GA-3sf"/>
+                        <outlet property="uiOutput" destination="2zZ-du-mTe" id="TG6-s7-CIw"/>
+                        <outlet property="uiPanGesture" destination="Rbu-Xm-w25" id="dQE-ZR-8h4"/>
                         <outlet property="uiPriceConverting" destination="1sa-ag-dvJ" id="Zop-Zh-rFq"/>
                         <outlet property="uiUnits" destination="a7I-b1-EsN" id="X9R-fJ-67S"/>
                     </connections>
@@ -1421,9 +1422,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="Rbu-Xm-w25">
                     <connections>
-                        <action selector="uiPanGestureRecognized:" destination="BYZ-38-t0r" id="AdZ-ob-wBB"/>
+                        <action selector="uiPanGestureRecognized:" destination="BYZ-38-t0r" id="2dQ-zB-haO"/>
                     </connections>
                 </panGestureRecognizer>
+                <tapGestureRecognizer id="xbg-eO-1X5">
+                    <connections>
+                        <action selector="uiTapGestureRecognized:" destination="BYZ-38-t0r" id="AJX-Nh-3Si"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1173" y="698"/>
         </scene>

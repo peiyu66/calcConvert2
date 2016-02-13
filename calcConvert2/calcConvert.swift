@@ -23,6 +23,8 @@ class calcConvert {
     var digBuffer:Double=0    //組字結果的值
     var prevInputedKey:String=""   //保存前次輸入運算子或運算元
 
+    var pastBoard:String="" //複製貼上的暫存區
+
     var valueOutput:String="0"          //輸出計算結果valBuffer or digBuffer
     var memoryOutput:String=""          //輸出valMemory
     var categoryTitle=""                //目前度量種類的標題
@@ -167,7 +169,7 @@ class calcConvert {
             opBuffer = inputedKey
             prevInputedKey = inputedKey
 
-        case "0","1","2","3","4","5","6","7","8","9",".","[mr]":
+        case "0","1","2","3","4","5","6","7","8","9",".","[mr]","[貼上]":
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
             case "[m+]","[m-]","[cr]","[sr]","=","→":    //度量轉換時，opBuffer是"→"
@@ -182,11 +184,21 @@ class calcConvert {
             default:
                 break
             }
-            if inputedKey=="[mr]" {
+            if inputedKey=="[mr]" || inputedKey=="[貼上]"{
                 //mr等於重新組字，但要等組字完成才提示mr的數值
                 historyText += txtBuffer + " " + inputedKey + " "
-                txtBuffer=String(format:"%."+precisionForOutput+"g",valMemory)
-                digBuffer=(rounding ? round(valMemory*roundingScale)/roundingScale : valMemory)
+                if inputedKey=="[mr]" {
+                    txtBuffer=String(format:"%."+precisionForOutput+"g",valMemory)
+                    digBuffer=(rounding ? round(valMemory*roundingScale)/roundingScale : valMemory)
+                } else {
+                    if let valPastBoard = Double(pastBoard) {
+                        txtBuffer=String(format:"%."+precisionForOutput+"g",valPastBoard)
+                        digBuffer=(rounding ? round(valPastBoard*roundingScale)/roundingScale : valPastBoard)
+                    } else {
+                        txtBuffer="0"
+                        digBuffer=0
+                    }
+                }
 
             } else {
                 if txtBuffer == "0" && inputedKey != "." { txtBuffer="" } //如果組數字時已有前導零，又不是組小數，則清除前導零
@@ -232,7 +244,7 @@ class calcConvert {
             if self.txtBuffer == "" {
                 valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
             } else {
-                if opBuffer == "[mr]" {
+                if opBuffer == "[mr]" || opBuffer == "[貼上]" {
                     valueOutput = String(format:"%."+precisionForOutput+"g",(roundingDisplay ? round(digBuffer*roundingScale)/roundingScale : digBuffer)) //不使用txtBuffer因為mr後txtBuffer精度不準
                 } else {
                     valueOutput = txtBuffer
