@@ -555,9 +555,12 @@ class calcConvert {
                        }
                     }
                 }
+            } else {    //error != nil 則不提供貨幣度量，為避免上次App睡眠時有保存貨幣度量所以再次重置
+                self.convertX = self.convertXList
+                self.unit = self.unitList
+                self.category = self.categoryList
             }
-            
-            
+
         })
         task.resume()
 
