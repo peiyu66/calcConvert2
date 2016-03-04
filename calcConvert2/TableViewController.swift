@@ -144,7 +144,12 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                     let dateFormatter = NSDateFormatter()
                     dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
                     dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
-                    footer="匯率(即期賣出)掛牌時間："+dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n貨幣換算以台幣為基準。例如美元換日圓是美元對台幣價格再換成日圓。"
+                    if calc!.rateSource == "台灣銀行" {
+                        footer=calc!.rateSource+"(即期賣出)掛牌時間："
+                    } else {
+                        footer=calc!.rateSource+"查詢時間："
+                    }
+                    footer = footer + dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n貨幣換算以台幣為基準。例如美元換日圓是美元對台幣價格再換成日圓。"
                 } else {
                     footer="等候連網查詢匯率....成功時才會出現「貨幣」選項。"
                 }

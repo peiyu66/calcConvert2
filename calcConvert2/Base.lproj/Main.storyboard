@@ -206,6 +206,9 @@
                                             <constraint firstItem="g7U-1o-jpf" firstAttribute="top" secondItem="PGn-D2-Ki2" secondAttribute="top" id="bFu-OP-q1X"/>
                                             <constraint firstAttribute="bottom" secondItem="g7U-1o-jpf" secondAttribute="bottom" id="bcY-Pf-YBZ"/>
                                         </constraints>
+                                        <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="2" width="344" height="17"/>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -606,7 +609,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 </variation>
                                 <variation key="heightClass=compact-widthClass=compact">
-                                    <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="60"/>
@@ -626,7 +629,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                 </variation>
                                 <variation key="heightClass=compact-widthClass=compact">
-                                    <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="60"/>

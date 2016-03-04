@@ -499,17 +499,16 @@ class calcConvert {
 
      }
 
+    var rateSource:String = ""  //查詢的資料來源，台灣銀行或Yahoo!
 
     func getExchangeRate () {
+        rateSource = ""
         if let _ = currencyTime {
-            if (0 - (currencyTime!.timeIntervalSinceNow / 60)) > 30 {
-                botQuery()  //上次查詢超過30分鐘再重新查詢匯率
+            if (0 - (currencyTime!.timeIntervalSinceNow / 60)) > 5 {
+                botQuery()  //上次查詢超過5分鐘再重新查詢匯率
             }
         } else  {
             botQuery()  //還沒成功查過就重試查詢匯率
-            //        if currencyTime == nil {
-            //            yahooQuery()
-            //        }
         }
     }
 
@@ -517,6 +516,7 @@ class calcConvert {
     //查詢台灣銀行匯率
 
     func botQuery () {
+        rateSource = "台灣銀行"
         self.currencyTime = nil
         let url = NSURL(string: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm");
         let request = NSURLRequest(URL: url!)
@@ -560,7 +560,9 @@ class calcConvert {
                 self.unit = self.unitList
                 self.category = self.categoryList
             }
-
+            if self.currencyTime == nil {
+                self.yahooQuery()
+            }
         })
         task.resume()
 
@@ -593,13 +595,14 @@ class calcConvert {
     //查詢Yahoo!匯率
     var queryTime:NSDate?     //查詢當中的時間
     func yahooQuery () {
+        rateSource = "Yahoo!"
         self.currencyTime = nil
         let dispatchGroup:dispatch_group_t = dispatch_group_create()
         var yahooSucceed:Bool = true
         for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
             for (indexTo,codeTo) in self.currencyCode.enumerate() {
                 if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
-                    if indexFrom == 0 { //只查第一排也就是美元，其他排以美元為基礎作換算
+                    if indexFrom == 0 { //只查第一排也就是台幣，其他排以台幣為基礎作換算
                         dispatch_group_enter(dispatchGroup)
                             let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
                             let request = NSURLRequest(URL: url!)

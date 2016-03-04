@@ -61,7 +61,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         //進入畫面時，檢查匯率查詢，例如從設定畫面切回到主畫面就會檢查一次
-        calc.getExchangeRate()  //上次查詢超過30分鐘再重新查詢匯率
+        calc.getExchangeRate()  //上次查詢超過？分鐘再重新查詢匯率
      }
 
 
