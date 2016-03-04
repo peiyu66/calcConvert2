@@ -382,6 +382,7 @@ class calcConvert {
         ]
     let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","港幣","人民幣"]]
     let currencyCode:([String]) = ["TWD","USD","EUR","JPY","HKD","CNY"] //這是Yahoo的查詢代碼
+    var queryTime:NSDate?     //查詢當中的時間
     var currencyTime:NSDate?  //最後成功取得全部匯率的時間
 
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
@@ -429,6 +430,7 @@ class calcConvert {
     func setCategory (withCategory categoryIndex: Int) ->String {
         self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
+        categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
         return changeUnit (withUnit: 0)
     }
 
@@ -502,7 +504,6 @@ class calcConvert {
     var rateSource:String = ""  //查詢的資料來源，台灣銀行或Yahoo!
 
     func getExchangeRate () {
-        rateSource = ""
         if let _ = currencyTime {
             if (0 - (currencyTime!.timeIntervalSinceNow / 60)) > 5 {
                 botQuery()  //上次查詢超過5分鐘再重新查詢匯率
@@ -516,8 +517,8 @@ class calcConvert {
     //查詢台灣銀行匯率
 
     func botQuery () {
-        rateSource = "台灣銀行"
-        self.currencyTime = nil
+
+        self.queryTime = nil
         let url = NSURL(string: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm");
         let request = NSURLRequest(URL: url!)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: {(data, response, error) in
@@ -530,7 +531,7 @@ class calcConvert {
                         dateFormatter.locale=NSLocale(localeIdentifier: "zh_TW")
                         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm zzz"
                         if let dt = dateFormatter.dateFromString(dTime+" GMT+8") {
-                            self.currencyTime = dt
+                            self.queryTime = dt
 
                             for (indexFrom,_) in self.currencyCode.enumerate() {
                                 for (indexTo,currencyTo) in self.currencyCode.enumerate() {
@@ -555,13 +556,16 @@ class calcConvert {
                        }
                     }
                 }
-            } else {    //error != nil 則不提供貨幣度量，為避免上次App睡眠時有保存貨幣度量所以再次重置
-                self.convertX = self.convertXList
-                self.unit = self.unitList
-                self.category = self.categoryList
+//            } else {    //error != nil 則不提供貨幣度量，為避免上次App睡眠時有保存貨幣度量所以再次重置
+//                self.convertX = self.convertXList
+//                self.unit = self.unitList
+//                self.category = self.categoryList
             }
-            if self.currencyTime == nil {
+            if self.queryTime == nil {
                 self.yahooQuery()
+            } else {
+                self.currencyTime = self.queryTime
+                self.rateSource = "台灣銀行"
             }
         })
         task.resume()
@@ -593,10 +597,10 @@ class calcConvert {
     }
 
     //查詢Yahoo!匯率
-    var queryTime:NSDate?     //查詢當中的時間
+
     func yahooQuery () {
-        rateSource = "Yahoo!"
-        self.currencyTime = nil
+
+        self.queryTime = nil
         let dispatchGroup:dispatch_group_t = dispatch_group_create()
         var yahooSucceed:Bool = true
         for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
@@ -647,13 +651,18 @@ class calcConvert {
                 }
                 //把匯率加入到度量轉換係數的大陣列
                 if let _ = self.queryTime {
+                    self.rateSource = "Yahoo!"
                     self.currencyTime = self.queryTime! //這裡沒有!會當掉
                     self.convertX = self.convertXList + self.exchangeRate
                     self.unit = self.unitList + self.currencyList
                     self.category = self.categoryList + self.currencyCategory
+//                } else {
+//                    self.convertX = self.convertXList
+//                    self.unit = self.unitList
+//                    self.category = self.categoryList
                 }
-            } else {
-                self.currencyTime = nil
+//            } else {
+//                self.currencyTime = nil
             }
         })
 

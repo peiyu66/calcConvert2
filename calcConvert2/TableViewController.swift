@@ -91,9 +91,6 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: //度量種類有幾條row?
-            if calc!.category.count == (calc!.categoryList.count + 1) {
-                checkCurrencyTime ()
-            }
             return calc!.category.count
         case 1:
             if lastRoundingDisplay {
