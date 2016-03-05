@@ -62,6 +62,8 @@ class calcConvert {
         convertX = convertXList
         category = categoryList
         unit = unitList
+        exchangeRate = initRate
+        backupRate = initRate
     }
 
     func getUserPreference () {
@@ -368,13 +370,13 @@ class calcConvert {
 
 
     //度量種類
-    var category:([String])           //在init()會塞入categoryList這個大陣列，之後取得匯率時再加入currencyCategory
+    var category:([String]) = []          //在init()會塞入categoryList這個陣列，之後取得匯率時再加入currencyCategory
     let categoryList:([String]) =  ["重量","長度","面積"]
     let currencyCategory:([String])=["貨幣"]
 
 
     //單位
-    var unit:([[String]])            //在init()會塞入unitList這個陣列，之後取得匯率時再加入currencyList
+    var unit:([[String]]) = []           //在init()會塞入unitList這個陣列，之後取得匯率時再加入currencyList
     var unitList:([[String]]) =  [
             ["公斤","公克","台斤","台兩","磅","盎司"],   // 重量
             ["公尺","公分","台尺","英尺","英寸"],       // 長度
@@ -414,8 +416,8 @@ class calcConvert {
             [(400.0,121.0),(400.0,11.241268),  (1.0,1.0)]           //坪 11.241268坪=400平方英尺
         ]
     ]
-    var convertX:([[[(Double,Double)]]])    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
-    var exchangeRate:([[[(Double,Double)]]]) = [[
+    var convertX:([[[(Double,Double)]]]) = [[[]]]    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
+    var initRate:([[[(Double,Double)]]]) = [[
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
@@ -423,7 +425,8 @@ class calcConvert {
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]
     ]]
-
+    var exchangeRate:([[[(Double,Double)]]]) = [[[]]]   //在查詢時帶入initRate，因為台灣銀行的匯率係數和Yahoo!顛倒，所以查詢時要重置
+    var backupRate:([[[(Double,Double)]]]) = [[[]]]     //Yahoo!查詢時會破壞exchangeRate所以先保存起來，失敗時復原
 
 
 
@@ -532,7 +535,7 @@ class calcConvert {
                         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm zzz"
                         if let dt = dateFormatter.dateFromString(dTime+" GMT+8") {
                             self.queryTime = dt
-
+                            self.exchangeRate = self.initRate
                             for (indexFrom,_) in self.currencyCode.enumerate() {
                                 for (indexTo,currencyTo) in self.currencyCode.enumerate() {
                                     if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
@@ -540,11 +543,11 @@ class calcConvert {
                                             self.exchangeRate[0][indexFrom][indexTo].1 = self.botRate(downloadedData,currency: currencyTo).spotSelling
                                             self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][indexFrom][indexTo].1
                                         } else {
-                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexTo].1   //以下皆以對美金的價格帶入，以維持換算係數的一致
+                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexTo].1   //以下皆以對台幣的價格帶入，以維持換算係數的一致
                                             self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexFrom].1
                                             self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexFrom].1
                                             self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexTo].1
-                                        }
+                                       }
                                     }
                                     
                                 }
@@ -565,7 +568,10 @@ class calcConvert {
                 self.yahooQuery()
             } else {
                 self.currencyTime = self.queryTime
-                self.rateSource = "台灣銀行"
+                self.rateSource = "台灣銀行"    //未超過2小時就繼續用台灣銀行的數字
+                if (0 - (self.currencyTime!.timeIntervalSinceNow / 60)) > 120 {
+                    self.yahooQuery()  //台灣銀行掛牌時間超過2小時再重新查詢Yahoo!匯率
+                }
             }
         })
         task.resume()
@@ -599,7 +605,8 @@ class calcConvert {
     //查詢Yahoo!匯率
 
     func yahooQuery () {
-
+        self.backupRate = self.exchangeRate
+        self.exchangeRate = self.initRate
         self.queryTime = nil
         let dispatchGroup:dispatch_group_t = dispatch_group_create()
         var yahooSucceed:Bool = true
@@ -640,13 +647,13 @@ class calcConvert {
             if yahooSucceed {
                 for (indexFrom,_) in self.currencyCode.enumerate() {
                     for (indexTo,_) in self.currencyCode.enumerate() {
-                        if indexFrom < indexTo && indexFrom > 0 {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
-                            self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexTo].0   //以下皆以對美金的價格帶入，以維持換算係數的一致
+                        if indexFrom < indexTo && indexFrom != 0 {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
+                            self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexTo].0   //以下皆以對台幣的價格帶入，以維持換算係數的一致
                             self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexFrom].0
                             self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexFrom].0
                             self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexTo].0
                         }
-                        
+
                     }
                 }
                 //把匯率加入到度量轉換係數的大陣列
@@ -656,13 +663,10 @@ class calcConvert {
                     self.convertX = self.convertXList + self.exchangeRate
                     self.unit = self.unitList + self.currencyList
                     self.category = self.categoryList + self.currencyCategory
-//                } else {
-//                    self.convertX = self.convertXList
-//                    self.unit = self.unitList
-//                    self.category = self.categoryList
+                } else {
+                    self.exchangeRate = self.backupRate
                 }
-//            } else {
-//                self.currencyTime = nil
+
             }
         })
 

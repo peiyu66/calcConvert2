@@ -143,8 +143,10 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                     dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
                     if calc!.rateSource == "台灣銀行" {
                         footer=calc!.rateSource+"(即期賣出)掛牌時間："
+                    } else if calc!.rateSource == "Yahoo!" {
+                        footer=calc!.rateSource+"匯率查詢時間："
                     } else {
-                        footer=calc!.rateSource+"查詢時間："
+                        footer="匯率查詢時間："
                     }
                     footer = footer + dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n貨幣換算以台幣為基準。例如美元換日圓是美元對台幣價格再換成日圓。"
                 } else {
