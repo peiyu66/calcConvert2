@@ -29,7 +29,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
         NSNotificationCenter.defaultCenter().addObserver(
             self,
-            selector: "applicationDidBecomeActive:",
+            selector: #selector(UIApplicationDelegate.applicationDidBecomeActive(_:)),
             name: UIApplicationDidBecomeActiveNotification,
             object: nil)
 

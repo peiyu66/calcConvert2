@@ -24,10 +24,10 @@ class pasteboardLabel: UILabel {
 
 
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        if action == "copy:" {
+        if action == #selector(NSObject.copy(_:)) {
             return true
         }
-        if action == "paste:" {
+        if action == #selector(NSObject.paste(_:)) {
             if let t = UIPasteboard.generalPasteboard().string {
                 if let _ = Double(t) {
                     return true
