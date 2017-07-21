@@ -18,17 +18,17 @@ class pasteboardLabel: UILabel {
 
     var Delegate:pasteLabelDelegate?
 
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
 
 
-    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        if action == #selector(NSObject.copy(_:)) {
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action ==  #selector(copy(_:)) {
             return true
         }
-        if action == #selector(NSObject.paste(_:)) {
-            if let t = UIPasteboard.generalPasteboard().string {
+        if action == #selector(paste(_:)) {
+            if let t = UIPasteboard.general.string {
                 if let _ = Double(t) {
                     return true
                 }
@@ -37,15 +37,15 @@ class pasteboardLabel: UILabel {
         return false
     }
 
-    override func copy(sender: AnyObject?) {
+    override func copy(_ sender: Any?) {
         Delegate?.copyLabel()
     }
 
-    override func paste(sender: AnyObject?) {
-        if let t = UIPasteboard.generalPasteboard().string {
+    override func paste(_ sender: Any?) {
+        if let t = UIPasteboard.general.string {
             Delegate?.pasteLabel(withString: t)
         }
-        let menu = UIMenuController.sharedMenuController()
+        let menu = UIMenuController.shared
         menu.setMenuVisible(false, animated: true)
     }
 }

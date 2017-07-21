@@ -22,7 +22,7 @@ class cellSwitch: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -32,9 +32,9 @@ class cellSwitch: UITableViewCell {
     @IBOutlet weak var uiSwitchLabel: UILabel!
     @IBOutlet weak var uiSwitch: UISwitch!
 
-    @IBAction func uiChangedSwitchStatus(sender: UISwitch) {
+    @IBAction func uiChangedSwitchStatus(_ sender: UISwitch) {
         
-        tableCellDelegate?.cellSwitchChanged(withStatus: sender.on,cellSwitch:self)
+        tableCellDelegate?.cellSwitchChanged(withStatus: sender.isOn,cellSwitch:self)
     }
 
 }
@@ -53,7 +53,7 @@ class cellStepper: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -63,7 +63,7 @@ class cellStepper: UITableViewCell {
     @IBOutlet weak var uiStepper: UIStepper!
 
 
-    @IBAction func uiValueChanged(sender: UIStepper) {
+    @IBAction func uiValueChanged(_ sender: UIStepper) {
         tableCellDelegate?.cellStepperValueChanged(withCell: self)
     }
 

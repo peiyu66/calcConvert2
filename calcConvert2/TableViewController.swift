@@ -84,11 +84,11 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 4    //度量種類、小數位數、單價換算、計算歷程
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: //度量種類有幾條row?
             return calc!.category.count
@@ -108,7 +108,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         }
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: //度量種類header
             return "度量種類"
@@ -119,7 +119,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         }
     }
     
-    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case 0: //度量種類footer 顯示匯率查詢時間及計算說明
             return checkCurrencyTime ()
@@ -138,9 +138,9 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 //檢查匯率查詢時間，在section footer顯示
                 var footer:String=""
                 if let _=calc!.currencyTime {
-                    let dateFormatter = NSDateFormatter()
+                    let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy/MM/dd hh:mm a"
-                    dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
+                    dateFormatter.locale = Locale(identifier: "en_US")
                     if calc!.rateSource == "台灣銀行" {
                         footer=calc!.rateSource+"(即期賣出)掛牌時間："
                     } else if calc!.rateSource == "Yahoo!" {
@@ -148,7 +148,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                     } else {
                         footer="匯率查詢時間："
                     }
-                    footer = footer + dateFormatter.stringFromDate(calc!.currencyTime!)+" \n\n貨幣換算以台幣為基準。例如美元換日圓是美元對台幣價格再換成日圓。"
+                    footer = footer + dateFormatter.string(from: calc!.currencyTime! as Date)+" \n\n貨幣換算以台幣為基準。例如美元換日圓是美元對台幣價格再換成日圓。"
                 } else {
                     footer="等候連網查詢匯率....成功時才會出現「貨幣」選項。"
                 }
@@ -158,37 +158,37 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
 
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0: //度量種類的cell
-            let cell = tableView.dequeueReusableCellWithIdentifier("cellCategory", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellCategory", for: indexPath)
             cell.textLabel!.text = calc!.category[indexPath.row]
             if indexPath.row == lastSelectedCategoryIndex {
-                cell.accessoryType = .Checkmark
+                cell.accessoryType = .checkmark
             } else {
-                cell.accessoryType = .None
+                cell.accessoryType = .none
             }
             return cell
         case 1: //section 1 小數位數
             switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cellSwitch", for: indexPath) as! cellSwitch
                 cell.tableCellDelegate=self
-                cell.uiSwitch.on=lastRoundingDisplay
+                cell.uiSwitch.isOn=lastRoundingDisplay
                 cell.uiSwitchLabel.text="顯示數值時固定小數位數"
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 return cell
             case 1:
-                let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cellSwitch", for: indexPath) as! cellSwitch
                 cell.tableCellDelegate=self
-                cell.uiSwitch.on=lastRoundingCalculation
+                cell.uiSwitch.isOn=lastRoundingCalculation
                 cell.uiSwitchLabel.text="計算時也要捨入到此位數"
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 return cell
             case 2:
-                let cell = tableView.dequeueReusableCellWithIdentifier("cellStepper", forIndexPath: indexPath) as! cellStepper
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cellStepper", for: indexPath) as! cellStepper
                 cell.tableCellDelegate=self
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 cell.uiStepper.value = lastDecimalScale
                 cell.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",cell.uiStepper.value)
                 return cell
@@ -196,45 +196,45 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 break
             }
         case 2: //section 2 單價換算
-            let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellSwitch", for: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
-            cell.uiSwitch.on=lastPriceSwitchStatus
+            cell.uiSwitch.isOn=lastPriceSwitchStatus
             if lastSelectedCategoryIndex == 3 {   //貨幣時不能使用單價換算
                 lastPriceSwitchEnabled = false
             } else {
                 lastPriceSwitchEnabled = true
             }
-            cell.uiSwitch.enabled=lastPriceSwitchEnabled
+            cell.uiSwitch.isEnabled=lastPriceSwitchEnabled
             cell.uiSwitchLabel.text="單價換算開關"
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
 
             return cell
         case 3: //section 3 計算歷程
-            let cell = tableView.dequeueReusableCellWithIdentifier("cellSwitch", forIndexPath: indexPath) as! cellSwitch
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellSwitch", for: indexPath) as! cellSwitch
             cell.tableCellDelegate=self
-            cell.uiSwitch.on = lastHistorySwitchStatus
+            cell.uiSwitch.isOn = lastHistorySwitchStatus
             cell.uiSwitchLabel.text="計算歷程"
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
             return cell
         default:
             break
         }
         //數錯section數目，否則不應該跑到這裡
-        let cell = tableView.dequeueReusableCellWithIdentifier("cellCategory", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellCategory", for: indexPath)
         cell.textLabel!.text = "unknown section?"
         return cell
 
    }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             //這裡只處理度量種類的選擇，其他設定項目不允許選到row（UITableViewCellSelectionStyle.None）
             if indexPath.row != lastSelectedCategoryIndex {
-                let oldCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastSelectedCategoryIndex, inSection: 0))
-                oldCell!.accessoryType = .None
-                let newCell = tableView.cellForRowAtIndexPath(indexPath)
-                newCell!.accessoryType = .Checkmark
+                let oldCell = tableView.cellForRow(at: IndexPath(row: lastSelectedCategoryIndex, section: 0))
+                oldCell!.accessoryType = .none
+                let newCell = tableView.cellForRow(at: indexPath)
+                newCell!.accessoryType = .checkmark
                 lastSelectedCategoryIndex = indexPath.row
                 if lastSelectedCategoryIndex == 3 { //貨幣時不能使用單價換算
                     lastPriceSwitchEnabled = false
@@ -242,7 +242,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 } else {
                     lastPriceSwitchEnabled = true
                 }
-                self.tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: UITableViewRowAnimation.Automatic)
+                self.tableView.reloadSections(IndexSet(integer: 2), with: UITableViewRowAnimation.automatic)
                 setPreference ()
             }
         }
@@ -251,7 +251,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
 
     // cellSwitchDelegate
     func cellSwitchChanged(withStatus status:Bool?,cellSwitch:UITableViewCell?) {
-        let indexPath = self.tableView.indexPathForCell(cellSwitch!)
+        let indexPath = self.tableView.indexPath(for: cellSwitch!)
         switch indexPath!.section {
         case 1:
             switch indexPath!.row {
@@ -279,8 +279,8 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     // cellStepperDelegate
     func cellStepperValueChanged(withCell cell: cellStepper?) {
         let stepper = cell!.uiStepper
-        lastDecimalScale = stepper.value
-        cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",stepper.value)
+        lastDecimalScale = (stepper?.value)!
+        cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",(stepper?.value)!)
         setPreference ()
     }
 

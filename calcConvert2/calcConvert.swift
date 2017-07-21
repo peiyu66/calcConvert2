@@ -42,7 +42,7 @@ class calcConvert {
     var decimalScale:Double = 4         //四捨五入的小數位
     var roundingScale:Double=10000.0    //四捨五入的小數位,10000是4位數
 
-    var defaults:NSUserDefaults
+    var defaults:UserDefaults
     let keyRounding:String          = "keyRounding"
     let keyRoundingDisplay:String   = "keyRoundingDisplay"
     let keyDecimalScale:String      = "keyDecimalScale"
@@ -55,7 +55,7 @@ class calcConvert {
 
     init () {
 
-        defaults = NSUserDefaults.standardUserDefaults()
+        defaults = UserDefaults.standard
 
 
         //建立轉換係數等陣列，後續查詢匯率成功時，還會加入匯率係數，不成功就維持初始狀態
@@ -67,18 +67,18 @@ class calcConvert {
     }
 
     func getUserPreference () {
-        if let _ = defaults.objectForKey(keyPreferenceUpdated) {
-            self.setRounding(withScale: defaults.doubleForKey (keyDecimalScale), roundingDisplay: defaults.boolForKey(keyRoundingDisplay), roundingCalculation: defaults.boolForKey(keyRounding))
-            self.showPriceConvertButton(withSwitch: defaults.boolForKey(keyshowPriceConvert))
-            self.setHistorySwitch(withSwitch: defaults.boolForKey(keyHistorySwitch))
+        if let _ = defaults.object(forKey: keyPreferenceUpdated) {
+            self.setRounding(withScale: defaults.double (forKey: keyDecimalScale), roundingDisplay: defaults.bool(forKey: keyRoundingDisplay), roundingCalculation: defaults.bool(forKey: keyRounding))
+            let _ = self.showPriceConvertButton(withSwitch: defaults.bool(forKey: keyshowPriceConvert))
+            self.setHistorySwitch(withSwitch: defaults.bool(forKey: keyHistorySwitch))
         } else {
             self.setRounding(withScale: 4, roundingDisplay: false, roundingCalculation: false)
-            self.showPriceConvertButton(withSwitch: false)
+            let _ = self.showPriceConvertButton(withSwitch: false)
             self.setHistorySwitch(withSwitch: false)
         }
     }
 
-    func keyIn (inputedKey: String) -> String {
+    func keyIn (_ inputedKey: String) -> String {
         //組字及運算：valBuffer得到值之後，就把組字中txtBuffer清為empty，並輸出valBuffer
         //如果收到的字是=開頭的數值，則直接帶入數值當作結果
         //如果收到的是其他如empty，則有txtBuffer就輸出txtBuffer，沒有就重新輸出valBuffer
@@ -104,8 +104,8 @@ class calcConvert {
         case "+","-","x","/","=","[m+]","[m-]","[cr]","[sr]":
             //如果四則運算子沒有輸入運算元，又連續接運算子，應消除無意義的連續運算子
             if (prevInputedKey == "+" || prevInputedKey == "-" || prevInputedKey == "x" || prevInputedKey == "/") {
-                let index = historyText.endIndex.advancedBy(-1)
-                historyText = historyText.substringToIndex(index) //+ inputedKey
+                let index = historyText.characters.index(historyText.endIndex, offsetBy: -1)
+                historyText = historyText.substring(to: index) //+ inputedKey
                 //就消除乘0或除0的情形
                 digBuffer = (opBuffer == "x" || opBuffer == "/" ? 1 : 0)
            }
@@ -205,7 +205,7 @@ class calcConvert {
             } else {
                 if txtBuffer == "0" && inputedKey != "." { txtBuffer="" } //如果組數字時已有前導零，又不是組小數，則清除前導零
                 if txtBuffer == ""  && inputedKey == "." { txtBuffer="0"} //如果組字是初始empty又接小數點，則補前導零
-                if txtBuffer.containsString(".") && inputedKey=="." {
+                if txtBuffer.contains(".") && inputedKey=="." {
                     break   //重複小數點就忽略
                 } else {
                     txtBuffer=txtBuffer+inputedKey  //最後把組字接上去
@@ -218,8 +218,8 @@ class calcConvert {
             prevInputedKey = txtBuffer
         default:
             //只有一種特殊情形是傳入按鍵外的資料，即傳入=後接數值，則將數值帶入保存 (度量單位改變時帶入換算結果）
-            if inputedKey.rangeOfString("=") != nil {
-                let inputedValue=inputedKey.stringByReplacingOccurrencesOfString("=", withString: "") //去掉等號
+            if inputedKey.range(of: "=") != nil {
+                let inputedValue=inputedKey.replacingOccurrences(of: "=", with: "") //去掉等號
                 if let _=Double(inputedValue) {
                     valBuffer=Double(inputedValue)!
                 } else {
@@ -276,10 +276,10 @@ class calcConvert {
         self.roundingDisplay = roundingDisplay
         prepareDisplayOutput ()
 
-        defaults.setBool(rounding, forKey: keyRounding)
-        defaults.setBool(roundingDisplay, forKey: keyRoundingDisplay)
-        defaults.setDouble(decimalScale, forKey: keyDecimalScale)
-        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
+        defaults.set(rounding, forKey: keyRounding)
+        defaults.set(roundingDisplay, forKey: keyRoundingDisplay)
+        defaults.set(decimalScale, forKey: keyDecimalScale)
+        defaults.set(Date(), forKey: keyPreferenceUpdated)
     }
 
 
@@ -303,7 +303,7 @@ class calcConvert {
         return factor   //不做時，手指頭移動還是觸動位移計算，但不會叫onScaling()，也不會就不會在historyText寫[≒]
     }
 
-    func onScaling (factor: Int) {
+    func onScaling (_ factor: Int) {
          if factor == 0 {
             scalingValue = round(originValue!)  //小數位＝0時....其實10的0次方得1也行，不過多算1次多1次誤差
             scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
@@ -313,10 +313,10 @@ class calcConvert {
             scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
             let scalingFactor = decimalScale(scalingValue!)
             if scalingFactor < factor {
-                if let _ = scalingOutput!.rangeOfString(".") {
-                    scalingOutput = scalingOutput! + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+                if let _ = scalingOutput!.range(of: ".") {
+                    scalingOutput = scalingOutput! + String(repeating: "0", count: (factor - scalingFactor))
                 } else {
-                    scalingOutput = scalingOutput! + "." + String(count: (factor - scalingFactor), repeatedValue: Character("0"))
+                    scalingOutput = scalingOutput! + "." + String(repeating: "0", count: (factor - scalingFactor))
                 }
             }
         }
@@ -338,21 +338,31 @@ class calcConvert {
     }
 
 
-    func decimalScale (d:Double) -> Int {   //回傳double的小數位數，用於手指操作進位時
+    func decimalScale (_ d:Double) -> Int {   //回傳double的小數位數，用於手指操作進位時
         var scale:Int = 0
         let s:String = String(format:"%."+precisionForOutput+"g",d)
-        let pIndex = s.rangeOfString(".")?.startIndex.advancedBy(1)
-        let ePlus = s.rangeOfString("e+")?.startIndex.advancedBy(2)
-        let eMinus = s.rangeOfString("e-")?.startIndex.advancedBy(2)
-        if  let _ = ePlus {
-            scale = 0
-        } else if let _ = eMinus {
-            scale = Int(s.substringFromIndex(eMinus!))!
-        } else if let _ = pIndex {
-                scale = s.substringFromIndex(pIndex!).characters.count
-        } else {
-            scale = 0
+        if let p = s.range(of: ".")?.lowerBound {
+            let pi = s.index(p, offsetBy: 1)
+            scale = s.substring(from: pi).characters.count
+//        } else if let _ = s.range(of: "e+")?.lowerBound {
+//            scale = 0
+//        } else if let _ = s.range(of: "e-")?.lowerBound {
+//            scale = 0
+//        } else {
+//            scale = 0
         }
+//        let pIndex = s.index((s.range(of: ".")?.lowerBound), offsetBy: 1)
+//        let ePlus  = s.index((s.range(of: "e+")?.lowerBound), offsetBy: 2)
+//        let eMinus = s.index((s.range(of: "e-")?.lowerBound), offsetBy: 2)
+//        if  let _ = ePlus {
+//            scale = 0
+//        } else if let _ = eMinus {
+//            scale = Int(s.substring(from: eMinus))!
+//        } else if let _ = pIndex {
+//                scale = s.substring(from: pIndex).characters.count
+//        } else {
+//            scale = 0
+//        }
         return scale
     }
 
@@ -382,10 +392,10 @@ class calcConvert {
             ["公尺","公分","台尺","英尺","英寸"],       // 長度
             ["平方公尺","平方英尺","坪"]               // 面積
         ]
-    let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","港幣","人民幣"]]
-    let currencyCode:([String]) = ["TWD","USD","EUR","JPY","HKD","CNY"] //這是Yahoo的查詢代碼
-    var queryTime:NSDate?     //查詢當中的時間
-    var currencyTime:NSDate?  //最後成功取得全部匯率的時間
+    let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","越南盾","韓元","港幣","人民幣"]]
+    let currencyCode:([String]) = ["TWD","USD","EUR","JPY","VND","KRW","HKD","CNY"] //這是Yahoo的查詢代碼
+    var queryTime:Date?     //查詢當中的時間
+    var currencyTime:Date?  //最後成功取得全部匯率的時間
 
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
     //這是3維陣列：[度量種類][原單位][新單位]
@@ -418,12 +428,14 @@ class calcConvert {
     ]
     var convertX:([[[(Double,Double)]]]) = [[[]]]    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
     var initRate:([[[(Double,Double)]]]) = [[
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
-        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
+        [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]
     ]]
     var exchangeRate:([[[(Double,Double)]]]) = [[[]]]   //在查詢時帶入initRate，因為台灣銀行的匯率係數和Yahoo!顛倒，所以查詢時要重置
     var backupRate:([[[(Double,Double)]]]) = [[[]]]     //Yahoo!查詢時會破壞exchangeRate所以先保存起來，失敗時復原
@@ -431,7 +443,7 @@ class calcConvert {
 
 
     func setCategory (withCategory categoryIndex: Int) ->String {
-        self.keyIn("=") //先取得計算機的結果
+        let _ = self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
         categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
         return changeUnit (withUnit: 0)
@@ -439,16 +451,16 @@ class calcConvert {
 
     func showPriceConvertButton (withSwitch show:Bool) ->String {
         showPriceConvertButton = show
-        defaults.setBool(showPriceConvertButton, forKey: keyshowPriceConvert)
-        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
-        return setPriceConverting(withSwitch: (show ? defaults.boolForKey(keyPriceConverting) : false)) //如果不顯示開關，也要關閉單價換算為OFF
+        defaults.set(showPriceConvertButton, forKey: keyshowPriceConvert)
+        defaults.set(Date(), forKey: keyPreferenceUpdated)
+        return setPriceConverting(withSwitch: (show ? defaults.bool(forKey: keyPriceConverting) : false)) //如果不顯示開關，也要關閉單價換算為OFF
 
     }
 
     func setPriceConverting (withSwitch priceConverting: Bool) ->String {
         self.priceConverting = priceConverting
-        defaults.setBool(priceConverting, forKey: keyPriceConverting)
-        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
+        defaults.set(priceConverting, forKey: keyPriceConverting)
+        defaults.set(Date(), forKey: keyPreferenceUpdated)
         categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
         return changeUnitInHistoryText ()
     }
@@ -461,8 +473,8 @@ class calcConvert {
 
     func setHistorySwitch (withSwitch historySwitch: Bool) {
         self.historySwitch = historySwitch
-        defaults.setBool(historySwitch, forKey: keyHistorySwitch)
-        defaults.setObject(NSDate(), forKey: keyPreferenceUpdated)
+        defaults.set(historySwitch, forKey: keyHistorySwitch)
+        defaults.set(Date(), forKey: keyPreferenceUpdated)
     }
 
 
@@ -480,11 +492,11 @@ class calcConvert {
 
 
 
-    func unitConvert (unitIndexTo:Int) -> String {
+    func unitConvert (_ unitIndexTo:Int) -> String {
         var output:Double=0
         let factor0=convertX[categoryIndex][unitIndex][unitIndexTo].0
         let factor1=convertX[categoryIndex][unitIndex][unitIndexTo].1
-        self.keyIn("=") //先取得計算機的結果
+        let _ = self.keyIn("=") //先取得計算機的結果
         if priceConverting {
             output = (rounding ? round((valBuffer * factor1 / factor0)*roundingScale)/roundingScale : valBuffer * factor1 / factor0)    //單價換算時，轉換係數的分子分母顛倒
         } else {
@@ -520,57 +532,74 @@ class calcConvert {
     //查詢台灣銀行匯率
 
     func botQuery () {
-
         self.queryTime = nil
-        let url = NSURL(string: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm");
-        let request = NSURLRequest(URL: url!)
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: {(data, response, error) in
+        let url = URL(string: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm");
+        let request = URLRequest(url: url!)
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             if error == nil {
-                if let downloadedData = String(data: data!, encoding: NSUTF8StringEncoding) {
-//                    print (self.botRate(downloadedData,currency: "USD").spotSelling)
-                    if let range = downloadedData.rangeOfString("最新掛牌時間：(.+)", options: .RegularExpressionSearch) {
-                        let dTime = downloadedData.substringWithRange(range).componentsSeparatedByString(";")[1]
-                        let dateFormatter = NSDateFormatter()
-                        dateFormatter.locale=NSLocale(localeIdentifier: "zh_TW")
+                if let downloadedData = String(data: data!, encoding: String.Encoding.utf8) {
+                    //                    print (self.botRate(downloadedData,currency: "USD").spotSelling)
+                    if let range = downloadedData.range(of: "最新掛牌時間：(.+)", options: .regularExpression) {
+                        let time1 = downloadedData.substring(with: range)
+                        let time2 = time1.replacingOccurrences(of: "最新掛牌時間：<span class=\"time\">", with: "")
+                        let dTime = time2.replacingOccurrences(of: "</span>", with: "")
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.locale=Locale(identifier: "zh_TW")
                         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm zzz"
-                        if let dt = dateFormatter.dateFromString(dTime+" GMT+8") {
+                        if let dt = dateFormatter.date(from: dTime+" GMT+8") {
                             self.queryTime = dt
-                            self.exchangeRate = self.initRate
-                            for (indexFrom,_) in self.currencyCode.enumerate() {
-                                for (indexTo,currencyTo) in self.currencyCode.enumerate() {
-                                    if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
-                                        if indexFrom == 0 {
-                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.botRate(downloadedData,currency: currencyTo).spotSelling
-                                            self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][indexFrom][indexTo].1
-                                        } else {
-                                            self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexTo].1   //以下皆以對台幣的價格帶入，以維持換算係數的一致
-                                            self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexFrom].1
-                                            self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexFrom].1
-                                            self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexTo].1
-                                       }
-                                    }
-                                    
-                                }
-                            }
+                            self.botQueryText ()
+                        }
 
-                            self.convertX = self.convertXList + self.exchangeRate
-                            self.unit = self.unitList + self.currencyList
-                            self.category = self.categoryList + self.currencyCategory
-                       }
                     }
                 }
-//            } else {    //error != nil 則不提供貨幣度量，為避免上次App睡眠時有保存貨幣度量所以再次重置
-//                self.convertX = self.convertXList
-//                self.unit = self.unitList
-//                self.category = self.categoryList
             }
             if self.queryTime == nil {
                 self.yahooQuery()
             } else {
                 self.currencyTime = self.queryTime
                 self.rateSource = "台灣銀行"    //未超過2小時就繼續用台灣銀行的數字
-                if (0 - (self.currencyTime!.timeIntervalSinceNow / 60)) > 120 {
-                    self.yahooQuery()  //台灣銀行掛牌時間超過2小時再重新查詢Yahoo!匯率
+//                if (0 - (self.currencyTime!.timeIntervalSinceNow / 60)) > 120 {
+//                    self.yahooQuery()  //台灣銀行掛牌時間超過2小時再重新查詢Yahoo!匯率
+//                }
+            }
+        })
+        task.resume()
+        
+    }
+
+
+    func botQueryText () {
+
+        let url = URL(string: "http://rate.bot.com.tw/xrt/fltxt/0/day");
+        let request = URLRequest(url: url!)
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
+            if error == nil {
+                if let downloadedData = String(data: data!, encoding: String.Encoding.utf8) {
+                    self.exchangeRate = self.initRate
+                    for (indexFrom,_) in self.currencyCode.enumerated() {
+                        for (indexTo,currencyTo) in self.currencyCode.enumerated() {
+                            if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
+                                if indexFrom == 0 {
+                                    self.exchangeRate[0][indexFrom][indexTo].1 = self.botRate(downloadedData,currency: currencyTo).spotSelling
+                                    self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][indexFrom][indexTo].1
+                                } else {
+                                    self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexTo].1   //以下皆以對台幣的價格帶入，以維持換算係數的一致
+                                    self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexFrom].1
+                                    self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexFrom].1
+                                    self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexTo].1
+
+                               }
+                            }
+                            
+                        }
+                    }
+
+                    self.convertX = self.convertXList + self.exchangeRate
+                    self.unit = self.unitList + self.currencyList
+                    self.category = self.categoryList + self.currencyCategory
+
+
                 }
             }
         })
@@ -578,25 +607,43 @@ class calcConvert {
 
     }
 
-    func botRate (data:String,currency:String) -> (cashBuying:Double,cashSelling:Double,spotBuying:Double,spotSelling:Double) {
+    func botRate (_ data:String,currency:String) -> (cashBuying:Double,cashSelling:Double,spotBuying:Double,spotSelling:Double) {
         var cashBuying:Double   = 0
         var cashSelling:Double  = 0
         var spotBuying:Double   = 0
         var spotSelling:Double  = 0
 
-        if let range=data.rangeOfString("\\("+currency+"\\)(.+)</td><td class=\"link\" colspan=\"1\"><a href=", options: .RegularExpressionSearch) {
-            let usd=data.substringWithRange(range).stringByReplacingOccurrencesOfString("</td><td class=\"decimal\">", withString: ",").stringByReplacingOccurrencesOfString("</td><td class=\"link\" colspan=\"1\"><a href=", withString: "")
-            if let d1=Double(usd.componentsSeparatedByString(",")[1]) {
-                cashBuying  = d1
+        if let range=data.range(of: currency+"         本行買入(.+)\r", options: .regularExpression) {
+            let data1 = data.substring(with: range).replacingOccurrences(of: currency+"         本行買入", with: "")
+            let data2 = data1.replacingOccurrences(of: "\r", with: "")
+            let data3 = data2.replacingOccurrences(of: "本行賣出", with: "")
+            let data4 = data3.replacingOccurrences(of: "    ", with: " ")
+            let data5 = data4.replacingOccurrences(of: "  ", with: " ")
+            let data6 = data5.replacingOccurrences(of: "  ", with: " ")
+            let data0 = data6.replacingOccurrences(of: "  ", with: " ")
+            if let d1=Double(data0.components(separatedBy: " ")[1]) {
+                cashBuying  = d1    //買入現金
             }
-            if let d2=Double(usd.componentsSeparatedByString(",")[2]) {
-                cashSelling = d2
+            if let d2=Double(data0.components(separatedBy: " ")[10]) {
+                cashSelling = d2    //買入即期
             }
-            if let d3=Double(usd.componentsSeparatedByString(",")[3]) {
-                spotBuying  = d3
+            if let d3=Double(data0.components(separatedBy: " ")[2]) {
+                spotBuying  = d3    //賣出現金
             }
-            if let d4=Double(usd.componentsSeparatedByString(",")[4]) {
-                spotSelling = d4
+            if let d4=Double(data0.components(separatedBy: " ")[11]) {
+                spotSelling = d4    //賣出即期
+            }
+            if cashSelling == 0 {
+                cashSelling = spotSelling
+            }
+            if spotSelling == 0 {
+                spotSelling = cashSelling
+            }
+            if cashBuying == 0 {
+                cashBuying = spotBuying
+            }
+            if spotBuying == 0 {
+                spotBuying = cashBuying
             }
         }
         return (cashBuying,cashSelling,spotBuying,spotSelling)
@@ -608,34 +655,35 @@ class calcConvert {
         self.backupRate = self.exchangeRate
         self.exchangeRate = self.initRate
         self.queryTime = nil
-        let dispatchGroup:dispatch_group_t = dispatch_group_create()
+        let dispatchGroup:DispatchGroup = DispatchGroup()
         var yahooSucceed:Bool = true
-        for (indexFrom,codeFrom) in self.currencyCode.enumerate() {
-            for (indexTo,codeTo) in self.currencyCode.enumerate() {
+        for (indexFrom,codeFrom) in self.currencyCode.enumerated() {
+            for (indexTo,codeTo) in self.currencyCode.enumerated() {
                 if indexFrom < indexTo {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
-                    if indexFrom == 0 { //只查第一排也就是台幣，其他排以台幣為基礎作換算
-                        dispatch_group_enter(dispatchGroup)
-                            let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
-                            let request = NSURLRequest(URL: url!)
-                            let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: {(data, response, error) in
+                    if indexFrom == 0  { //只查第一排也就是台幣，其他排以台幣為基礎作換算
+                        dispatchGroup.enter()
+                            let url = URL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeFrom+codeTo+"=X&f=nl1d1t1");
+//                        let url = NSURL(string: "http://download.finance.yahoo.com/d/quotes.csv?s="+codeTo+codeFrom+"=X&f=nl1d1t1");
+                            let request = URLRequest(url: url!)
+                            let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
                                 if error == nil {
-                                    if let downloadedData = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+                                    if let downloadedData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue) {
                                         //查到的價格是對美金1元的換算係數，所以另一半係數就是預設表格中的1.0，就不用改
-                                        self.exchangeRate[0][indexFrom][indexTo].0 = Double(downloadedData.componentsSeparatedByString(",")[1])!
+                                        self.exchangeRate[0][indexFrom][indexTo].0 = Double(downloadedData.components(separatedBy: ",")[1])!
                                         self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][indexFrom][indexTo].0
-                                        let d = downloadedData.componentsSeparatedByString(",")[2].stringByReplacingOccurrencesOfString("\"", withString: "")
-                                        let t = downloadedData.componentsSeparatedByString(",")[3].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "").uppercaseString
-                                        let dateFormatter = NSDateFormatter()
-                                        dateFormatter.locale=NSLocale(localeIdentifier: "en_US")
+                                        let d = downloadedData.components(separatedBy: ",")[2].replacingOccurrences(of: "\"", with: "")
+                                        let t = downloadedData.components(separatedBy: ",")[3].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "\n", with: "").uppercased()
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.locale=Locale(identifier: "en_US")
                                         dateFormatter.dateFormat = "M/d/yyyy h:mma zzz"
-                                        if let dt = dateFormatter.dateFromString(d+" "+t+" GMT") {
+                                        if let dt = dateFormatter.date(from: d+" "+t+" GMT") {
                                             self.queryTime = dt
                                          }
                                     }
                                 } else {
                                     yahooSucceed = false
                                 }
-                                dispatch_group_leave(dispatchGroup)
+                                dispatchGroup.leave()
                             })
                         task.resume()
                     }
@@ -643,15 +691,16 @@ class calcConvert {
 
             }
         }
-        dispatch_group_notify(dispatchGroup,dispatch_get_main_queue(), {
+        dispatchGroup.notify(queue: DispatchQueue.main, execute: {
             if yahooSucceed {
-                for (indexFrom,_) in self.currencyCode.enumerate() {
-                    for (indexTo,_) in self.currencyCode.enumerate() {
+                for (indexFrom,_) in self.currencyCode.enumerated() {
+                    for (indexTo,_) in self.currencyCode.enumerated() {
                         if indexFrom < indexTo && indexFrom != 0 {    //只查一半的表格，另一半就是係數顛倒，所以直接填入
                             self.exchangeRate[0][indexFrom][indexTo].0 = self.exchangeRate[0][0][indexTo].0   //以下皆以對台幣的價格帶入，以維持換算係數的一致
                             self.exchangeRate[0][indexFrom][indexTo].1 = self.exchangeRate[0][0][indexFrom].0
                             self.exchangeRate[0][indexTo][indexFrom].0 = self.exchangeRate[0][0][indexFrom].0
                             self.exchangeRate[0][indexTo][indexFrom].1 = self.exchangeRate[0][0][indexTo].0
+
                         }
 
                     }
