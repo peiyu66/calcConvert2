@@ -388,12 +388,12 @@ class calcConvert {
     //單位
     var unit:([[String]]) = []           //在init()會塞入unitList這個陣列，之後取得匯率時再加入currencyList
     var unitList:([[String]]) =  [
-            ["公斤","公克","台斤","台兩","磅","盎司"],   // 重量
-            ["公尺","公分","台尺","英尺","英寸"],       // 長度
-            ["平方公尺","平方英尺","坪"]               // 面積
+            ["公斤","公克","台斤","台兩","磅","盎司"], // 重量
+            ["公尺","公分","台尺","英尺","英寸"],     // 長度
+            ["平方公尺","平方英尺","坪"]             // 面積
         ]
-    let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","越南盾","韓元","港幣","人民幣"]]
-    let currencyCode:([String]) = ["TWD","USD","EUR","JPY","VND","KRW","HKD","CNY"] //這是Yahoo的查詢代碼
+    let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","港幣","越南盾","韓元","人民幣"]]
+    let currencyCode:([String]) = ["TWD","USD","EUR","JPY","HKD","VND","KRW","CNY"] //這是Yahoo的查詢代碼
     var queryTime:Date?     //查詢當中的時間
     var currencyTime:Date?  //最後成功取得全部匯率的時間
 
@@ -426,7 +426,7 @@ class calcConvert {
             [(400.0,121.0),(400.0,11.241268),  (1.0,1.0)]           //坪 11.241268坪=400平方英尺
         ]
     ]
-    var convertX:([[[(Double,Double)]]]) = [[[]]]    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
+    var convertX:([[[(Double,Double)]]]) = []    //在init()會塞入convertXList這個大陣列，之後取得匯率時再加入exchangeRate這個陣列
     var initRate:([[[(Double,Double)]]]) = [[
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
@@ -437,8 +437,8 @@ class calcConvert {
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)],
         [(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0),(1.0,1.0)]
     ]]
-    var exchangeRate:([[[(Double,Double)]]]) = [[[]]]   //在查詢時帶入initRate，因為台灣銀行的匯率係數和Yahoo!顛倒，所以查詢時要重置
-    var backupRate:([[[(Double,Double)]]]) = [[[]]]     //Yahoo!查詢時會破壞exchangeRate所以先保存起來，失敗時復原
+    var exchangeRate:([[[(Double,Double)]]]) = []   //在查詢時帶入initRate，因為台灣銀行的匯率係數和Yahoo!顛倒，所以查詢時要重置
+    var backupRate:([[[(Double,Double)]]]) = []     //Yahoo!查詢時會破壞exchangeRate所以先保存起來，失敗時復原
 
 
 
@@ -518,10 +518,61 @@ class calcConvert {
 
     var rateSource:String = ""  //查詢的資料來源，台灣銀行或Yahoo!
 
+
+    func loadExchangeRate() {
+        if let dt = defaults.object(forKey: "currencyTime") {
+            currencyTime    = dt as? Date
+            rateSource      = defaults.string(forKey: "rateSource")!
+            if let e = defaults.object(forKey: "exchangeRate")  {
+                let ex = e as! [[[[Double]]]]
+                var rx:[[[(Double,Double)]]]=[]
+                for r1 in ex {
+                    var r1x:[[(Double,Double)]]=[]
+                    for r2 in r1 {
+                        var r2x:[(Double,Double)]=[]
+                        for r3 in r2 {
+                            r2x.append((r3[0],r3[1]))
+                        }
+                        r1x.append(r2x)
+                    }
+                    rx.append(r1x)
+                }
+                self.exchangeRate = rx
+                self.convertX = self.convertXList + self.exchangeRate
+                self.unit = self.unitList + self.currencyList
+                self.category = self.categoryList + self.currencyCategory
+            }
+        }
+    }
+
+    func saveExchangeRate() {
+        if let _ = currencyTime {
+            var ex:[[[[Double]]]] = []
+            for r1 in exchangeRate {
+                var r1x:[[[Double]]] = []
+                for r2 in r1 {
+                    var r2x:[[Double]]=[]
+                    for r3 in r2 {
+                        r2x.append([r3.0,r3.1])
+                    }
+                    r1x.append(r2x)
+                }
+                ex.append(r1x)
+            }
+            defaults.setValue(ex, forKey: "exchangeRate")
+            defaults.setValue(currencyTime, forKey: "currencyTime")
+            defaults.setValue(rateSource, forKey: "rateSource")
+            self.convertX = self.convertXList + self.exchangeRate
+            self.unit = self.unitList + self.currencyList
+            self.category = self.categoryList + self.currencyCategory
+        }
+
+    }
+
     func getExchangeRate () {
         if let _ = currencyTime {
-            if (0 - (currencyTime!.timeIntervalSinceNow / 60)) > 5 {
-                botQuery()  //上次查詢超過5分鐘再重新查詢匯率
+            if currencyTime!.timeIntervalSinceNow < -900 {
+                botQuery()  //上次查詢超過15分鐘再重新查詢匯率
             }
         } else  {
             botQuery()  //還沒成功查過就重試查詢匯率
@@ -595,9 +646,7 @@ class calcConvert {
                         }
                     }
 
-                    self.convertX = self.convertXList + self.exchangeRate
-                    self.unit = self.unitList + self.currencyList
-                    self.category = self.categoryList + self.currencyCategory
+                    self.saveExchangeRate()
 
 
                 }
@@ -612,11 +661,17 @@ class calcConvert {
         var cashSelling:Double  = 0
         var spotBuying:Double   = 0
         var spotSelling:Double  = 0
+        var buying:String  = "本行買入"
+        var selling:String = "本行賣出"
+        if data.contains("Currency") {
+            buying  = "Buying"
+            selling = "Selling"
+        }
 
-        if let range=data.range(of: currency+"         本行買入(.+)\r", options: .regularExpression) {
-            let data1 = data.substring(with: range).replacingOccurrences(of: currency+"         本行買入", with: "")
+        if let range=data.range(of: currency+"         \(buying)(.+)\r", options: .regularExpression) {
+            let data1 = data.substring(with: range).replacingOccurrences(of: currency+"         \(buying)", with: "")
             let data2 = data1.replacingOccurrences(of: "\r", with: "")
-            let data3 = data2.replacingOccurrences(of: "本行賣出", with: "")
+            let data3 = data2.replacingOccurrences(of: selling, with: "")
             let data4 = data3.replacingOccurrences(of: "    ", with: " ")
             let data5 = data4.replacingOccurrences(of: "  ", with: " ")
             let data6 = data5.replacingOccurrences(of: "  ", with: " ")
@@ -709,9 +764,7 @@ class calcConvert {
                 if let _ = self.queryTime {
                     self.rateSource = "Yahoo!"
                     self.currencyTime = self.queryTime! //這裡沒有!會當掉
-                    self.convertX = self.convertXList + self.exchangeRate
-                    self.unit = self.unitList + self.currencyList
-                    self.category = self.categoryList + self.currencyCategory
+                    self.saveExchangeRate()
                 } else {
                     self.exchangeRate = self.backupRate
                 }

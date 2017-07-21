@@ -31,11 +31,18 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     var viewDelegate:tableViewDelegate?
     var currencyTime:String=""
 
-
+    func updateCurrencyByPull() {
+        calc?.botQuery()
+        refreshControl?.endRefreshing()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        refreshControl = UIRefreshControl()
+        if let _ = refreshControl {
+            refreshControl!.addTarget(self, action: #selector(TableViewController.updateCurrencyByPull), for: UIControlEvents.valueChanged)
+            tableView.addSubview(self.refreshControl!)
+        }
         // Uncomment the following line to preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -283,5 +290,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         cell!.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",(stepper?.value)!)
         setPreference ()
     }
+
+
 
 }

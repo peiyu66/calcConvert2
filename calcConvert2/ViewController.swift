@@ -12,7 +12,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     let precisionLong:String   = "16"
     let precisionShort:String  = "9"
-    let maxUnitLong:Int = 6
+    let maxUnitLong:Int = 6     //直幅最多可顯示的單位數
     var calc:calcConvert = calcConvert()
 
 
@@ -49,6 +49,8 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
             calc.setPrecisionForOutput (withPrecision: precisionShort)
         }
 
+        calc.loadExchangeRate()
+
         //啟始category度量種類
         populateSegmentUnits(calc.categoryIndex)    //重新建立度量單位的選項
         calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
@@ -62,7 +64,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //進入畫面時，檢查匯率查詢，例如從設定畫面切回到主畫面就會檢查一次
-        calc.getExchangeRate()  //上次查詢超過？分鐘再重新查詢匯率
+        if calc.categoryIndex == 3 || calc.currencyTime == nil {
+            calc.getExchangeRate()  //上次查詢超過？分鐘再重新查詢匯率
+        }
     }
 
 
@@ -73,7 +77,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
 
     func applicationDidBecomeActive(_ notification: Notification) {
-        calc.getExchangeRate()  //上次查詢超過5分鐘再重新查詢匯率
+        if calc.categoryIndex == 3 || calc.currencyTime == nil {
+            calc.getExchangeRate()  //上次查詢超過？分鐘再重新查詢匯率
+        }
 
     }
 
@@ -127,8 +133,10 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func populateSegmentUnits (_ catalogIndex:IntegerLiteralType) {
         //自定函數用來做出度量單位選項
         uiUnits.removeAllSegments()
-        for tx in calc.unit[catalogIndex] {
-            uiUnits.insertSegment(withTitle: tx, at: uiUnits.numberOfSegments, animated: false)
+        for (index,tx) in calc.unit[catalogIndex].enumerated() {
+            if UIDevice.current.orientation.isLandscape || index < maxUnitLong {
+                uiUnits.insertSegment(withTitle: tx, at: uiUnits.numberOfSegments, animated: false)
+            }
         }
         uiUnits.selectedSegmentIndex=calc.unitIndex  //起始應為第1個度量單位
      }
@@ -137,6 +145,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     //機體旋轉時，改變精度
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        populateSegmentUnits(calc.categoryIndex)
         if UIDevice.current.orientation.isLandscape {
             calc.setPrecisionForOutput (withPrecision: precisionLong)
         } else {
