@@ -34,6 +34,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     func updateCurrencyByPull() {
         calc?.botQuery()
         refreshControl?.endRefreshing()
+        tableView.reloadData()
     }
 
     override func viewDidLoad() {

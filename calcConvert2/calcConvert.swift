@@ -64,10 +64,15 @@ class calcConvert {
         unit = unitList
         exchangeRate = initRate
         backupRate = initRate
+        loadExchangeRate()
+        getUserPreference ()
     }
 
     func getUserPreference () {
         if let _ = defaults.object(forKey: keyPreferenceUpdated) {
+            let ci = defaults.integer(forKey: "categoryIndex")
+            let _ = self.setCategory(withCategory: ci)
+
             self.setRounding(withScale: defaults.double (forKey: keyDecimalScale), roundingDisplay: defaults.bool(forKey: keyRoundingDisplay), roundingCalculation: defaults.bool(forKey: keyRounding))
             let _ = self.showPriceConvertButton(withSwitch: defaults.bool(forKey: keyshowPriceConvert))
             self.setHistorySwitch(withSwitch: defaults.bool(forKey: keyHistorySwitch))
@@ -307,7 +312,7 @@ class calcConvert {
          if factor == 0 {
             scalingValue = round(originValue!)  //小數位＝0時....其實10的0次方得1也行，不過多算1次多1次誤差
             scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
-        } else {
+         } else {
             let scale = pow(10,Double(factor))
             scalingValue = round(originValue! * scale) / scale
             scalingOutput = String(format:"%."+precisionForOutput+"g", scalingValue!)
@@ -442,10 +447,13 @@ class calcConvert {
 
 
 
+
     func setCategory (withCategory categoryIndex: Int) ->String {
         let _ = self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
         categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
+        defaults.set(categoryIndex, forKey: "categoryIndex")
+        defaults.set(Date(), forKey: keyPreferenceUpdated)
         return changeUnit (withUnit: 0)
     }
 
@@ -571,8 +579,8 @@ class calcConvert {
 
     func getExchangeRate () {
         if let _ = currencyTime {
-            if currencyTime!.timeIntervalSinceNow < -900 {
-                botQuery()  //上次查詢超過15分鐘再重新查詢匯率
+            if currencyTime!.timeIntervalSinceNow < -1800 {
+                botQuery()  //上次查詢超過30分鐘再重新查詢匯率
             }
         } else  {
             botQuery()  //還沒成功查過就重試查詢匯率

@@ -14,6 +14,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     let precisionShort:String  = "9"
     let maxUnitLong:Int = 6     //直幅最多可顯示的單位數
     var calc:calcConvert = calcConvert()
+    var isPad:Bool = false
 
 
     @IBOutlet weak var uiOutput: pasteboardLabel!
@@ -34,7 +35,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
             name: NSNotification.Name.UIApplicationDidBecomeActive,
             object: nil)
 
-
+        if (traitCollection.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
+            isPad = true
+        }
 
         // Initialize the output labels.
         uiOutput.adjustsFontSizeToFitWidth=true //數字太長時會自動縮小字級
@@ -49,11 +52,11 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
             calc.setPrecisionForOutput (withPrecision: precisionShort)
         }
 
-        calc.loadExchangeRate()
+//        calc.loadExchangeRate()
 
         //啟始category度量種類
+//        calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
         populateSegmentUnits(calc.categoryIndex)    //重新建立度量單位的選項
-        calc.getUserPreference ()   //這會帶動setPriceConvertingOnly在historyText顯示第一個度量單位名稱
         changeHistorySwitch(withSwitch: calc.historySwitch)     //這會顯示或隱藏historyText
         showPriceConvert(withSwitch: calc.showPriceConvertButton)     //這會顯示或隱藏單價換算開關
 
@@ -139,6 +142,11 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
             }
         }
         uiUnits.selectedSegmentIndex=calc.unitIndex  //起始應為第1個度量單位
+        if isPad {
+            let font = UIFont.systemFont(ofSize: 25)
+            uiUnits.setTitleTextAttributes([NSFontAttributeName: font],
+                                           for: .normal)
+        }
      }
 
 
