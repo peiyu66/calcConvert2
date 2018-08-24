@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Rd1-Qz-psh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Rd1-Qz-psh">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14278.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -97,6 +97,7 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="CIN-aY-Q1W" secondAttribute="trailing" constant="16" id="m1J-ie-8c3"/>
                                         <constraint firstItem="CIN-aY-Q1W" firstAttribute="centerY" secondItem="8ip-uJ-oOq" secondAttribute="centerY" id="meD-JT-OJ2"/>
                                         <constraint firstItem="jRQ-FY-xUL" firstAttribute="leading" secondItem="8ip-uJ-oOq" secondAttribute="leadingMargin" constant="8" id="r2o-wA-S50"/>
+                                        <constraint firstItem="CIN-aY-Q1W" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jRQ-FY-xUL" secondAttribute="trailing" constant="4" id="wDG-vR-Oaa"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -120,7 +121,7 @@
             </objects>
             <point key="canvasLocation" x="1173" y="-15"/>
         </scene>
-        <!--度量-->
+        <!--unitCategory-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="calcConvert2" customModuleProvider="target" sceneMemberID="viewController">
@@ -132,75 +133,56 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a7I-b1-EsN" userLabel="units">
-                                <rect key="frame" x="20" y="78" width="83" height="65"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="ODI-ig-092"/>
-                                    <constraint firstAttribute="height" constant="32" id="tfL-iw-ZPa"/>
-                                </constraints>
-                                <segments>
-                                    <segment title="公斤"/>
-                                    <segment title="公克"/>
-                                </segments>
-                                <variation key="heightClass=regular-widthClass=regular">
-                                    <mask key="constraints">
-                                        <exclude reference="tfL-iw-ZPa"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="uiUnitValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="5NJ-st-z3J"/>
-                                </connections>
-                            </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="066-ro-xrt" userLabel="OutputBG">
-                                <rect key="frame" x="20" y="143" width="728" height="287"/>
+                                <rect key="frame" x="20" y="129" width="728" height="291.5"/>
                                 <color key="backgroundColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLZ-5p-9HB" userLabel="OutputBG1">
-                                <rect key="frame" x="20" y="143" width="728" height="72"/>
+                                <rect key="frame" x="20" y="129" width="728" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAw-X8-hyd" userLabel="OutputBG2">
-                                <rect key="frame" x="20" y="215" width="728" height="71.5"/>
+                                <rect key="frame" x="20" y="202" width="728" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aRN-dm-aKc" userLabel="OutputBG3">
-                                <rect key="frame" x="20" y="286.5" width="728" height="72"/>
+                                <rect key="frame" x="20" y="275" width="728" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc1-bu-pvH" userLabel="OutputBG4">
-                                <rect key="frame" x="20" y="358.5" width="728" height="71.5"/>
+                                <rect key="frame" x="20" y="348" width="728" height="72.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frn-sg-9ea" userLabel="KeyBG1">
-                                <rect key="frame" x="20" y="430" width="728" height="287"/>
+                                <rect key="frame" x="20" y="420.5" width="728" height="292"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wEX-GM-aII" userLabel="KeyBG2">
-                                <rect key="frame" x="20" y="717" width="728" height="287"/>
+                                <rect key="frame" x="20" y="712.5" width="728" height="291.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKU-LI-m15">
-                                <rect key="frame" x="28" y="143" width="712" height="72"/>
+                                <rect key="frame" x="28" y="129" width="712" height="73"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGn-D2-Ki2">
-                                        <rect key="frame" x="0.0" y="21.5" width="712" height="29"/>
+                                        <rect key="frame" x="0.0" y="22" width="712" height="29"/>
                                         <subviews>
                                             <label opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="公斤" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7U-1o-jpf" userLabel="history">
                                                 <rect key="frame" x="0.0" y="0.0" width="712" height="29"/>
@@ -233,7 +215,7 @@
                                 </constraints>
                             </scrollView>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output" customClass="pasteboardLabel" customModule="calcConvert2" customModuleProvider="target">
-                                <rect key="frame" x="667" y="286.5" width="73" height="143.5"/>
+                                <rect key="frame" x="667" y="275" width="73" height="145.5"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -253,7 +235,7 @@
                                 </connections>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m = 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fvO-lX-MTt" userLabel="memory">
-                                <rect key="frame" x="28" y="215" width="99" height="71.5"/>
+                                <rect key="frame" x="28" y="202" width="99" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -265,7 +247,7 @@
                                 </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sa-ag-dvJ" userLabel="uiPriceConverting">
-                                <rect key="frame" x="127.5" y="215" width="612.5" height="71.5"/>
+                                <rect key="frame" x="127.5" y="202" width="612.5" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <state key="normal" title="單價換算 OFF">
                                     <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -281,7 +263,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eV4-DJ-CH5">
-                                <rect key="frame" x="21" y="431" width="120" height="142.5"/>
+                                <rect key="frame" x="21" y="421.5" width="120" height="145"/>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="mc">
@@ -298,7 +280,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qK-KM-S5j">
-                                <rect key="frame" x="21" y="717.5" width="120" height="142.5"/>
+                                <rect key="frame" x="21" y="713" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.59999999999999998" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="m+">
@@ -315,7 +297,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qam-cc-sxG">
-                                <rect key="frame" x="21" y="574.5" width="120" height="142"/>
+                                <rect key="frame" x="21" y="567.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="m-">
@@ -332,7 +314,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mfi-LD-Txi">
-                                <rect key="frame" x="21" y="861" width="120" height="142"/>
+                                <rect key="frame" x="21" y="858.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="mr">
@@ -349,7 +331,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYV-IT-rKl">
-                                <rect key="frame" x="142" y="431" width="120.5" height="142.5"/>
+                                <rect key="frame" x="142" y="421.5" width="120.5" height="145"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="7"/>
@@ -364,7 +346,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sub-b4-jiK">
-                                <rect key="frame" x="263.5" y="431" width="120" height="142.5"/>
+                                <rect key="frame" x="263.5" y="421.5" width="120" height="145"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="8"/>
@@ -379,7 +361,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="7Hw-36-56B">
-                                <rect key="frame" x="384.5" y="431" width="120" height="142.5"/>
+                                <rect key="frame" x="384.5" y="421.5" width="120" height="145"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="9"/>
@@ -394,7 +376,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ltB-gC-F6N">
-                                <rect key="frame" x="142" y="574.5" width="120.5" height="142"/>
+                                <rect key="frame" x="142" y="567.5" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="4"/>
@@ -409,7 +391,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VrM-ry-tL4">
-                                <rect key="frame" x="263.5" y="574.5" width="120" height="142"/>
+                                <rect key="frame" x="263.5" y="567.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="5"/>
@@ -424,7 +406,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z0t-WT-Qrh">
-                                <rect key="frame" x="384.5" y="574.5" width="120" height="142"/>
+                                <rect key="frame" x="384.5" y="567.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="6"/>
@@ -439,7 +421,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1b5-s7-zbC">
-                                <rect key="frame" x="142" y="717.5" width="120.5" height="142.5"/>
+                                <rect key="frame" x="142" y="713" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="1"/>
@@ -454,7 +436,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3e-5f-Tri">
-                                <rect key="frame" x="263.5" y="717.5" width="120" height="142.5"/>
+                                <rect key="frame" x="263.5" y="713" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="2"/>
@@ -469,7 +451,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pxs-RT-sdb">
-                                <rect key="frame" x="384.5" y="717.5" width="120" height="142.5"/>
+                                <rect key="frame" x="384.5" y="713" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="3"/>
@@ -484,7 +466,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NnX-Kh-qgX" userLabel="clear">
-                                <rect key="frame" x="142" y="861" width="120.5" height="142"/>
+                                <rect key="frame" x="142" y="858.5" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="C">
@@ -501,7 +483,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1F6-IH-U5F">
-                                <rect key="frame" x="263.5" y="861" width="120" height="142"/>
+                                <rect key="frame" x="263.5" y="858.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="0"/>
@@ -516,7 +498,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWG-Xt-PAj" userLabel="point">
-                                <rect key="frame" x="384.5" y="861" width="120" height="142"/>
+                                <rect key="frame" x="384.5" y="858.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="∙">
@@ -533,7 +515,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jez-Wx-S4S" userLabel="divide">
-                                <rect key="frame" x="505.5" y="574.5" width="120.5" height="142"/>
+                                <rect key="frame" x="505.5" y="567.5" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="÷">
@@ -550,7 +532,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DB3-cK-cur" userLabel="minus">
-                                <rect key="frame" x="627" y="431" width="120" height="142.5"/>
+                                <rect key="frame" x="627" y="421.5" width="120" height="145"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="−">
@@ -567,7 +549,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jmt-GC-oLh" userLabel="plus">
-                                <rect key="frame" x="627" y="574.5" width="120" height="142"/>
+                                <rect key="frame" x="627" y="567.5" width="120" height="144.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="+">
@@ -584,7 +566,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rUf-X7-fSL" userLabel="equal">
-                                <rect key="frame" x="627" y="717.5" width="120" height="285.5"/>
+                                <rect key="frame" x="627" y="713" width="120" height="290"/>
                                 <color key="backgroundColor" red="0.11764705882352941" green="0.39215686274509803" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="50"/>
                                 <state key="normal" title="=">
@@ -601,7 +583,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ht8-i5-vTN" userLabel="multiply">
-                                <rect key="frame" x="505.5" y="431" width="120.5" height="142.5"/>
+                                <rect key="frame" x="505.5" y="421.5" width="120.5" height="145"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="×">
@@ -618,7 +600,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R30-10-3RL" userLabel="cuberoot">
-                                <rect key="frame" x="505.5" y="861" width="120.5" height="142"/>
+                                <rect key="frame" x="505.5" y="858.5" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.19607843137254902" green="0.39215686274509803" blue="0.58823529411764708" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="∛">
@@ -638,7 +620,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEN-ib-N7O" userLabel="squareroot">
-                                <rect key="frame" x="505.5" y="717.5" width="120.5" height="142.5"/>
+                                <rect key="frame" x="505.5" y="713" width="120.5" height="144.5"/>
                                 <color key="backgroundColor" red="0.19607843137254902" green="0.39215686274509803" blue="0.58823529411764708" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="√">
@@ -657,6 +639,43 @@
                                     <action selector="uiKeySquareRoot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="65O-cy-5Xg"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a7I-b1-EsN" userLabel="units">
+                                <rect key="frame" x="20" y="78" width="83" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="6NS-XC-uE9"/>
+                                    <constraint firstAttribute="height" constant="50" id="ODI-ig-092"/>
+                                    <constraint firstAttribute="height" constant="25" id="tfL-iw-ZPa"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="公斤"/>
+                                    <segment title="公克"/>
+                                </segments>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6NS-XC-uE9"/>
+                                        <exclude reference="ODI-ig-092"/>
+                                        <exclude reference="tfL-iw-ZPa"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="tfL-iw-ZPa"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="6NS-XC-uE9"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="ODI-ig-092"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="uiUnitValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="5NJ-st-z3J"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -664,7 +683,6 @@
                             <constraint firstItem="ltB-gC-F6N" firstAttribute="leading" secondItem="eV4-DJ-CH5" secondAttribute="leading" id="0NE-Yd-pYJ"/>
                             <constraint firstItem="Mfi-LD-Txi" firstAttribute="bottom" secondItem="eV4-DJ-CH5" secondAttribute="bottom" id="0zr-5o-9x5"/>
                             <constraint firstItem="7Hw-36-56B" firstAttribute="bottom" secondItem="NYV-IT-rKl" secondAttribute="bottom" id="14r-8P-bm6"/>
-                            <constraint firstItem="a7I-b1-EsN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="1Mf-pn-iHq"/>
                             <constraint firstItem="OLZ-5p-9HB" firstAttribute="leading" secondItem="066-ro-xrt" secondAttribute="leading" id="1jE-xE-BVK"/>
                             <constraint firstItem="Z0t-WT-Qrh" firstAttribute="top" secondItem="qam-cc-sxG" secondAttribute="top" id="1s3-g9-ei9"/>
                             <constraint firstItem="sub-b4-jiK" firstAttribute="width" secondItem="eV4-DJ-CH5" secondAttribute="width" id="1sO-Rf-FpW"/>
@@ -804,6 +822,7 @@
                             <constraint firstItem="sub-b4-jiK" firstAttribute="bottom" secondItem="eV4-DJ-CH5" secondAttribute="bottom" id="bea-DV-ac9"/>
                             <constraint firstItem="NYV-IT-rKl" firstAttribute="top" secondItem="eV4-DJ-CH5" secondAttribute="top" id="c5M-jX-NlI"/>
                             <constraint firstItem="ht8-i5-vTN" firstAttribute="bottom" secondItem="NYV-IT-rKl" secondAttribute="bottom" id="cEr-uy-ORT"/>
+                            <constraint firstItem="a7I-b1-EsN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="cR4-cI-Nad"/>
                             <constraint firstItem="rUf-X7-fSL" firstAttribute="bottom" secondItem="NnX-Kh-qgX" secondAttribute="bottom" id="csk-7D-i4o"/>
                             <constraint firstItem="AWG-Xt-PAj" firstAttribute="bottom" secondItem="NnX-Kh-qgX" secondAttribute="bottom" id="da0-vC-Ncm"/>
                             <constraint firstItem="1F6-IH-U5F" firstAttribute="top" secondItem="Mfi-LD-Txi" secondAttribute="top" id="deR-Wp-fT9"/>
@@ -856,6 +875,7 @@
                             <constraint firstItem="Mfi-LD-Txi" firstAttribute="bottom" secondItem="wEX-GM-aII" secondAttribute="bottom" constant="-1" id="qA7-IE-zrQ"/>
                             <constraint firstItem="DB3-cK-cur" firstAttribute="leading" secondItem="jez-Wx-S4S" secondAttribute="leading" id="qGl-hf-JQ5"/>
                             <constraint firstItem="frn-sg-9ea" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="rHF-Ja-Y2D"/>
+                            <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="a7I-b1-EsN" secondAttribute="trailing" constant="8" id="rLf-FT-FJf"/>
                             <constraint firstItem="1qK-KM-S5j" firstAttribute="top" secondItem="eV4-DJ-CH5" secondAttribute="top" id="rk3-qb-hwf"/>
                             <constraint firstItem="sub-b4-jiK" firstAttribute="leading" secondItem="1qK-KM-S5j" secondAttribute="leading" id="sKO-aP-MoM"/>
                             <constraint firstItem="eV4-DJ-CH5" firstAttribute="leading" secondItem="frn-sg-9ea" secondAttribute="leading" constant="1" id="sNk-c9-NHd"/>
@@ -894,12 +914,12 @@
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="a7I-b1-EsN"/>
                                 <exclude reference="qam-cc-sxG"/>
                                 <exclude reference="R30-10-3RL"/>
                                 <exclude reference="cEN-ib-N7O"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="SEn-2d-vhm"/>
                                 <exclude reference="7W5-hO-EVA"/>
                                 <exclude reference="C2N-p1-dlV"/>
                                 <exclude reference="Vbn-Al-aD2"/>
@@ -948,14 +968,14 @@
                                 <exclude reference="eGd-kM-Bvd"/>
                                 <exclude reference="gjX-LO-1Ki"/>
                                 <exclude reference="jzt-3S-hie"/>
-                                <exclude reference="7p2-Pf-JhD"/>
-                                <exclude reference="Cax-fv-G6n"/>
-                                <exclude reference="F9c-kc-bGu"/>
-                                <exclude reference="u5x-Oz-O3B"/>
                                 <exclude reference="BE6-Il-97V"/>
                                 <exclude reference="Ddl-Vu-Z1x"/>
                                 <exclude reference="T5u-eE-fKO"/>
                                 <exclude reference="l8o-he-SIr"/>
+                                <exclude reference="7p2-Pf-JhD"/>
+                                <exclude reference="Cax-fv-G6n"/>
+                                <exclude reference="F9c-kc-bGu"/>
+                                <exclude reference="u5x-Oz-O3B"/>
                                 <exclude reference="5UI-AX-Pkz"/>
                                 <exclude reference="Qc2-RO-m1y"/>
                                 <exclude reference="be2-dr-gxg"/>
@@ -974,6 +994,10 @@
                                 <exclude reference="elT-z3-CkP"/>
                                 <exclude reference="lI5-nE-FJX"/>
                                 <exclude reference="sgH-dB-zos"/>
+                                <exclude reference="IaQ-Sa-qpv"/>
+                                <exclude reference="mCO-fv-zeP"/>
+                                <exclude reference="ots-8P-EGk"/>
+                                <exclude reference="ppH-Mf-AmF"/>
                                 <exclude reference="CX3-uF-NBK"/>
                                 <exclude reference="deR-Wp-fT9"/>
                                 <exclude reference="poj-jU-7YY"/>
@@ -988,10 +1012,6 @@
                                 <exclude reference="sfi-of-D0i"/>
                                 <exclude reference="uxe-8j-ace"/>
                                 <exclude reference="wqF-Ev-5uj"/>
-                                <exclude reference="IaQ-Sa-qpv"/>
-                                <exclude reference="mCO-fv-zeP"/>
-                                <exclude reference="ots-8P-EGk"/>
-                                <exclude reference="ppH-Mf-AmF"/>
                                 <exclude reference="9o8-4j-sNz"/>
                                 <exclude reference="Fxb-o8-NG2"/>
                                 <exclude reference="Qyc-s8-CCC"/>
@@ -1096,6 +1116,14 @@
                                 <include reference="jzt-3S-hie"/>
                                 <exclude reference="qGl-hf-JQ5"/>
                                 <exclude reference="uhV-Wa-dSh"/>
+                                <exclude reference="3YY-iX-gkF"/>
+                                <exclude reference="75W-Pu-ylZ"/>
+                                <include reference="BE6-Il-97V"/>
+                                <include reference="Ddl-Vu-Z1x"/>
+                                <exclude reference="JGA-hT-07C"/>
+                                <include reference="T5u-eE-fKO"/>
+                                <exclude reference="f8s-It-m4O"/>
+                                <include reference="l8o-he-SIr"/>
                                 <exclude reference="66W-No-mAU"/>
                                 <exclude reference="6bB-5w-TKe"/>
                                 <include reference="7p2-Pf-JhD"/>
@@ -1106,14 +1134,6 @@
                                 <exclude reference="YCe-is-ggB"/>
                                 <include reference="u5x-Oz-O3B"/>
                                 <exclude reference="xeI-2i-dev"/>
-                                <exclude reference="3YY-iX-gkF"/>
-                                <exclude reference="75W-Pu-ylZ"/>
-                                <include reference="BE6-Il-97V"/>
-                                <include reference="Ddl-Vu-Z1x"/>
-                                <exclude reference="JGA-hT-07C"/>
-                                <include reference="T5u-eE-fKO"/>
-                                <exclude reference="f8s-It-m4O"/>
-                                <include reference="l8o-he-SIr"/>
                                 <include reference="5UI-AX-Pkz"/>
                                 <exclude reference="Cgc-3H-Bas"/>
                                 <include reference="Qc2-RO-m1y"/>
@@ -1150,6 +1170,10 @@
                                 <include reference="elT-z3-CkP"/>
                                 <include reference="lI5-nE-FJX"/>
                                 <include reference="sgH-dB-zos"/>
+                                <include reference="IaQ-Sa-qpv"/>
+                                <include reference="mCO-fv-zeP"/>
+                                <include reference="ots-8P-EGk"/>
+                                <include reference="ppH-Mf-AmF"/>
                                 <include reference="CX3-uF-NBK"/>
                                 <exclude reference="HSR-Aj-tBe"/>
                                 <exclude reference="Svw-65-bPF"/>
@@ -1178,10 +1202,6 @@
                                 <include reference="sfi-of-D0i"/>
                                 <include reference="uxe-8j-ace"/>
                                 <include reference="wqF-Ev-5uj"/>
-                                <include reference="IaQ-Sa-qpv"/>
-                                <include reference="mCO-fv-zeP"/>
-                                <include reference="ots-8P-EGk"/>
-                                <include reference="ppH-Mf-AmF"/>
                                 <include reference="9o8-4j-sNz"/>
                                 <include reference="Fxb-o8-NG2"/>
                                 <include reference="Qyc-s8-CCC"/>
@@ -1190,13 +1210,12 @@
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
                             <mask key="subviews">
-                                <include reference="a7I-b1-EsN"/>
                                 <include reference="qam-cc-sxG"/>
                                 <include reference="R30-10-3RL"/>
                                 <include reference="cEN-ib-N7O"/>
+                                <include reference="a7I-b1-EsN"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="1Mf-pn-iHq"/>
                                 <include reference="F9o-V4-tfC"/>
                                 <include reference="TJw-MZ-HdT"/>
                                 <include reference="Yb7-Mi-nb9"/>
@@ -1305,6 +1324,9 @@
                                 <exclude reference="ieW-oA-AXl"/>
                                 <include reference="ioq-dH-wdE"/>
                                 <exclude reference="rk3-qb-hwf"/>
+                                <include reference="CMB-fC-niI"/>
+                                <include reference="Uyt-Tl-ZId"/>
+                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="34X-Nj-e7N"/>
                                 <include reference="4J8-dB-xKW"/>
                                 <exclude reference="dsM-Pa-qnr"/>
@@ -1313,9 +1335,6 @@
                                 <exclude reference="lNe-2f-433"/>
                                 <exclude reference="nD5-Sz-S5X"/>
                                 <include reference="zAV-eb-HBU"/>
-                                <include reference="CMB-fC-niI"/>
-                                <include reference="Uyt-Tl-ZId"/>
-                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="9IT-hT-BdB"/>
                                 <include reference="Ae0-iD-d9d"/>
                                 <exclude reference="S95-aM-dMh"/>
@@ -1326,6 +1345,14 @@
                                 <include reference="jzt-3S-hie"/>
                                 <exclude reference="qGl-hf-JQ5"/>
                                 <exclude reference="uhV-Wa-dSh"/>
+                                <exclude reference="3YY-iX-gkF"/>
+                                <exclude reference="75W-Pu-ylZ"/>
+                                <include reference="BE6-Il-97V"/>
+                                <include reference="Ddl-Vu-Z1x"/>
+                                <exclude reference="JGA-hT-07C"/>
+                                <include reference="T5u-eE-fKO"/>
+                                <exclude reference="f8s-It-m4O"/>
+                                <include reference="l8o-he-SIr"/>
                                 <exclude reference="66W-No-mAU"/>
                                 <exclude reference="6bB-5w-TKe"/>
                                 <include reference="7p2-Pf-JhD"/>
@@ -1336,14 +1363,6 @@
                                 <exclude reference="YCe-is-ggB"/>
                                 <include reference="u5x-Oz-O3B"/>
                                 <exclude reference="xeI-2i-dev"/>
-                                <exclude reference="3YY-iX-gkF"/>
-                                <exclude reference="75W-Pu-ylZ"/>
-                                <include reference="BE6-Il-97V"/>
-                                <include reference="Ddl-Vu-Z1x"/>
-                                <exclude reference="JGA-hT-07C"/>
-                                <include reference="T5u-eE-fKO"/>
-                                <exclude reference="f8s-It-m4O"/>
-                                <include reference="l8o-he-SIr"/>
                                 <include reference="5UI-AX-Pkz"/>
                                 <exclude reference="Cgc-3H-Bas"/>
                                 <include reference="Qc2-RO-m1y"/>
@@ -1380,6 +1399,10 @@
                                 <include reference="elT-z3-CkP"/>
                                 <include reference="lI5-nE-FJX"/>
                                 <include reference="sgH-dB-zos"/>
+                                <include reference="IaQ-Sa-qpv"/>
+                                <include reference="mCO-fv-zeP"/>
+                                <include reference="ots-8P-EGk"/>
+                                <include reference="ppH-Mf-AmF"/>
                                 <include reference="CX3-uF-NBK"/>
                                 <exclude reference="HSR-Aj-tBe"/>
                                 <exclude reference="Svw-65-bPF"/>
@@ -1408,26 +1431,26 @@
                                 <include reference="sfi-of-D0i"/>
                                 <include reference="uxe-8j-ace"/>
                                 <include reference="wqF-Ev-5uj"/>
-                                <include reference="acg-xZ-awW"/>
-                                <include reference="IaQ-Sa-qpv"/>
-                                <include reference="mCO-fv-zeP"/>
-                                <include reference="ots-8P-EGk"/>
-                                <include reference="ppH-Mf-AmF"/>
                                 <include reference="9o8-4j-sNz"/>
                                 <include reference="Fxb-o8-NG2"/>
                                 <include reference="Qyc-s8-CCC"/>
                                 <include reference="voR-2I-TZq"/>
+                                <include reference="acg-xZ-awW"/>
                             </mask>
                         </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="aq0-Wd-Lt5" appends="YES" id="N9F-d9-kYh"/>
+                            <outletCollection property="gestureRecognizers" destination="PTn-69-wBf" appends="YES" id="CCA-62-BIu"/>
+                        </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="度量" id="s1X-fH-y0J">
+                    <navigationItem key="navigationItem" title="unitCategory" id="s1X-fH-y0J">
                         <barButtonItem key="rightBarButtonItem" id="ZND-5Q-BiQ">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L37-BT-WJf">
                                 <rect key="frame" x="687" y="3" width="61" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="設定"/>
                                 <variation key="heightClass=regular-widthClass=regular">
-                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 </variation>
                                 <connections>
                                     <segue destination="Qpg-LQ-vko" kind="show" identifier="segueTableView" id="o87-Oo-huz"/>
@@ -1441,12 +1464,21 @@
                         <outlet property="uiHistoryScrollView" destination="mKU-LI-m15" id="rvi-uj-Kl5"/>
                         <outlet property="uiMemory" destination="fvO-lX-MTt" id="9sA-MS-AFH"/>
                         <outlet property="uiOutput" destination="2zZ-du-mTe" id="TG6-s7-CIw"/>
-                        <outlet property="uiPanGesture" destination="Rbu-Xm-w25" id="dQE-ZR-8h4"/>
                         <outlet property="uiPriceConverting" destination="1sa-ag-dvJ" id="Zop-Zh-rFq"/>
                         <outlet property="uiUnits" destination="a7I-b1-EsN" id="X9R-fJ-67S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="PTn-69-wBf">
+                    <connections>
+                        <action selector="uiSwipeCategory:" destination="BYZ-38-t0r" id="Yf1-ex-npV"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="aq0-Wd-Lt5">
+                    <connections>
+                        <action selector="uiSwipeCategory:" destination="BYZ-38-t0r" id="u8L-S2-g8f"/>
+                    </connections>
+                </swipeGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="Rbu-Xm-w25">
                     <connections>
                         <action selector="uiPanGestureRecognized:" destination="BYZ-38-t0r" id="2dQ-zB-haO"/>
@@ -1458,7 +1490,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1173" y="698"/>
+            <point key="canvasLocation" x="1171.875" y="697.265625"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="wwI-EK-TIO">

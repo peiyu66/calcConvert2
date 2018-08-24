@@ -24,6 +24,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     @IBOutlet weak var uiHistoryScrollView: UIScrollView!
     @IBOutlet weak var uiHistoryContentView: UIView!
 
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +105,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     //啟始或變換category度量種類
     func changeCategory(withCategory categoryIndex: Int) {
+        if calc.valBuffer != 0 || calc.valueOutput != "0" {    //切換度量前，如果有數值應先清掉（留到下個度量沒有意義）
+            calcKeyIn("[C]")
+        }
         uiHistory.text = calc.setCategory(withCategory: categoryIndex)   //這會帶動將unit初始為第1個度量單位
         populateSegmentUnits(categoryIndex)  //度量種類改變時，重新建立度量單位的選項
         navigationItem.title = calc.categoryTitle
@@ -197,13 +201,36 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         })
 
     }
-
-
+    
+    @IBAction func uiSwipeCategory(_ sender: UISwipeGestureRecognizer) {
+        if sender.direction == UISwipeGestureRecognizerDirection.left {
+            self.previousCategory()
+        } else if sender.direction == UISwipeGestureRecognizerDirection.right {
+            self.nextCategory()
+        }
+    }
+    
+    func nextCategory() {
+        if calc.categoryIndex + 1 >= calc.category.count {
+            self.changeCategory(withCategory: 0)
+        } else {
+            self.changeCategory(withCategory: calc.categoryIndex + 1)
+        }
+    }
+    
+    func previousCategory() {
+        if calc.categoryIndex < 1 {
+            self.changeCategory(withCategory: calc.category.count - 1)
+        } else {
+            self.changeCategory(withCategory: calc.categoryIndex - 1)
+        }
+    }
+    
     //***** 用手指變動小數位數 *****
     var factor:(originScale:Int,movingScale:Int) = (0,0) //原始的位數，和移動中的位數
     var beginX:Int = 0                                   //這次開始移動時的位數
 
-    @IBOutlet var uiPanGesture: UIPanGestureRecognizer!
+//    @IBOutlet var uiPanGesture: UIPanGestureRecognizer!
 
     @IBAction func uiPanGestureRecognized(_ sender: UIPanGestureRecognizer) {
 
@@ -215,7 +242,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
         if sender.state == UIGestureRecognizerState.changed {
             //每次移動中
-            let transX = uiPanGesture.translation(in: uiOutput).x //移動的x軸向量，負數向左增加位數，正數向右減少位數
+            let transX = sender.translation(in: uiOutput).x //移動的x軸向量，負數向左增加位數，正數向右減少位數
             let movedX:Int = Int(round(transX/50))      //換算成每移動50點才變動1個小數位
             if factor.originScale > 0 {                 //原始數值有小數位才處理
                 factor.movingScale = beginX - movedX    //這次移動的位數，必須介於0和原始位數之間（轉正負所以用減）

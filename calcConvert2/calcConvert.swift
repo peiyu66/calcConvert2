@@ -109,7 +109,7 @@ class calcConvert {
         case "+","-","x","/","=","[m+]","[m-]","[cr]","[sr]":
             //如果四則運算子沒有輸入運算元，又連續接運算子，應消除無意義的連續運算子
             if (prevInputedKey == "+" || prevInputedKey == "-" || prevInputedKey == "x" || prevInputedKey == "/") {
-                let index = historyText.characters.index(historyText.endIndex, offsetBy: -1)
+                let index = historyText.index(historyText.endIndex, offsetBy: -1)
                 historyText = historyText.substring(to: index) //+ inputedKey
                 //就消除乘0或除0的情形
                 digBuffer = (opBuffer == "x" || opBuffer == "/" ? 1 : 0)
@@ -348,7 +348,7 @@ class calcConvert {
         let s:String = String(format:"%."+precisionForOutput+"g",d)
         if let p = s.range(of: ".")?.lowerBound {
             let pi = s.index(p, offsetBy: 1)
-            scale = s.substring(from: pi).characters.count
+            scale = s.substring(from: pi).count
 //        } else if let _ = s.range(of: "e+")?.lowerBound {
 //            scale = 0
 //        } else if let _ = s.range(of: "e-")?.lowerBound {
@@ -393,9 +393,9 @@ class calcConvert {
     //單位
     var unit:([[String]]) = []           //在init()會塞入unitList這個陣列，之後取得匯率時再加入currencyList
     var unitList:([[String]]) =  [
-            ["公斤","公克","台斤","台兩","磅","盎司"], // 重量
+            ["公克","公斤","台斤","台兩","英磅","盎司"], // 重量
             ["公尺","公分","台尺","英尺","英寸"],     // 長度
-            ["平方公尺","平方英尺","坪"]             // 面積
+            ["平方公尺","平方英尺","日坪"]             // 面積
         ]
     let currencyList:([[String]]) = [["台幣","美元","歐元","日圓","港幣","越南盾","韓元","人民幣"]]
     let currencyCode:([String]) = ["TWD","USD","EUR","JPY","HKD","VND","KRW","CNY"] //這是Yahoo的查詢代碼
@@ -405,6 +405,7 @@ class calcConvert {
     //轉換係數：為了增加精度所以使用雙係數。例如3公斤=5台斤，則2公斤=2*5/3台斤。
     //這是3維陣列：[度量種類][原單位][新單位]
     let convertXList:([[[(Double,Double)]]]) = [
+        /*
         //重量
         [   //  公斤              公克              台斤             台兩            磅             盎司
             [(1.0,1.0),         (1000.0,1.0),   (5.0,3.0),   (80.0,3.0), (1.0,0.45359237),(16.0,0.45359237)],  // 公斤 3公斤=5台斤
@@ -413,6 +414,16 @@ class calcConvert {
             [(3.0,80.0),        (300.0,8.0),    (1.0,16.0),  (1.0,1.0),  (3.0,36.2873896), (48.0,36.2873896)], // 台兩 1台兩=(3/2.26796185*16)磅=(3/36.2873896)磅
             [(0.45359237,1.0),  (453.59237,1.0),(2.26796185,3.0),(36.2873896,3.0),(1.0,1.0), (16.0,1.0)],      // 磅 1磅=453.59237公克=16盎司=(453.59237*5)/3000台斤=(2.26796185/3)台斤
             [(0.45359237,16.0), (453.59237,16.0),(2.26796185,48.0),(36.2873896,48.0),(1.0,16.0), (1.0,1.0)]    // 盎司
+        ],
+        */
+        //重量
+        [   //  公克              公斤              台斤             台兩            磅             盎司
+            [(1.0,1.0),         (1.0,1000.0),   (5.0,3000.0),(8.0,300.0),(1.0,453.59237), (16.0,453.59237)],  // 公克 3000公克=5台斤=80台兩
+            [(1000.0,1.0),      (1.0,1.0),      (5.0,3.0),   (80.0,3.0), (1.0,0.45359237),(16.0,0.45359237)],   // 公斤 3公斤=5台斤
+            [(3000.0,5.0),      (3.0,5.0),      (1.0,1.0),   (16.0,1.0), (3.0,2.26796185),  (48.0,2.26796185)],// 台斤 1台斤=16台兩=(3/2.26796185)磅
+            [(300.0,8.0),       (3.0,80.0),     (1.0,16.0),  (1.0,1.0),  (3.0,36.2873896), (48.0,36.2873896)], // 台兩 1台兩=(3/2.26796185*16)磅=(3/36.2873896)磅
+            [(453.59237,1.0),  (0.45359237,1.0),(2.26796185,3.0),(36.2873896,3.0),(1.0,1.0), (16.0,1.0)],      // 磅 1磅=453.59237公克=16盎司=(453.59237*5)/3000台斤=(2.26796185/3)台斤
+            [(453.59237,16.0), (0.45359237,16.0),(2.26796185,48.0),(36.2873896,48.0),(1.0,16.0), (1.0,1.0)]    // 盎司
         ],
 
         //長度
@@ -451,7 +462,7 @@ class calcConvert {
     func setCategory (withCategory categoryIndex: Int) ->String {
         let _ = self.keyIn("=") //先取得計算機的結果
         self.categoryIndex = categoryIndex
-        categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
+        categoryTitle = category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
         defaults.set(categoryIndex, forKey: "categoryIndex")
         defaults.set(Date(), forKey: keyPreferenceUpdated)
         return changeUnit (withUnit: 0)
@@ -469,7 +480,7 @@ class calcConvert {
         self.priceConverting = priceConverting
         defaults.set(priceConverting, forKey: keyPriceConverting)
         defaults.set(Date(), forKey: keyPreferenceUpdated)
-        categoryTitle = "度量：" + category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
+        categoryTitle = category[categoryIndex] + (priceConverting ? "，單價換算＄" : "")
         return changeUnitInHistoryText ()
     }
 
