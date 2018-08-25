@@ -3,6 +3,8 @@
 
 calcConvert提供四則運算及台灣常用度量衡單位換算，精簡而小巧。
 
+從[Apple Store](https://itunes.apple.com/us/app/apple-store/id1070983118?pt=173536&ct=google_sites&mt=8)下載安裝。
+
 ## 度量種類
 
 * 重量：公克、公斤、台斤、台兩、英磅、盎司。
