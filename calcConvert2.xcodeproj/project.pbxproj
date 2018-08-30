@@ -15,6 +15,7 @@
 		E2B895EA1C277EB7000F1445 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2B895E81C277EB7000F1445 /* Main.storyboard */; };
 		E2B895EF1C277EB8000F1445 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2B895ED1C277EB8000F1445 /* LaunchScreen.storyboard */; };
 		E2B895F71C277EF0000F1445 /* calcConvert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B895F61C277EF0000F1445 /* calcConvert.swift */; };
+		E2E76EED2137926F00E47BCD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E2E76EEC2137926E00E47BCD /* .gitignore */; };
 		E2FE06FC1C6ED0210056982B /* pasteboardLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE06FB1C6ED0210056982B /* pasteboardLabel.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		E2B895EE1C277EB8000F1445 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2B895F01C277EB8000F1445 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2B895F61C277EF0000F1445 /* calcConvert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calcConvert.swift; sourceTree = "<group>"; };
+		E2E76EEC2137926E00E47BCD /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E2FE06FB1C6ED0210056982B /* pasteboardLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = pasteboardLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -46,6 +48,7 @@
 		E2B895D81C277EB7000F1445 = {
 			isa = PBXGroup;
 			children = (
+				E2E76EEC2137926E00E47BCD /* .gitignore */,
 				E2B895E31C277EB7000F1445 /* calcConvert2 */,
 				E2B895E21C277EB7000F1445 /* Products */,
 			);
@@ -142,6 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2E76EED2137926F00E47BCD /* .gitignore in Resources */,
 				E2B895EF1C277EB8000F1445 /* LaunchScreen.storyboard in Resources */,
 				E27703301C283FFD0089F965 /* Assets.xcassets in Resources */,
 				E2B895EA1C277EB7000F1445 /* Main.storyboard in Resources */,

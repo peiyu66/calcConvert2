@@ -24,11 +24,25 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     @IBOutlet weak var uiHistoryScrollView: UIScrollView!
     @IBOutlet weak var uiHistoryContentView: UIView!
 
-    
+    let buildNo:String = Bundle.main.infoDictionary!["CFBundleVersion"] as! String
+    let versionNo:String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    var versionNow:String = ""
+    var versionLast:String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let defaults = UserDefaults.standard
+        versionNow = versionNo + (buildNo <= "1" ? "" : "(\(buildNo))")
+        if let ver = defaults.string(forKey: "version") {
+            versionLast = ver
+        }
+        if versionLast < "2.6(2)" {
+            defaults.removeObject(forKey: "currencyTime")
+            defaults.removeObject(forKey: "rateSource")
+            defaults.removeObject(forKey: "exchangeRate")
+        }
+        defaults.set(versionNow,      forKey: "version")
 
         NotificationCenter.default.addObserver(
             self,
