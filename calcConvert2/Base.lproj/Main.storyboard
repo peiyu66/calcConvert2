@@ -120,7 +120,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UlM-1G-oul" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1173" y="-15"/>
+            <point key="canvasLocation" x="1213" y="-490"/>
         </scene>
         <!--unitCategory-->
         <scene sceneID="tne-QT-ifu">
@@ -1491,7 +1491,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1171.875" y="697.265625"/>
+            <point key="canvasLocation" x="1196" y="696"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="wwI-EK-TIO">

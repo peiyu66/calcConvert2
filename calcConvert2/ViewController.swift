@@ -119,6 +119,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     //啟始或變換category度量種類
     func changeCategory(withCategory categoryIndex: Int) {
+        if categoryIndex == 3 {
+            self.showPriceConvert(withSwitch: false)
+        }
         if calc.valBuffer != 0 || calc.valueOutput != "0" {    //切換度量前，如果有數值應先清掉（留到下個度量沒有意義）
             calcKeyIn("[C]")
         }
