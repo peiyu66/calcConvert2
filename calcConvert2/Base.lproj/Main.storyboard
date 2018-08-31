@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Rd1-Qz-psh">
-    <device id="retina5_5" orientation="portrait">
+    <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,33 +15,33 @@
             <objects>
                 <tableViewController id="Qpg-LQ-vko" customClass="TableViewController" customModule="calcConvert2" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="o6S-Uu-ecB">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellCategory" id="4Pz-3X-gMv">
-                                <rect key="frame" x="0.0" y="55.333333333333343" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="55.5" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Pz-3X-gMv" id="zfj-kc-53I">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellSwitch" id="2tu-Tz-vMB" customClass="cellSwitch" customModule="calcConvert2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99.333333333333343" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="99.5" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2tu-Tz-vMB" id="soS-gf-VXl">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="限制小數位數" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sHd-CJ-9aT" userLabel="uiLabel">
-                                            <rect key="frame" x="28" y="11.666666666666666" width="293" height="20.333333333333336"/>
+                                            <rect key="frame" x="28" y="11.5" width="104" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kPZ-2L-M0x" userLabel="uiSwitch">
-                                            <rect key="frame" x="329" y="6.6666666666666679" width="51" height="31.000000000000004"/>
+                                            <rect key="frame" x="683" y="6.5" width="51" height="31"/>
                                             <connections>
                                                 <action selector="uiChangedSwitchStatus:" destination="2tu-Tz-vMB" eventType="valueChanged" id="3k9-Ni-lP0"/>
                                             </connections>
@@ -74,20 +74,20 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellStepper" id="ewS-TB-a92" customClass="cellStepper" customModule="calcConvert2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="143.33333333333334" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="143.5" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ewS-TB-a92" id="8ip-uJ-oOq">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="小數位數 = 4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRQ-FY-xUL" userLabel="uiLabel">
-                                            <rect key="frame" x="28.000000000000007" y="11.666666666666666" width="99.666666666666686" height="20.333333333333336"/>
+                                            <rect key="frame" x="28" y="11.5" width="99.5" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" maximumValue="15" translatesAutoresizingMaskIntoConstraints="NO" id="CIN-aY-Q1W">
-                                            <rect key="frame" x="284" y="7.6666666666666679" width="94" height="29.000000000000004"/>
+                                            <rect key="frame" x="638" y="7.5" width="94" height="29"/>
                                             <connections>
                                                 <action selector="uiValueChanged:" destination="ewS-TB-a92" eventType="valueChanged" id="xwI-BE-1Oi"/>
                                             </connections>
@@ -131,62 +131,62 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="066-ro-xrt" userLabel="OutputBG">
-                                <rect key="frame" x="20" y="107.99999999999999" width="374" height="202.66666666666663"/>
+                                <rect key="frame" x="20" y="123" width="728" height="293.5"/>
                                 <color key="backgroundColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLZ-5p-9HB" userLabel="OutputBG1">
-                                <rect key="frame" x="20" y="108" width="374" height="51"/>
+                                <rect key="frame" x="20" y="123" width="728" height="73.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAw-X8-hyd" userLabel="OutputBG2">
-                                <rect key="frame" x="20" y="159" width="374" height="50.666666666666657"/>
+                                <rect key="frame" x="20" y="196.5" width="728" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aRN-dm-aKc" userLabel="OutputBG3">
-                                <rect key="frame" x="20" y="209.66666666666666" width="374" height="50.333333333333343"/>
+                                <rect key="frame" x="20" y="269.5" width="728" height="74"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc1-bu-pvH" userLabel="OutputBG4">
-                                <rect key="frame" x="20" y="260" width="374" height="50.666666666666686"/>
+                                <rect key="frame" x="20" y="343.5" width="728" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frn-sg-9ea" userLabel="KeyBG1">
-                                <rect key="frame" x="20" y="310.66666666666669" width="374" height="203.00000000000006"/>
+                                <rect key="frame" x="20" y="416.5" width="728" height="294"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wEX-GM-aII" userLabel="KeyBG2">
-                                <rect key="frame" x="20" y="513.66666666666663" width="374" height="202.33333333333337"/>
+                                <rect key="frame" x="20" y="710.5" width="728" height="293.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKU-LI-m15">
-                                <rect key="frame" x="28" y="108" width="358" height="51"/>
+                                <rect key="frame" x="28" y="123" width="712" height="73.5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGn-D2-Ki2">
-                                        <rect key="frame" x="0.0" y="17" width="358" height="18"/>
+                                        <rect key="frame" x="0.0" y="22.5" width="712" height="29"/>
                                         <subviews>
                                             <label opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="公斤" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7U-1o-jpf" userLabel="history">
-                                                <rect key="frame" x="0.0" y="0.0" width="358" height="18"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="712" height="29"/>
                                                 <gestureRecognizers/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -216,7 +216,7 @@
                                 </constraints>
                             </scrollView>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.123456789" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2zZ-du-mTe" userLabel="output" customClass="pasteboardLabel" customModule="calcConvert2" customModuleProvider="target">
-                                <rect key="frame" x="28.333333333333343" y="209.66666666666663" width="357.66666666666663" height="101"/>
+                                <rect key="frame" x="28.5" y="269.5" width="711.5" height="147"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -236,7 +236,7 @@
                                 </connections>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m = 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fvO-lX-MTt" userLabel="memory">
-                                <rect key="frame" x="28.000000000000004" y="159" width="50.333333333333343" height="50.666666666666657"/>
+                                <rect key="frame" x="28" y="196.5" width="99" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -248,7 +248,7 @@
                                 </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sa-ag-dvJ" userLabel="uiPriceConverting">
-                                <rect key="frame" x="79" y="159" width="307" height="50.666666666666657"/>
+                                <rect key="frame" x="127.5" y="196.5" width="612.5" height="73"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <state key="normal" title="單價換算 OFF">
                                     <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -264,7 +264,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eV4-DJ-CH5">
-                                <rect key="frame" x="20.999999999999993" y="311.66666666666669" width="92.333333333333314" height="79.666666666666686"/>
+                                <rect key="frame" x="21" y="417.5" width="120.5" height="146"/>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="mc">
@@ -281,7 +281,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qK-KM-S5j">
-                                <rect key="frame" x="114.33333333333334" y="311.66666666666669" width="92.333333333333343" height="79.666666666666686"/>
+                                <rect key="frame" x="21" y="711" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.59999999999999998" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="m+">
@@ -298,7 +298,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qam-cc-sxG">
-                                <rect key="frame" x="21" y="236.66666666666666" width="115" height="51.666666666666657"/>
+                                <rect key="frame" x="21" y="564.5" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="m-">
@@ -315,7 +315,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mfi-LD-Txi">
-                                <rect key="frame" x="207.66666666666666" y="311.66666666666669" width="92.333333333333343" height="79.666666666666686"/>
+                                <rect key="frame" x="21" y="857.5" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="mr">
@@ -332,7 +332,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYV-IT-rKl">
-                                <rect key="frame" x="20.999999999999993" y="392.33333333333331" width="92.333333333333314" height="80"/>
+                                <rect key="frame" x="142.5" y="417.5" width="120" height="146"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="7"/>
@@ -347,7 +347,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sub-b4-jiK">
-                                <rect key="frame" x="114.33333333333334" y="392.33333333333331" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="263.5" y="417.5" width="120.5" height="146"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="8"/>
@@ -362,7 +362,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="7Hw-36-56B">
-                                <rect key="frame" x="207.66666666666666" y="392.33333333333331" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="385" y="417.5" width="120" height="146"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="9"/>
@@ -377,7 +377,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ltB-gC-F6N">
-                                <rect key="frame" x="20.999999999999993" y="473.33333333333326" width="92.333333333333314" height="80"/>
+                                <rect key="frame" x="142.5" y="564.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="4"/>
@@ -392,7 +392,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VrM-ry-tL4">
-                                <rect key="frame" x="114.33333333333334" y="473.33333333333326" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="263.5" y="564.5" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="5"/>
@@ -407,7 +407,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z0t-WT-Qrh">
-                                <rect key="frame" x="207.66666666666666" y="473.33333333333326" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="385" y="564.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="6"/>
@@ -422,7 +422,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1b5-s7-zbC">
-                                <rect key="frame" x="20.999999999999993" y="554.33333333333337" width="92.333333333333314" height="80"/>
+                                <rect key="frame" x="142.5" y="711" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="1"/>
@@ -437,7 +437,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3e-5f-Tri">
-                                <rect key="frame" x="114.33333333333334" y="554.33333333333337" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="263.5" y="711" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="2"/>
@@ -452,7 +452,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pxs-RT-sdb">
-                                <rect key="frame" x="207.66666666666666" y="554.33333333333337" width="92.333333333333343" height="80"/>
+                                <rect key="frame" x="385" y="711" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="3"/>
@@ -467,7 +467,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NnX-Kh-qgX" userLabel="clear">
-                                <rect key="frame" x="20.999999999999993" y="635.33333333333337" width="92.333333333333314" height="79.666666666666629"/>
+                                <rect key="frame" x="142.5" y="857.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="C">
@@ -484,7 +484,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1F6-IH-U5F">
-                                <rect key="frame" x="114.33333333333334" y="635.33333333333337" width="92.333333333333343" height="79.666666666666629"/>
+                                <rect key="frame" x="263.5" y="857.5" width="120.5" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="0"/>
@@ -499,7 +499,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWG-Xt-PAj" userLabel="point">
-                                <rect key="frame" x="207.66666666666666" y="635.33333333333337" width="92.333333333333343" height="79.666666666666629"/>
+                                <rect key="frame" x="385" y="857.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="∙">
@@ -516,7 +516,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jez-Wx-S4S" userLabel="divide">
-                                <rect key="frame" x="301" y="311.66666666666669" width="92" height="79.666666666666686"/>
+                                <rect key="frame" x="506" y="564.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="÷">
@@ -533,7 +533,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DB3-cK-cur" userLabel="minus">
-                                <rect key="frame" x="301" y="473.33333333333326" width="92" height="80"/>
+                                <rect key="frame" x="627" y="417.5" width="120" height="146"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="−">
@@ -550,7 +550,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jmt-GC-oLh" userLabel="plus">
-                                <rect key="frame" x="301" y="554.33333333333337" width="92" height="80"/>
+                                <rect key="frame" x="627" y="564.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="+">
@@ -567,7 +567,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rUf-X7-fSL" userLabel="equal">
-                                <rect key="frame" x="301" y="635.33333333333337" width="92" height="79.666666666666629"/>
+                                <rect key="frame" x="627" y="711" width="120" height="292"/>
                                 <color key="backgroundColor" red="0.11764705882352941" green="0.39215686274509803" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="50"/>
                                 <state key="normal" title="=">
@@ -584,7 +584,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ht8-i5-vTN" userLabel="multiply">
-                                <rect key="frame" x="301" y="392.33333333333331" width="92" height="80"/>
+                                <rect key="frame" x="506" y="417.5" width="120" height="146"/>
                                 <color key="backgroundColor" red="0.0" green="0.33333333329999998" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="×">
@@ -601,7 +601,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R30-10-3RL" userLabel="cuberoot">
-                                <rect key="frame" x="484.66666666666669" y="341.66666666666669" width="114.66666666666669" height="51.333333333333314"/>
+                                <rect key="frame" x="506" y="857.5" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.19607843137254902" green="0.39215686274509803" blue="0.58823529411764708" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="∛">
@@ -621,7 +621,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEN-ib-N7O" userLabel="squareroot">
-                                <rect key="frame" x="484.66666666666669" y="289.33333333333331" width="114.66666666666669" height="51.333333333333314"/>
+                                <rect key="frame" x="506" y="711" width="120" height="145.5"/>
                                 <color key="backgroundColor" red="0.19607843137254902" green="0.39215686274509803" blue="0.58823529411764708" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="√">
@@ -640,8 +640,8 @@
                                     <action selector="uiKeySquareRoot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="65O-cy-5Xg"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a7I-b1-EsN" userLabel="units">
-                                <rect key="frame" x="20" y="72" width="83" height="36"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a7I-b1-EsN" userLabel="units">
+                                <rect key="frame" x="20" y="72" width="83" height="51"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="6NS-XC-uE9"/>
                                     <constraint firstAttribute="height" constant="50" id="ODI-ig-092"/>
@@ -920,9 +920,23 @@
                                 <exclude reference="cEN-ib-N7O"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="fJ9-GJ-lRS"/>
+                                <exclude reference="fe3-2j-f0J"/>
+                                <exclude reference="h8i-4B-wjO"/>
+                                <exclude reference="y25-v3-ScI"/>
                                 <exclude reference="SEn-2d-vhm"/>
                                 <exclude reference="7W5-hO-EVA"/>
                                 <exclude reference="C2N-p1-dlV"/>
+                                <exclude reference="KES-ol-i3X"/>
+                                <exclude reference="WuA-JB-iGj"/>
+                                <exclude reference="ezm-Pq-BZv"/>
+                                <exclude reference="ioq-dH-wdE"/>
+                                <exclude reference="32v-ow-TaQ"/>
+                                <exclude reference="I6f-bC-WeM"/>
+                                <exclude reference="Lnj-Gg-Tr2"/>
+                                <exclude reference="eT0-2r-RW5"/>
+                                <exclude reference="jWy-E3-Pvi"/>
+                                <exclude reference="qA7-IE-zrQ"/>
                                 <exclude reference="Vbn-Al-aD2"/>
                                 <exclude reference="aTt-ZS-i5y"/>
                                 <exclude reference="bdo-tY-vQw"/>
@@ -931,10 +945,10 @@
                                 <exclude reference="Q5E-xT-YP4"/>
                                 <exclude reference="bea-DV-ac9"/>
                                 <exclude reference="pyN-KY-oH2"/>
-                                <exclude reference="fJ9-GJ-lRS"/>
-                                <exclude reference="fe3-2j-f0J"/>
-                                <exclude reference="h8i-4B-wjO"/>
-                                <exclude reference="y25-v3-ScI"/>
+                                <exclude reference="7p2-Pf-JhD"/>
+                                <exclude reference="Cax-fv-G6n"/>
+                                <exclude reference="F9c-kc-bGu"/>
+                                <exclude reference="u5x-Oz-O3B"/>
                                 <exclude reference="JaV-AC-rpG"/>
                                 <exclude reference="W9c-Gg-37y"/>
                                 <exclude reference="ZR0-lY-m69"/>
@@ -955,10 +969,6 @@
                                 <exclude reference="HHe-xv-6ZD"/>
                                 <exclude reference="peT-8U-EZg"/>
                                 <exclude reference="x9o-yt-Agl"/>
-                                <exclude reference="KES-ol-i3X"/>
-                                <exclude reference="WuA-JB-iGj"/>
-                                <exclude reference="ezm-Pq-BZv"/>
-                                <exclude reference="ioq-dH-wdE"/>
                                 <exclude reference="34X-Nj-e7N"/>
                                 <exclude reference="4J8-dB-xKW"/>
                                 <exclude reference="fR1-HG-PJv"/>
@@ -969,10 +979,6 @@
                                 <exclude reference="eGd-kM-Bvd"/>
                                 <exclude reference="gjX-LO-1Ki"/>
                                 <exclude reference="jzt-3S-hie"/>
-                                <exclude reference="7p2-Pf-JhD"/>
-                                <exclude reference="Cax-fv-G6n"/>
-                                <exclude reference="F9c-kc-bGu"/>
-                                <exclude reference="u5x-Oz-O3B"/>
                                 <exclude reference="BE6-Il-97V"/>
                                 <exclude reference="Ddl-Vu-Z1x"/>
                                 <exclude reference="T5u-eE-fKO"/>
@@ -985,12 +991,6 @@
                                 <exclude reference="Thl-MU-B43"/>
                                 <exclude reference="vxP-sg-kVO"/>
                                 <exclude reference="yeW-KW-WTh"/>
-                                <exclude reference="32v-ow-TaQ"/>
-                                <exclude reference="I6f-bC-WeM"/>
-                                <exclude reference="Lnj-Gg-Tr2"/>
-                                <exclude reference="eT0-2r-RW5"/>
-                                <exclude reference="jWy-E3-Pvi"/>
-                                <exclude reference="qA7-IE-zrQ"/>
                                 <exclude reference="UJK-sN-TQf"/>
                                 <exclude reference="elT-z3-CkP"/>
                                 <exclude reference="lI5-nE-FJX"/>
@@ -1027,10 +1027,32 @@
                                 <include reference="cEN-ib-N7O"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="fJ9-GJ-lRS"/>
+                                <include reference="fe3-2j-f0J"/>
+                                <include reference="h8i-4B-wjO"/>
+                                <include reference="y25-v3-ScI"/>
                                 <include reference="7W5-hO-EVA"/>
                                 <include reference="C2N-p1-dlV"/>
                                 <exclude reference="sNk-c9-NHd"/>
                                 <exclude reference="sOJ-q7-Fzj"/>
+                                <exclude reference="4cD-4X-M5m"/>
+                                <exclude reference="5wK-MG-Jvj"/>
+                                <include reference="KES-ol-i3X"/>
+                                <include reference="WuA-JB-iGj"/>
+                                <include reference="ezm-Pq-BZv"/>
+                                <exclude reference="ieW-oA-AXl"/>
+                                <include reference="ioq-dH-wdE"/>
+                                <exclude reference="rk3-qb-hwf"/>
+                                <exclude reference="0zr-5o-9x5"/>
+                                <include reference="32v-ow-TaQ"/>
+                                <exclude reference="62h-5m-h7m"/>
+                                <exclude reference="HH3-U3-EBT"/>
+                                <include reference="I6f-bC-WeM"/>
+                                <include reference="Lnj-Gg-Tr2"/>
+                                <exclude reference="XfP-dt-mbj"/>
+                                <include reference="eT0-2r-RW5"/>
+                                <include reference="jWy-E3-Pvi"/>
+                                <include reference="qA7-IE-zrQ"/>
                                 <exclude reference="94V-eh-Nme"/>
                                 <exclude reference="V9d-Ke-zHN"/>
                                 <include reference="Vbn-Al-aD2"/>
@@ -1047,10 +1069,16 @@
                                 <exclude reference="enU-VT-gBr"/>
                                 <include reference="pyN-KY-oH2"/>
                                 <exclude reference="sKO-aP-MoM"/>
-                                <include reference="fJ9-GJ-lRS"/>
-                                <include reference="fe3-2j-f0J"/>
-                                <include reference="h8i-4B-wjO"/>
-                                <include reference="y25-v3-ScI"/>
+                                <exclude reference="66W-No-mAU"/>
+                                <exclude reference="6bB-5w-TKe"/>
+                                <include reference="7p2-Pf-JhD"/>
+                                <include reference="Cax-fv-G6n"/>
+                                <include reference="F9c-kc-bGu"/>
+                                <exclude reference="Nwx-dS-U84"/>
+                                <exclude reference="U5r-lu-Ww0"/>
+                                <exclude reference="YCe-is-ggB"/>
+                                <include reference="u5x-Oz-O3B"/>
+                                <exclude reference="xeI-2i-dev"/>
                                 <exclude reference="14r-8P-bm6"/>
                                 <include reference="JaV-AC-rpG"/>
                                 <include reference="W9c-Gg-37y"/>
@@ -1091,14 +1119,6 @@
                                 <include reference="x9o-yt-Agl"/>
                                 <exclude reference="zQ4-SF-1Z6"/>
                                 <exclude reference="zmj-W6-elg"/>
-                                <exclude reference="4cD-4X-M5m"/>
-                                <exclude reference="5wK-MG-Jvj"/>
-                                <include reference="KES-ol-i3X"/>
-                                <include reference="WuA-JB-iGj"/>
-                                <include reference="ezm-Pq-BZv"/>
-                                <exclude reference="ieW-oA-AXl"/>
-                                <include reference="ioq-dH-wdE"/>
-                                <exclude reference="rk3-qb-hwf"/>
                                 <include reference="34X-Nj-e7N"/>
                                 <include reference="4J8-dB-xKW"/>
                                 <exclude reference="dsM-Pa-qnr"/>
@@ -1117,16 +1137,6 @@
                                 <include reference="jzt-3S-hie"/>
                                 <exclude reference="qGl-hf-JQ5"/>
                                 <exclude reference="uhV-Wa-dSh"/>
-                                <exclude reference="66W-No-mAU"/>
-                                <exclude reference="6bB-5w-TKe"/>
-                                <include reference="7p2-Pf-JhD"/>
-                                <include reference="Cax-fv-G6n"/>
-                                <include reference="F9c-kc-bGu"/>
-                                <exclude reference="Nwx-dS-U84"/>
-                                <exclude reference="U5r-lu-Ww0"/>
-                                <exclude reference="YCe-is-ggB"/>
-                                <include reference="u5x-Oz-O3B"/>
-                                <exclude reference="xeI-2i-dev"/>
                                 <exclude reference="3YY-iX-gkF"/>
                                 <exclude reference="75W-Pu-ylZ"/>
                                 <include reference="BE6-Il-97V"/>
@@ -1151,16 +1161,6 @@
                                 <exclude reference="vWZ-dV-iJG"/>
                                 <include reference="vxP-sg-kVO"/>
                                 <include reference="yeW-KW-WTh"/>
-                                <exclude reference="0zr-5o-9x5"/>
-                                <include reference="32v-ow-TaQ"/>
-                                <exclude reference="62h-5m-h7m"/>
-                                <exclude reference="HH3-U3-EBT"/>
-                                <include reference="I6f-bC-WeM"/>
-                                <include reference="Lnj-Gg-Tr2"/>
-                                <exclude reference="XfP-dt-mbj"/>
-                                <include reference="eT0-2r-RW5"/>
-                                <include reference="jWy-E3-Pvi"/>
-                                <include reference="qA7-IE-zrQ"/>
                                 <exclude reference="6QQ-p8-HtX"/>
                                 <exclude reference="Cpc-FE-naG"/>
                                 <exclude reference="Kj4-oL-jbO"/>
@@ -1217,6 +1217,10 @@
                                 <include reference="a7I-b1-EsN"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="fJ9-GJ-lRS"/>
+                                <include reference="fe3-2j-f0J"/>
+                                <include reference="h8i-4B-wjO"/>
+                                <include reference="y25-v3-ScI"/>
                                 <include reference="F9o-V4-tfC"/>
                                 <include reference="TJw-MZ-HdT"/>
                                 <include reference="Yb7-Mi-nb9"/>
@@ -1236,6 +1240,9 @@
                                 <include reference="JJr-YQ-QHF"/>
                                 <include reference="fH3-VC-PmE"/>
                                 <include reference="jvT-J2-HD1"/>
+                                <include reference="CMB-fC-niI"/>
+                                <include reference="Uyt-Tl-ZId"/>
+                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="49z-OM-cLl"/>
                                 <include reference="Dvd-o7-jrO"/>
                                 <include reference="F6C-1v-OsX"/>
@@ -1252,6 +1259,24 @@
                                 <include reference="C2N-p1-dlV"/>
                                 <exclude reference="sNk-c9-NHd"/>
                                 <exclude reference="sOJ-q7-Fzj"/>
+                                <exclude reference="4cD-4X-M5m"/>
+                                <exclude reference="5wK-MG-Jvj"/>
+                                <include reference="KES-ol-i3X"/>
+                                <include reference="WuA-JB-iGj"/>
+                                <include reference="ezm-Pq-BZv"/>
+                                <exclude reference="ieW-oA-AXl"/>
+                                <include reference="ioq-dH-wdE"/>
+                                <exclude reference="rk3-qb-hwf"/>
+                                <exclude reference="0zr-5o-9x5"/>
+                                <include reference="32v-ow-TaQ"/>
+                                <exclude reference="62h-5m-h7m"/>
+                                <exclude reference="HH3-U3-EBT"/>
+                                <include reference="I6f-bC-WeM"/>
+                                <include reference="Lnj-Gg-Tr2"/>
+                                <exclude reference="XfP-dt-mbj"/>
+                                <include reference="eT0-2r-RW5"/>
+                                <include reference="jWy-E3-Pvi"/>
+                                <include reference="qA7-IE-zrQ"/>
                                 <exclude reference="94V-eh-Nme"/>
                                 <exclude reference="V9d-Ke-zHN"/>
                                 <include reference="Vbn-Al-aD2"/>
@@ -1268,10 +1293,16 @@
                                 <exclude reference="enU-VT-gBr"/>
                                 <include reference="pyN-KY-oH2"/>
                                 <exclude reference="sKO-aP-MoM"/>
-                                <include reference="fJ9-GJ-lRS"/>
-                                <include reference="fe3-2j-f0J"/>
-                                <include reference="h8i-4B-wjO"/>
-                                <include reference="y25-v3-ScI"/>
+                                <exclude reference="66W-No-mAU"/>
+                                <exclude reference="6bB-5w-TKe"/>
+                                <include reference="7p2-Pf-JhD"/>
+                                <include reference="Cax-fv-G6n"/>
+                                <include reference="F9c-kc-bGu"/>
+                                <exclude reference="Nwx-dS-U84"/>
+                                <exclude reference="U5r-lu-Ww0"/>
+                                <exclude reference="YCe-is-ggB"/>
+                                <include reference="u5x-Oz-O3B"/>
+                                <exclude reference="xeI-2i-dev"/>
                                 <exclude reference="14r-8P-bm6"/>
                                 <include reference="JaV-AC-rpG"/>
                                 <include reference="W9c-Gg-37y"/>
@@ -1304,6 +1335,11 @@
                                 <exclude reference="cEr-uy-ORT"/>
                                 <include reference="klg-WB-hrz"/>
                                 <include reference="w8f-hA-UPe"/>
+                                <include reference="NQ9-65-e34"/>
+                                <include reference="TZw-gO-rVo"/>
+                                <include reference="bD7-UA-8XZ"/>
+                                <include reference="f9u-VE-kBk"/>
+                                <include reference="wTL-4r-Cq2"/>
                                 <include reference="1s3-g9-ei9"/>
                                 <include reference="HHe-xv-6ZD"/>
                                 <exclude reference="Xcn-5g-cIn"/>
@@ -1312,19 +1348,6 @@
                                 <include reference="x9o-yt-Agl"/>
                                 <exclude reference="zQ4-SF-1Z6"/>
                                 <exclude reference="zmj-W6-elg"/>
-                                <include reference="NQ9-65-e34"/>
-                                <include reference="TZw-gO-rVo"/>
-                                <include reference="bD7-UA-8XZ"/>
-                                <include reference="f9u-VE-kBk"/>
-                                <include reference="wTL-4r-Cq2"/>
-                                <exclude reference="4cD-4X-M5m"/>
-                                <exclude reference="5wK-MG-Jvj"/>
-                                <include reference="KES-ol-i3X"/>
-                                <include reference="WuA-JB-iGj"/>
-                                <include reference="ezm-Pq-BZv"/>
-                                <exclude reference="ieW-oA-AXl"/>
-                                <include reference="ioq-dH-wdE"/>
-                                <exclude reference="rk3-qb-hwf"/>
                                 <include reference="34X-Nj-e7N"/>
                                 <include reference="4J8-dB-xKW"/>
                                 <exclude reference="dsM-Pa-qnr"/>
@@ -1333,9 +1356,6 @@
                                 <exclude reference="lNe-2f-433"/>
                                 <exclude reference="nD5-Sz-S5X"/>
                                 <include reference="zAV-eb-HBU"/>
-                                <include reference="CMB-fC-niI"/>
-                                <include reference="Uyt-Tl-ZId"/>
-                                <include reference="xgD-Uj-LSp"/>
                                 <include reference="9IT-hT-BdB"/>
                                 <include reference="Ae0-iD-d9d"/>
                                 <exclude reference="S95-aM-dMh"/>
@@ -1346,16 +1366,6 @@
                                 <include reference="jzt-3S-hie"/>
                                 <exclude reference="qGl-hf-JQ5"/>
                                 <exclude reference="uhV-Wa-dSh"/>
-                                <exclude reference="66W-No-mAU"/>
-                                <exclude reference="6bB-5w-TKe"/>
-                                <include reference="7p2-Pf-JhD"/>
-                                <include reference="Cax-fv-G6n"/>
-                                <include reference="F9c-kc-bGu"/>
-                                <exclude reference="Nwx-dS-U84"/>
-                                <exclude reference="U5r-lu-Ww0"/>
-                                <exclude reference="YCe-is-ggB"/>
-                                <include reference="u5x-Oz-O3B"/>
-                                <exclude reference="xeI-2i-dev"/>
                                 <exclude reference="3YY-iX-gkF"/>
                                 <exclude reference="75W-Pu-ylZ"/>
                                 <include reference="BE6-Il-97V"/>
@@ -1380,16 +1390,6 @@
                                 <exclude reference="vWZ-dV-iJG"/>
                                 <include reference="vxP-sg-kVO"/>
                                 <include reference="yeW-KW-WTh"/>
-                                <exclude reference="0zr-5o-9x5"/>
-                                <include reference="32v-ow-TaQ"/>
-                                <exclude reference="62h-5m-h7m"/>
-                                <exclude reference="HH3-U3-EBT"/>
-                                <include reference="I6f-bC-WeM"/>
-                                <include reference="Lnj-Gg-Tr2"/>
-                                <exclude reference="XfP-dt-mbj"/>
-                                <include reference="eT0-2r-RW5"/>
-                                <include reference="jWy-E3-Pvi"/>
-                                <include reference="qA7-IE-zrQ"/>
                                 <exclude reference="6QQ-p8-HtX"/>
                                 <exclude reference="Cpc-FE-naG"/>
                                 <exclude reference="Kj4-oL-jbO"/>
@@ -1447,7 +1447,7 @@
                     <navigationItem key="navigationItem" title="unitCategory" id="s1X-fH-y0J">
                         <barButtonItem key="rightBarButtonItem" id="ZND-5Q-BiQ">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L37-BT-WJf">
-                                <rect key="frame" x="333" y="0.0" width="61" height="44"/>
+                                <rect key="frame" x="687" y="0.0" width="61" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="設定"/>
                                 <variation key="heightClass=regular-widthClass=regular">
@@ -1499,7 +1499,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Rd1-Qz-psh" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DYZ-Sg-lK8">
-                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -74,11 +76,16 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="calcConvert 2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2p7-9q-4qD">
                                 <rect key="frame" x="20" y="205.66666666666666" width="374" height="79.999999999999972"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="J4b-di-lzA"/>
+                                    <constraint firstAttribute="height" constant="80" id="J4b-di-lzA">
+                                        <variation key="heightClass=compact" constant="50"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="heightClass=compact">
+                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7xk-pG-YuN" userLabel="bgR">
                                 <rect key="frame" x="277.33333333333331" y="301.66666666666669" width="132.66666666666669" height="132.66666666666669"/>
@@ -118,7 +125,9 @@
                             <constraint firstItem="2PG-Aq-Vpe" firstAttribute="bottom" secondItem="Ldz-Jd-jii" secondAttribute="bottom" id="VdY-3A-Nag"/>
                             <constraint firstItem="PVH-Nb-0B6" firstAttribute="top" secondItem="o0N-PG-AnO" secondAttribute="top" constant="4" id="VgP-3W-BwQ"/>
                             <constraint firstItem="2PG-Aq-Vpe" firstAttribute="height" secondItem="PVH-Nb-0B6" secondAttribute="height" id="YAs-bv-Nmt"/>
+                            <constraint firstItem="2p7-9q-4qD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="30" id="ZLk-B3-ALX"/>
                             <constraint firstItem="Ldz-Jd-jii" firstAttribute="leading" secondItem="o0N-PG-AnO" secondAttribute="leading" constant="4" id="a7y-2E-EbK"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" relation="greaterThanOrEqual" secondItem="o0N-PG-AnO" secondAttribute="bottom" constant="30" id="adv-GZ-7e4"/>
                             <constraint firstItem="o0N-PG-AnO" firstAttribute="top" secondItem="XzJ-9Z-06c" secondAttribute="top" id="e0I-PL-6a9"/>
                             <constraint firstItem="2PG-Aq-Vpe" firstAttribute="trailing" secondItem="btR-NE-Nm3" secondAttribute="trailing" id="eU3-AE-eCs"/>
                             <constraint firstItem="7xk-pG-YuN" firstAttribute="bottom" secondItem="XzJ-9Z-06c" secondAttribute="bottom" id="fcU-ta-bF5"/>

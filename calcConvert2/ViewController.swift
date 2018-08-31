@@ -154,6 +154,11 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func populateSegmentUnits (_ catalogIndex:IntegerLiteralType) {
         //自定函數用來做出度量單位選項
         uiUnits.removeAllSegments()
+//        if catalogIndex == 2 {  //面積
+//            uiUnits.apportionsSegmentWidthsByContent = true
+//        } else {
+//            uiUnits.apportionsSegmentWidthsByContent = false
+//        }
         for (index,tx) in calc.unit[catalogIndex].enumerated() {
             if UIDevice.current.orientation.isLandscape || index < maxUnitLong {
                 uiUnits.insertSegment(withTitle: tx, at: uiUnits.numberOfSegments, animated: false)
