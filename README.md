@@ -3,7 +3,7 @@
 
 calcConvert提供四則運算及台灣常用度量衡單位換算，精簡而小巧。
 
-從[Apple Store](https://itunes.apple.com/us/app/apple-store/id1070983118?pt=173536&ct=google_sites&mt=8)下載安裝。
+請從[Apple Store](https://itunes.apple.com/us/app/apple-store/id1070983118?pt=173536&ct=google_sites&mt=8)下載安裝。
 
 ## 度量種類
 
@@ -26,7 +26,7 @@ calcConvert提供四則運算及台灣常用度量衡單位換算，精簡而小
 
 ### 指定進位的小數位數
 
-1. 於「設定」顯示數值時固定小數位數，或計算時也捨入到此位數。
+1. 在「設定」可指定於顯示小數時，於幾個位數後截斷顯示，或計算時也捨入到此位數。
 
 2. 用手指按住並橫向拖動畫面的數字(pan)，可直接調整其小數進位的位數同時四捨五入。
 
