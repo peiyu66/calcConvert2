@@ -8,15 +8,11 @@
 
 import UIKit
 
-protocol pasteLabelDelegate: class {
-    func pasteLabel(withString pasteString: String)
-    func copyLabel()
-
-}
 
 class pasteboardLabel: UILabel {
 
-    var Delegate:pasteLabelDelegate?
+    var delegate:pasteLabelDelegate?
+    var isUIOutput:Bool = false
 
     override var canBecomeFirstResponder : Bool {
         return true
@@ -27,7 +23,7 @@ class pasteboardLabel: UILabel {
         if action ==  #selector(copy(_:)) {
             return true
         }
-        if action == #selector(paste(_:)) {
+        if action == #selector(paste(_:)) && isUIOutput  {
             if let t = UIPasteboard.general.string {
                 if let _ = Double(t) {
                     return true
@@ -38,14 +34,12 @@ class pasteboardLabel: UILabel {
     }
 
     override func copy(_ sender: Any?) {
-        Delegate?.copyLabel()
+        delegate?.copyLabel(isUIOutput:isUIOutput)
     }
 
     override func paste(_ sender: Any?) {
         if let t = UIPasteboard.general.string {
-            Delegate?.pasteLabel(withString: t)
+            delegate?.pasteLabel(withString: t)
         }
-        let menu = UIMenuController.shared
-        menu.setMenuVisible(false, animated: true)
     }
 }

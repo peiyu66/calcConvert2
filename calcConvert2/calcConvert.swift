@@ -165,7 +165,7 @@ class calcConvert {
 //                    if inputedKey == "[cr]" || inputedKey == "[sr]" {
 //                        historyText += "="
 //                    }
-                    historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))
+                    historyText += " " + String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer)) + " "
                 }
            default:
                 break
@@ -180,7 +180,7 @@ class calcConvert {
             //如果之前已按=,m+,m-,CR,SR等結束運算，之後沒有按運算子就開始組數字，則前數值應放棄歸零，且前運算子也清除為初始狀態
             switch opBuffer {
             case "[m+]","[m-]","[cr]","[sr]","=","→":    //度量轉換時，opBuffer是"→"
-                historyText += (valBuffer != 0 || ((opBuffer == "=" || opBuffer == "[m+]" || opBuffer == "[m-]") && (opBuffer != "→" )) ? "," : "") //此時分段落，以增加可讀性
+                historyText += (valBuffer != 0 || ((opBuffer == "=" || opBuffer == "[m+]" || opBuffer == "[m-]") && (opBuffer != "→" )) ? ", " : "") //此時分段落，以增加可讀性
                 //條件 valBuffer != 0 剛好valBuffer計算後是0 卻不能顯示逗號
                 //條件 valBuffer != 0 && digBuffer == 0 剛好valBuffer計算後是0 換單位時是空白接逗號，所以加opBuffer != "→"條件
                 //條件 (valBuffer != 0 && digBuffer == 0) && (opBuffer != "→" ) 組字中換category已用＝得值，再接著組字卻沒有逗號

@@ -31,7 +31,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
     var viewDelegate:tableViewDelegate?
     var currencyTime:String=""
 
-    func updateCurrencyByPull() {
+    @objc func updateCurrencyByPull() {
         calc?.botQuery()
         refreshControl?.endRefreshing()
         tableView.reloadData()
@@ -41,7 +41,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
         super.viewDidLoad()
         refreshControl = UIRefreshControl()
         if let _ = refreshControl {
-            refreshControl!.addTarget(self, action: #selector(TableViewController.updateCurrencyByPull), for: UIControlEvents.valueChanged)
+            refreshControl!.addTarget(self, action: #selector(TableViewController.updateCurrencyByPull), for: UIControl.Event.valueChanged)
             tableView.addSubview(self.refreshControl!)
         }
         // Uncomment the following line to preserve selection between presentations
@@ -184,19 +184,19 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 cell.tableCellDelegate=self
                 cell.uiSwitch.isOn=lastRoundingDisplay
                 cell.uiSwitchLabel.text="顯示數值時固定小數位數"
-                cell.selectionStyle = UITableViewCellSelectionStyle.none
+                cell.selectionStyle = UITableViewCell.SelectionStyle.none
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cellSwitch", for: indexPath) as! cellSwitch
                 cell.tableCellDelegate=self
                 cell.uiSwitch.isOn=lastRoundingCalculation
                 cell.uiSwitchLabel.text="計算時也要捨入到此位數"
-                cell.selectionStyle = UITableViewCellSelectionStyle.none
+                cell.selectionStyle = UITableViewCell.SelectionStyle.none
                 return cell
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cellStepper", for: indexPath) as! cellStepper
                 cell.tableCellDelegate=self
-                cell.selectionStyle = UITableViewCellSelectionStyle.none
+                cell.selectionStyle = UITableViewCell.SelectionStyle.none
                 cell.uiStepper.value = lastDecimalScale
                 cell.uiStepperLabel.text="小數位數 = "+String(format:"%.0f",cell.uiStepper.value)
                 return cell
@@ -214,7 +214,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
             }
             cell.uiSwitch.isEnabled=lastPriceSwitchEnabled
             cell.uiSwitchLabel.text="單價換算開關"
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
 
             return cell
         case 3: //section 3 計算歷程
@@ -222,7 +222,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
             cell.tableCellDelegate=self
             cell.uiSwitch.isOn = lastHistorySwitchStatus
             cell.uiSwitchLabel.text="計算歷程"
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         default:
             break
@@ -250,7 +250,7 @@ class TableViewController: UITableViewController ,cellSwitchDelegate, cellSteppe
                 } else {
                     lastPriceSwitchEnabled = true
                 }
-                self.tableView.reloadSections(IndexSet(integer: 2), with: UITableViewRowAnimation.automatic)
+                self.tableView.reloadSections(IndexSet(integer: 2), with: UITableView.RowAnimation.automatic)
                 setPreference ()
             }
         }

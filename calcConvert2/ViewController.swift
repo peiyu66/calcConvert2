@@ -8,6 +8,12 @@
 
 import UIKit
 
+protocol pasteLabelDelegate: class {
+    func pasteLabel(withString pasteString: String)
+    func copyLabel(isUIOutput:Bool)
+}
+
+
 class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     let precisionLong:String   = "16"
@@ -20,7 +26,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     @IBOutlet weak var uiOutput: pasteboardLabel!
     @IBOutlet weak var uiMemory: UILabel!
     @IBOutlet weak var uiUnits: UISegmentedControl!
-    @IBOutlet weak var uiHistory: UILabel!
+    @IBOutlet weak var uiHistory: pasteboardLabel!
     @IBOutlet weak var uiHistoryScrollView: UIScrollView!
     @IBOutlet weak var uiHistoryContentView: UIView!
 
@@ -47,7 +53,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(UIApplicationDelegate.applicationDidBecomeActive(_:)),
-            name: NSNotification.Name.UIApplicationDidBecomeActive,
+            name: UIApplication.didBecomeActiveNotification,
             object: nil)
 
         if (traitCollection.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
@@ -61,7 +67,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         uiMemory.text=""
         uiHistory.text=""
 
-        if (UIDeviceOrientationIsLandscape(UIDevice.current.orientation)) {
+        if (UIDevice.current.orientation.isLandscape) {
             calc.setPrecisionForOutput (withPrecision: precisionLong)
         } else {
             calc.setPrecisionForOutput (withPrecision: precisionShort)
@@ -75,7 +81,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         changeHistorySwitch(withSwitch: calc.historySwitch)     //這會顯示或隱藏historyText
         showPriceConvert(withSwitch: calc.showPriceConvertButton)     //這會顯示或隱藏單價換算開關
 
-        uiOutput.Delegate = self
+        uiOutput.isUIOutput = true
+        uiOutput.delegate = self
+        uiHistory.delegate = self
 
     }
 
@@ -94,7 +102,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     }
 
 
-    func applicationDidBecomeActive(_ notification: Notification) {
+    @objc func applicationDidBecomeActive(_ notification: Notification) {
         if calc.categoryIndex == 3 || calc.currencyTime == nil {
             calc.getExchangeRate()  //上次查詢超過？分鐘再重新查詢匯率
         }
@@ -102,7 +110,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     }
 
     deinit {
-         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+         NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
 
     @IBOutlet weak var uiPriceConverting: UIButton!
@@ -110,8 +118,8 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     @IBAction func uiPriceConvertingSwitch(_ sender: UIButton) {
         if sender == uiPriceConverting {
             uiHistory.text = calc.setPriceConverting(withSwitch: !calc.priceConverting) //開就關、關就開
-            sender.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), for: UIControlState())
-            sender.setTitleColor((calc.priceConverting ? UIColor.orange : UIColor.lightGray) , for: UIControlState())
+            sender.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), for: UIControl.State())
+            sender.setTitleColor((calc.priceConverting ? UIColor.orange : UIColor.lightGray) , for: UIControl.State())
             navigationItem.title = calc.categoryTitle
         }
     }
@@ -135,8 +143,8 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func showPriceConvert(withSwitch show:Bool) {
         uiHistory.text = calc.showPriceConvertButton(withSwitch: show)
         uiPriceConverting.isHidden = !show
-        uiPriceConverting.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), for: UIControlState())
-        uiPriceConverting.setTitleColor((calc.priceConverting ? UIColor.orange : UIColor.lightGray) , for: UIControlState())
+        uiPriceConverting.setTitle("單價換算 "+(calc.priceConverting ? "ON" : "OFF"), for: UIControl.State())
+        uiPriceConverting.setTitleColor((calc.priceConverting ? UIColor.orange : UIColor.lightGray) , for: UIControl.State())
         navigationItem.title = calc.categoryTitle
     }
 
@@ -170,7 +178,7 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         uiUnits.selectedSegmentIndex=calc.unitIndex  //起始應為第1個度量單位
         if isPad {
             let font = UIFont.systemFont(ofSize: 25)
-            uiUnits.setTitleTextAttributes([NSFontAttributeName: font],
+            uiUnits.setTitleTextAttributes([NSAttributedString.Key(rawValue: convertFromNSAttributedStringKey(NSAttributedString.Key.font)): font],
                                            for: .normal)
         }
      }
@@ -225,9 +233,9 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     }
     
     @IBAction func uiSwipeCategory(_ sender: UISwipeGestureRecognizer) {
-        if sender.direction == UISwipeGestureRecognizerDirection.left {
+        if sender.direction == UISwipeGestureRecognizer.Direction.left {
             self.previousCategory()
-        } else if sender.direction == UISwipeGestureRecognizerDirection.right {
+        } else if sender.direction == UISwipeGestureRecognizer.Direction.right {
             self.nextCategory()
         }
     }
@@ -256,13 +264,13 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
     @IBAction func uiPanGestureRecognized(_ sender: UIPanGestureRecognizer) {
 
-        if sender.state == UIGestureRecognizerState.began {
+        if sender.state == UIGestureRecognizer.State.began {
             //移動開始時
             factor = calc.startScaling()
             beginX = factor.movingScale //這次開始移動前的位數
         }
 
-        if sender.state == UIGestureRecognizerState.changed {
+        if sender.state == UIGestureRecognizer.State.changed {
             //每次移動中
             let transX = sender.translation(in: uiOutput).x //移動的x軸向量，負數向左增加位數，正數向右減少位數
             let movedX:Int = Int(round(transX/50))      //換算成每移動50點才變動1個小數位
@@ -287,8 +295,17 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func showMenu(_ sender: UILabel) {
         sender.becomeFirstResponder()
         let menu = UIMenuController.shared
+        var rect:CGRect = sender.frame
+        if sender == uiHistory {
+            menu.arrowDirection = .up
+            if uiHistory.text?.count ?? 0 < 15 {
+                rect = rect.offsetBy(dx: uiHistory.frame.width / 2.2, dy: 0)
+            } else if uiHistory.text?.count ?? 0 < 30 {
+                rect = rect.offsetBy(dx: uiHistory.frame.width / 3, dy: 0)
+            }
+        }
         if !menu.isMenuVisible {
-            menu.setTargetRect(sender.frame, in: sender.superview!)
+            menu.setTargetRect(rect, in: sender.superview!)
             menu.setMenuVisible(true, animated: true)
         }
     }
@@ -297,16 +314,27 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func pasteLabel(withString pasteString: String) {
         calc.pastBoard = pasteString
         calcKeyIn("[貼上]")
+        let menu = UIMenuController.shared
+        menu.setMenuVisible(false, animated: true)
     }
     
-    func copyLabel(){
+    func copyLabel(isUIOutput:Bool){
         let board = UIPasteboard.general
-        board.string = String(format:"%."+precisionLong+"g",calc.valBuffer)
+        if isUIOutput {
+            board.string = String(format:"%."+precisionLong+"g",calc.valBuffer)
+        } else {
+            board.string = uiHistory.text
+        }
         let menu = UIMenuController.shared
         menu.setMenuVisible(false, animated: true)
     }
 
-
+    @IBAction func uiTapHistoryText(_ sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            showMenu(uiHistory)
+        }
+    }
+    
     //***** 計算機按鍵的介面 *****
 
     //轉換unit作換算
@@ -405,3 +433,8 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
 
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
