@@ -211,26 +211,48 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
         }
 
     }
-
-    //uiHistory更新時會改變scrollView的layout，這時做自動捲動
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //捲動位置是historyText的長度減去scrollView的寬度，也就是靠右顯示
-        var cg = CGPoint(x: (uiHistoryScrollView.contentSize.width - uiHistoryScrollView.bounds.size.width), y: self.uiHistoryScrollView.contentOffset.y)
-        //雖然說layout更新了，不知為什麼有時不會馬上刷新historyText的寬度，所以捲動的程式指派給非同步的系統排程去執行
-        DispatchQueue.main.async(execute: {
-            //這一行就是捲動
-            self.uiHistoryScrollView.setContentOffset(cg, animated: true)
-
-            //不知為什麼即使非同步，有時還是沒來得及刷新historyText的寬度，所以再檢查一次
-            cg = CGPoint(x: (self.uiHistoryScrollView.contentSize.width - self.uiHistoryScrollView.bounds.size.width), y: self.uiHistoryScrollView.contentOffset.y)
-            //如果沒來得及刷新也沒關係，再捲一次就會到位了
-            if cg.x != self.uiHistoryScrollView.contentOffset.x {
-                self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+    
+    func scrollToEnd(x:CGFloat=0) {
+        let oX = uiHistoryScrollView.contentSize.width - uiHistoryScrollView.bounds.size.width
+        if oX >= 0 {
+            if (oX != x || x == 0) {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(250), execute: {
+                    let offsetX = self.uiHistoryScrollView.contentSize.width - self.uiHistoryScrollView.bounds.size.width
+                    let cg = CGPoint(x: offsetX, y: self.uiHistoryScrollView.contentOffset.y)
+                    self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+                    self.scrollToEnd(x:offsetX)
+                })
             }
-        })
-
+        } else {
+            let cg = CGPoint(x:0, y:0)
+            self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+        }
     }
+
+//    uiHistory更新時會改變scrollView的layout，這時做自動捲動
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        scrollToEnd()
+//        //捲動位置是historyText的長度減去scrollView的寬度，也就是靠右顯示
+//        let offsetX = uiHistoryScrollView.contentSize.width - uiHistoryScrollView.bounds.size.width
+//        if offsetX > 0 {
+//            var cg = CGPoint(x: offsetX, y: self.uiHistoryScrollView.contentOffset.y)
+//            //雖然說layout更新了，不知為什麼有時不會馬上刷新historyText的寬度，所以捲動的程式指派給非同步的系統排程去執行
+//            self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+//            DispatchQueue.main.async(execute: {
+//                //這一行就是捲動
+//
+//                //不知為什麼即使非同步，有時還是沒來得及刷新historyText的寬度，所以再檢查一次
+//                cg = CGPoint(x: (self.uiHistoryScrollView.contentSize.width - self.uiHistoryScrollView.bounds.size.width), y: self.uiHistoryScrollView.contentOffset.y)
+//                //如果沒來得及刷新也沒關係，再捲一次就會到位了
+//
+//                if cg.x != self.uiHistoryScrollView.contentOffset.x {
+//                    self.uiHistoryScrollView.setContentOffset(cg, animated: true)
+//                }
+//            })
+//        }
+//
+//    }
     
     @IBAction func uiSwipeCategory(_ sender: UISwipeGestureRecognizer) {
         if sender.direction == UISwipeGestureRecognizer.Direction.left {
@@ -295,17 +317,13 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func showMenu(_ sender: UILabel) {
         sender.becomeFirstResponder()
         let menu = UIMenuController.shared
-        var rect:CGRect = sender.frame
         if sender == uiHistory {
             menu.arrowDirection = .up
-            if uiHistory.text?.count ?? 0 < 15 {
-                rect = rect.offsetBy(dx: uiHistory.frame.width / 2.2, dy: 0)
-            } else if uiHistory.text?.count ?? 0 < 30 {
-                rect = rect.offsetBy(dx: uiHistory.frame.width / 3, dy: 0)
-            }
+        } else {
+            menu.arrowDirection = .down
         }
         if !menu.isMenuVisible {
-            menu.setTargetRect(rect, in: sender.superview!)
+            menu.setTargetRect(sender.frame, in: sender.superview!)
             menu.setMenuVisible(true, animated: true)
         }
     }
@@ -348,14 +366,12 @@ class ViewController: UIViewController, tableViewDelegate, pasteLabelDelegate {
     func calcKeyIn(_ key: String) {
         uiHistory.text = calc.keyIn(key) //計算和輸出歷程
         outputToDisplay ()
-
     }
 
     func outputToDisplay () {
-        //顯示計算結果
-        uiOutput.text = calc.valueOutput
-        //顯示暫存值
-        uiMemory.text = calc.memoryOutput
+        uiOutput.text = calc.valueOutput    //顯示計算結果
+        uiMemory.text = calc.memoryOutput   //顯示暫存值
+        scrollToEnd()
     }
 
     @IBAction func uiKey1(_ sender: UIButton) {

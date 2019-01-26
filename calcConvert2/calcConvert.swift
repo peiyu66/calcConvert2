@@ -31,7 +31,7 @@ class calcConvert {
 
     var historySwitch:Bool=false        //是否顯示計算歷程
     var historyText:String=""           //計算歷程的內容
-    var prevHistoryText:String=""       //前次要放入historyText的紀錄內容
+//    var prevHistoryText:String=""       //前次要放入historyText的紀錄內容
 
     var precisionForOutput:String="9"               //輸出欄使用的精度
     let precisionForHistory:String="7"              //計算歷程使用的精度
@@ -110,7 +110,7 @@ class calcConvert {
             //如果四則運算子沒有輸入運算元，又連續接運算子，應消除無意義的連續運算子
             if (prevInputedKey == "+" || prevInputedKey == "-" || prevInputedKey == "x" || prevInputedKey == "/") {
                 let index = historyText.index(historyText.endIndex, offsetBy: -1)
-                historyText = historyText.substring(to: index) //+ inputedKey
+                historyText = String(historyText[..<index]) 
                 //就消除乘0或除0的情形
                 digBuffer = (opBuffer == "x" || opBuffer == "/" ? 1 : 0)
            }
@@ -347,8 +347,8 @@ class calcConvert {
         var scale:Int = 0
         let s:String = String(format:"%."+precisionForOutput+"g",d)
         if let p = s.range(of: ".")?.lowerBound {
-            let pi = s.index(p, offsetBy: 1)
-            scale = s.substring(from: pi).count
+            let pIdx = s.index(p, offsetBy: 1)
+            scale = s[pIdx...].count    //s.substring(from: pi).count
 //        } else if let _ = s.range(of: "e+")?.lowerBound {
 //            scale = 0
 //        } else if let _ = s.range(of: "e-")?.lowerBound {
@@ -508,11 +508,12 @@ class calcConvert {
 
     func changeUnitInHistoryText () ->String {
         //變換度量單位時輸出：[@]<單位名稱>：[目前數值][前運算子] opBuffer代表剛開始沒有前運算子則不輸出0；前運算子是"→"也要抑制
-        let text = (opBuffer == "" ? "" : " ") + (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))) + (txtBuffer == "" || opBuffer == "→" ? "" : opBuffer)
-        if text != prevHistoryText {    //初始時，setPriceConverting()和changeUnit()會重複叫，則不要重複給相同單位名稱
+        let text = (opBuffer == "" || historyText == "" ? "" : " ") + (priceConverting ? "@" : "") + unit[categoryIndex][unitIndex] + ": " + (valBuffer == 0 ? "" :String(format:"%."+precisionForHistory+"g",(roundingDisplay ? round(valBuffer*roundingScale)/roundingScale : valBuffer))) + (txtBuffer == "" || opBuffer == "→" ? "" : opBuffer)
+
+        //初始時，setCategory和setPriceConverting會重複叫changeUnitInHistoryText，則不要重複給相同單位名稱
+        if text != " " + historyText {
             historyText += text
         }
-        prevHistoryText = text
         return self.historyText
     }
 
@@ -615,11 +616,12 @@ class calcConvert {
         let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             if error == nil {
                 if let downloadedData = String(data: data!, encoding: String.Encoding.utf8) {
-                    //                    print (self.botRate(downloadedData,currency: "USD").spotSelling)
-                    if let range = downloadedData.range(of: "最新掛牌時間：(.+)", options: .regularExpression) {
-                        let time1 = downloadedData.substring(with: range)
-                        let time2 = time1.replacingOccurrences(of: "最新掛牌時間：<span class=\"time\">", with: "")
-                        let dTime = time2.replacingOccurrences(of: "</span>", with: "")
+                    let leading = "最新掛牌時間：<span class=\"time\">"
+                    let trailing = "</span>"
+                    if let range = downloadedData.range(of: "\(leading)(.+)\(trailing)", options: .regularExpression) {
+                        let startIndex = downloadedData.index(range.lowerBound, offsetBy: leading.count)
+                        let endIndex   = downloadedData.index(range.upperBound, offsetBy: 0-trailing.count)
+                        let dTime = String(downloadedData[startIndex..<endIndex])
                         let dateFormatter = DateFormatter()
                         dateFormatter.locale=Locale(identifier: "zh_TW")
                         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm zzz"
@@ -693,11 +695,14 @@ class calcConvert {
             buying  = "Buying"
             selling = "Selling"
         }
-
-        if let range=data.range(of: currency+"         \(buying)(.+)\r", options: .regularExpression) {
-            let data1 = data.substring(with: range).replacingOccurrences(of: currency+"         \(buying)", with: "")
-            let data2 = data1.replacingOccurrences(of: "\r", with: "")
-            let data3 = data2.replacingOccurrences(of: selling, with: "")
+        let leading = "\(currency)         \(buying)"
+        let trailing = "\r"
+        if let range=data.range(of: "\(leading)(.+)\(trailing)", options: .regularExpression) {
+            let startIndex = data.index(range.lowerBound, offsetBy: leading.count)
+            let endIndex = data.index(range.upperBound, offsetBy: 0-trailing.count)
+            let data1 = String(data[startIndex..<endIndex])    //data.substring(with: range).replacingOccurrences(of: currency+"         \(buying)", with: "")
+//            let data2 = data1.replacingOccurrences(of: "\r", with: "")
+            let data3 = data1.replacingOccurrences(of: selling, with: "")
             let data4 = data3.replacingOccurrences(of: "    ", with: " ")
             let data5 = data4.replacingOccurrences(of: "  ", with: " ")
             let data6 = data5.replacingOccurrences(of: "  ", with: " ")
